@@ -8,9 +8,6 @@
 
 import UIKit
 
-import CameoKit
-import MediaPlayer
-
 var lastchannel = ""
 var currentChannelName = ""
 var selectedRow : IndexPath? = nil
@@ -54,7 +51,7 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
                 filterData = coldFilteredData
             }
         	
-            UpdateTableView(scrollPosition: .middle)
+            UpdateTableView(scrollPosition: .none)
 
         }
         
@@ -74,11 +71,7 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
     
     
     override func viewWillDisappear(_ animated: Bool) {
-        
-        if Player.shared.player.isReady {
-           // Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(SPXCacheChannels), userInfo: nil, repeats: false)
-        }
-
+        NotificationCenter.default.removeObserver(self, name: .updateChannelsView, object: nil)
     }
     
     func updateFilter() {
@@ -100,20 +93,32 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
         }
     }
     
+    @objc func updateChannelsView() {
+        
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
-        self.title = categoryTitle
-
-
+        
         if let searchbartext = searchBar.text {
             if searchbartext.count > 0 {
                 globalSearchText = searchbartext
             } else if globalSearchText.count > 0 {
                 searchBar.text = globalSearchText
             }
+            
         }
         
+
         
-        UpdateTableView(scrollPosition: .middle)
+        self.title == categoryTitle ? UpdateTableView(scrollPosition: .none) : UpdateTableView(scrollPosition: .middle) 
+
+        self.title = categoryTitle
+
+
+        
+        
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(UpdateTableView), name: .updateChannelsView, object: nil)
 
     }
         
@@ -143,7 +148,7 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
         super.viewDidLoad()
         
         ChannelsTableView.delegate = self
-		ChannelsPDT()
+        UpdateTableView()
         
         self.clearsSelectionOnViewWillAppear = true
         self.navigationController?.navigationBar.shadowImage = UIImage()
@@ -247,19 +252,13 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
             
             lastCategory = categoryTitle
             
-            
-            
-            
-            let this = Player.shared
-            
-            currentChannel != previousChannel || this.player.isDead || this.state != .playing ? this.new(.stream) : () //playing
-            
-            
-            
-            
-            
-            
-            
+            UpdateTableView(scrollPosition: .none)
+
+            DispatchQueue.global().async {
+                let this = Player.shared
+                currentChannel != previousChannel || this.player.isDead || this.state != .playing ? this.new(.stream) : () //playing
+            }
+               
         }
     }
     

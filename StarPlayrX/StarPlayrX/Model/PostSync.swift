@@ -16,7 +16,7 @@ internal func PostSync(request: Dictionary<String, Any>, endpoint: String, metho
     let semaphore = DispatchSemaphore(value: 0)
     var syncData : PostReturnTuple? = (message: "", success: false, data: [:], response: HTTPURLResponse() )
     let http_method = "POST"
-    let time_out = 10
+    let time_out = 120
     
     func getURLRequest() -> URLRequest? {
         if let url = URL(string: endpoint) {

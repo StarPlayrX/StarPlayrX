@@ -36,7 +36,7 @@
 		5F5C5066244CC26000A35D76 /* LaunchServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5053244CC26000A35D76 /* LaunchServer.swift */; };
 		5F5C5067244CC26000A35D76 /* Xtra.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5054244CC26000A35D76 /* Xtra.swift */; };
 		5F5C5068244CC26000A35D76 /* Cookies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5055244CC26000A35D76 /* Cookies.swift */; };
-		5F5C5069244CC26000A35D76 /* TextSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5056244CC26000A35D76 /* TextSync.swift */; };
+		5F5C5069244CC26000A35D76 /* textSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5056244CC26000A35D76 /* textSync.swift */; };
 		5F5C506A244CC26000A35D76 /* Networkabilty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5057244CC26000A35D76 /* Networkabilty.swift */; };
 		5F5C506B244CC26000A35D76 /* ImageAsync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5058244CC26000A35D76 /* ImageAsync.swift */; };
 		5F5C506C244CC26000A35D76 /* DataSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5059244CC26000A35D76 /* DataSync.swift */; };
@@ -86,7 +86,7 @@
 		5F5C5053244CC26000A35D76 /* LaunchServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LaunchServer.swift; sourceTree = "<group>"; };
 		5F5C5054244CC26000A35D76 /* Xtra.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Xtra.swift; sourceTree = "<group>"; };
 		5F5C5055244CC26000A35D76 /* Cookies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cookies.swift; sourceTree = "<group>"; };
-		5F5C5056244CC26000A35D76 /* TextSync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextSync.swift; sourceTree = "<group>"; };
+		5F5C5056244CC26000A35D76 /* textSync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = textSync.swift; sourceTree = "<group>"; };
 		5F5C5057244CC26000A35D76 /* Networkabilty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Networkabilty.swift; sourceTree = "<group>"; };
 		5F5C5058244CC26000A35D76 /* ImageAsync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageAsync.swift; sourceTree = "<group>"; };
 		5F5C5059244CC26000A35D76 /* DataSync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSync.swift; sourceTree = "<group>"; };
@@ -235,7 +235,7 @@
 				5F5C5049244CC26000A35D76 /* PortFinder.swift */,
 				5F5C504C244CC26000A35D76 /* PostSync.swift */,
 				5F5C504D244CC26000A35D76 /* ReadDataFile.swift */,
-				5F5C5056244CC26000A35D76 /* TextSync.swift */,
+				5F5C5056244CC26000A35D76 /* textSync.swift */,
 				5F5C5054244CC26000A35D76 /* Xtra.swift */,
 			);
 			path = Model;
@@ -352,7 +352,7 @@
 				5F5C505F244CC26000A35D76 /* PostSync.swift in Sources */,
 				5F5C5027244CBCD500A35D76 /* SplitViewController.swift in Sources */,
 				5F5C505E244CC26000A35D76 /* Channels.swift in Sources */,
-				5F5C5069244CC26000A35D76 /* TextSync.swift in Sources */,
+				5F5C5069244CC26000A35D76 /* textSync.swift in Sources */,
 				5F5C5065244CC26000A35D76 /* Global.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -418,7 +418,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -429,13 +429,14 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -477,18 +478,20 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_COMPILATION_MODE = singlefile;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -500,11 +503,11 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = StarPlayrX/StarPlayrX.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = 469UCUB275;
 				HEADER_SEARCH_PATHS = "/Users/todd/CameoKit/.build/checkouts/**";
 				INFOPLIST_FILE = StarPlayrX/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -513,7 +516,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.toddbruss.StarPlayr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "StarPlayrX/AP2Volume/StarPlayrX-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_OPTIMIZATION_LEVEL = "-Osize";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -526,11 +529,11 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = StarPlayrX/StarPlayrX.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = 469UCUB275;
 				HEADER_SEARCH_PATHS = "/Users/todd/CameoKit/.build/checkouts/**";
 				INFOPLIST_FILE = StarPlayrX/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

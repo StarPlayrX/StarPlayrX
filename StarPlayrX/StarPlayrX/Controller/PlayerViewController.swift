@@ -9,7 +9,6 @@
 
 
 import UIKit
-import MediaPlayer
 import AVKit
 
 var setPlayerObservers = false
@@ -60,13 +59,17 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     func PlayPause() {
         if Player.shared.player.isBusy && Player.shared.state == PlayerState.playing {
             updatePlayPauseIcon(play: false)
-            Player.shared.pause()
             Player.shared.state = .paused
+            Player.shared.pause()
         } else {
             updatePlayPauseIcon(play: true)
             Player.shared.state = .stream
-            Player.shared.player.pause()
-            Player.shared.playX()
+            
+            DispatchQueue.global().async {
+                Player.shared.player.pause()
+                Player.shared.playX()
+            }
+         
         }
     }
     @IBAction func PlayButton(_ sender: Any) {
@@ -267,7 +270,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         
         setupAirPlayButton()
         
-        PlayerPDT()
+        //PlayerPDT()
         self.navigationController?.navigationBar.shadowImage = UIImage()
         
         if let appearance = navigationController?.navigationBar.standardAppearance {
@@ -431,17 +434,17 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     
     func startVolumeTimer() {
         invalidateTimer()
-        self.playerViewTimerX = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(systemVolumeUpdater), userInfo: nil, repeats: true)
+        self.playerViewTimerX = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(systemVolumeUpdater), userInfo: nil, repeats: true)
     }
     
     func routePickerViewWillBeginPresentingRoutes(_ routePickerView: AVRoutePickerView) {
         systemVolumeUpdater()
-        startVolumeTimer()
+        //startVolumeTimer()
         PulsarAnimation()
     }
     
     func routePickerViewDidEndPresentingRoutes(_ routePickerView: AVRoutePickerView) {
-        invalidateTimer()
+        //invalidateTimer()
         systemVolumeUpdater()
         PulsarAnimation()
     }
@@ -478,8 +481,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     func removeSlider() {
         AP2VolumeSlider.removeTarget(nil, action: nil, for: .valueChanged)
     }
-    let x = MPMusicPlayerController.applicationMusicPlayer
-    
     
     @objc func gotVolumeDidChange(_ notification: NSNotification) {
         if sliderIsMoving { return }

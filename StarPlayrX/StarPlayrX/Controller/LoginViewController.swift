@@ -7,9 +7,8 @@
 //
 
 import UIKit
-import CameoKit
-import AVKit
 import SafariServices
+import AVKit
 
 private let LoginQueue = DispatchQueue(label: "LoginQueue", qos: .userInteractive, attributes: .concurrent)
 
@@ -352,8 +351,15 @@ class LoginViewController: UIViewController {
                 self.progressBar?.setProgress(0.85, animated: true)
             }
             
-            channelArray = Player.shared.getPDTData(importData: channelArray)
-            
+            Player.shared.updatePDT(completionHandler: { (success) -> Void in
+                // do nothing
+                if success {
+                    print("HELLOWORLD!")
+                    
+                  //do nothing
+                }
+            })
+                        
             DispatchQueue.main.async {
                 self.progressBar?.setProgress(0.9, animated: true)
             }

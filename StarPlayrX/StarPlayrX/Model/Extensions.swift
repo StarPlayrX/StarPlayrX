@@ -61,6 +61,7 @@ extension AVQueuePlayer {
 extension Notification.Name {
     static let didUpdatePlay = Notification.Name("didUpdatePlay")
     static let didUpdatePause = Notification.Name("didUpdatePause")
+    static let updateChannelsView = Notification.Name("updateChannelsView")
     static let gotNowPlayingInfo = Notification.Name("gotNowPlayingInfo")
     static let gotSessionInterruption = AVAudioSession.interruptionNotification
     static let gotRouteChangeNotification = AVAudioSession.routeChangeNotification

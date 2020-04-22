@@ -180,26 +180,20 @@ final class Player {
     //MARK: Update our display
     func updateDisplay(key: String, cache: [String : Any], channelArt: String) {
         if let value  = cache[key] as? [String: String],
-           let artist = value["artist"] as String?,
-           let song   = value["song"] as String?,
-           let image  = value["image"] as String? {
-			
-           let md5 = MD5(artist + song + key + channelArt + image)
-
-            if previousMD5 != md5 {
-                
-                previousMD5 = md5!
-                
-                nowPlaying.artist = artist
-                nowPlaying.song = song
-                nowPlaying.channel = key
-                nowPlaying.channelArt = channelArt
-                nowPlaying.albumArt = image
-                
-                updateNowPlayingX()
-
-               
-            }
+            let artist = value["artist"] as String?,
+            let song   = value["song"] as String?,
+            let image  = value["image"] as String?,
+            let md5 = MD5(artist + song + key + channelArt + image),
+            previousMD5 != md5
+        {
+            
+            previousMD5 = md5
+            nowPlaying.artist = artist
+            nowPlaying.song = song
+            nowPlaying.channel = key
+            nowPlaying.channelArt = channelArt
+            nowPlaying.albumArt = image
+            updateNowPlayingX()
         }
     }
     
@@ -227,9 +221,9 @@ final class Player {
                 nowPlaying.image = img
                 self.setnowPlayingInfo(channel: nowPlaying.channel, song: nowPlaying.song, artist: nowPlaying.artist, imageData:img)
 
-            } else {
-                nowPlaying.image = demoImage()
-                self.setnowPlayingInfo(channel: nowPlaying.channel, song: nowPlaying.song, artist: nowPlaying.artist, imageData: nowPlaying.image!)
+            } else if let i = demoImage()  {
+                nowPlaying.image = i
+                self.setnowPlayingInfo(channel: nowPlaying.channel, song: nowPlaying.song, artist: nowPlaying.artist, imageData: i)
             }
             
             DispatchQueue.main.async { NotificationCenter.default.post(name: .gotNowPlayingInfo, object: nil) }

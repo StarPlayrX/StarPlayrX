@@ -8,7 +8,6 @@
 
 import UIKit
 import AVKit
-
 //UIGestureRecognizerDelegate
 class SiriusViewController: UITableViewController {
     var pdtTimer: Timer? = nil
@@ -23,7 +22,7 @@ class SiriusViewController: UITableViewController {
         
         restartPDT()
         
-        SPXCache()
+        SPXCache(run: true)
         
         if let appearance = navigationController?.navigationBar.standardAppearance {
             appearance.shadowImage = nil
@@ -40,6 +39,7 @@ class SiriusViewController: UITableViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(handleRouteChange(_:)), name: .gotRouteChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(handleInterruption(_:)), name: .gotSessionInterruption, object: nil)
+
         NotificationCenter.default.addObserver(self, selector: #selector(networkInterruption(_:)), name: NSNotification.Name.AVPlayerItemFailedToPlayToEndTime, object: nil)
     }
     
@@ -130,9 +130,9 @@ class SiriusViewController: UITableViewController {
     override func viewWillDisappear(_ animated: Bool) {
         freshChannels = true
         
-        if Player.shared.player.isReady {
-            Timer.scheduledTimer(timeInterval: 2.5, target: self, selector: #selector(SPXCache), userInfo: nil, repeats: false)
-        }
+        //if Player.shared.player.isReady {
+         //   Timer.scheduledTimer(timeInterval: 2.5, target: self, selector: #selector(SPXCache), userInfo: nil, repeats: false)
+        //}
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -140,22 +140,31 @@ class SiriusViewController: UITableViewController {
     }
     
     //Read Write Cache for the PDT (Artist / Song / Album Art)
-    @objc func SPXCache() {
-        if !Player.shared.player.isReady {
-            Player.shared.autoLaunchServer(completionHandler: { (success) -> Void in
-                if !success { print("Not working!!!") }
+    @objc func SPXCache(run: Bool = false) {
+      
+        if Player.shared.player.isReady || run  {
+            Player.shared.updatePDT(completionHandler: { (success) -> Void in
+                // do nothing
+                if success && Player.shared.state == .playing {
+                    
+                    if let i = channelArray.firstIndex(where: {$0.channel == currentChannel}) {
+                        let item = channelArray[i].largeChannelArtUrl
+                        Player.shared.updateDisplay(key: currentChannel, cache: Player.shared.pdtCache, channelArt: item)
+                    }
+                    
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: .updateChannelsView, object: nil)
+                    }
+                }
             })
         }
-        
-        Player.shared.updatePDT(completionHandler: { (success) -> Void in
-            // do nothing
-        })
+       
         
     }
     
     func restartPDT() {
         DispatchQueue.main.async {
-            self.pdtTimer = Timer.scheduledTimer(timeInterval: 15.0, target: self, selector: #selector(self.SPXCache), userInfo: nil, repeats: true)
+            self.pdtTimer = Timer.scheduledTimer(timeInterval: 20.0, target: self, selector: #selector(self.SPXCache), userInfo: nil, repeats: true)
         }
     }
     
