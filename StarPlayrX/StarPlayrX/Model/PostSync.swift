@@ -14,17 +14,15 @@ internal func PostSync(request: Dictionary<String, Any>, endpoint: String, metho
  
     //MARK - for Sync
     let semaphore = DispatchSemaphore(value: 0)
-    var syncData : PostReturnTuple? = (message: "", success: false, data: [:], response: HTTPURLResponse() )
-    let http_method = "POST"
-    let time_out = 120
+    var syncData : PostReturnTuple = (message: "", success: false, data: [:], response: HTTPURLResponse() )
     
     func getURLRequest() -> URLRequest? {
         if let url = URL(string: endpoint) {
             var urlReq = URLRequest(url: url)
             urlReq.httpBody = try? JSONSerialization.data(withJSONObject: request, options: .prettyPrinted)
             urlReq.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            urlReq.httpMethod = http_method
-            urlReq.timeoutInterval = TimeInterval(time_out)
+            urlReq.httpMethod = "POST"
+            urlReq.timeoutInterval = TimeInterval(15)
             urlReq.setValue("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0.2 Safari/605.1.15", forHTTPHeaderField: "User-Agent")
             return urlReq
         }
@@ -32,19 +30,16 @@ internal func PostSync(request: Dictionary<String, Any>, endpoint: String, metho
         return nil
     }
     
-    
-    if let urlReq = getURLRequest() {
-      
-        let task = URLSession.shared.dataTask(with: urlReq ) { ( returndata, resp, error ) in
+        let task = URLSession.shared.dataTask(with: getURLRequest()! ) { ( returndata, resp, error ) in
             
-            if let r = resp, (r as? HTTPURLResponse)?.statusCode == 200, let rdata = returndata {
+            if let rdata = returndata {
                 
-                do { let result =
-                    try JSONSerialization.jsonObject(with: rdata, options: JSONSerialization.ReadingOptions.mutableContainers) as? NSDictionary
+                    let result = try? JSONSerialization.jsonObject(with: rdata, options: JSONSerialization.ReadingOptions.mutableContainers) as? NSDictionary
 
-                    var localCats = Array<String>()
                     
                     if (method == "channels") {
+                        var localCats = Array<String>()
+
                         if let cats = result?["categories"] as? Array<String> {
                             localCats = cats
                             localCats = localCats.sorted()
@@ -57,16 +52,13 @@ internal func PostSync(request: Dictionary<String, Any>, endpoint: String, metho
                         var miscArray = Array<String>()
 
                         
-                        if localCats.count > 2 {
+                        if !localCats.isEmpty {
                             
-                            let max = localCats.count - 1
-
-                            for i in 0...max  {
-                                
+                            for i in 0...localCats.count - 1  {
                                 
                                 switch localCats[i] {
                                 case "Rock","Pop","Sports","Hip-Hop/R&B":
-                                    fallthrough
+                                    ()
                                 case "Dance/Electronic","Latino","Country","Jazz","Punk","Oldies","Family","Christian","Classical","Metal","Alternative","Artists":
                                     //add to musicArray
                                     musicArray.append(localCats[i])
@@ -105,19 +97,8 @@ internal func PostSync(request: Dictionary<String, Any>, endpoint: String, metho
                         
                     }
                     
-                    syncData = (message: method + " was successful.", success: true, data: result, response: r  ) as? PostReturnTuple
-                } catch {
-                    //fail on any errors
-                    syncData = (message: method + " failed in do try catch.", success: false, data: ["": ""], response: r as! HTTPURLResponse )
-                }
-            } else {
-                //we always require 200 on the post, anything else is a failure
-                
-                if resp != nil {
-                    syncData = (message: method + " failed, see response.", success: false, data: ["": ""], response: resp as! HTTPURLResponse ) as PostReturnTuple
-                } else {
-                    syncData = (message: method + " failed, no response.", success: false, data: ["": ""], response: HTTPURLResponse() ) as PostReturnTuple
-                }
+                    syncData = (message: method + " was successful.", success: true, data: result, response: resp as! HTTPURLResponse ) as! PostReturnTuple
+               
             }
             
             //MARK - for Sync
@@ -126,13 +107,10 @@ internal func PostSync(request: Dictionary<String, Any>, endpoint: String, metho
         
         task.resume()
         _ = semaphore.wait(timeout: .distantFuture)
-    }
+ 
         
-    if let data = syncData {
-        return data
-    }
+    return syncData
     
-    return (message: method + " failed!", success: false, data: ["Error": "Fatal Error"], response: HTTPURLResponse() ) as PostReturnTuple
 }
 
 

@@ -9,16 +9,6 @@
 import Foundation
 
 func readLocalDataFile(filename:String) -> Data?  {
-    let dms = Bundle.main.path(forResource: filename, ofType: "dms")
-    
-    if let artwork = dms {
-        if let data = NSData(contentsOfFile: artwork) {
-            return data as Data
-        } else {
-            return nil
-        }
-    }
-    
-    return nil
-}
 
+    try? NSData(contentsOfFile: Bundle.main.path(forResource: filename, ofType: "dms")!) as Data
+}
