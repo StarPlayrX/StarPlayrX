@@ -23,7 +23,6 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
     override var prefersHomeIndicatorAutoHidden : Bool { return true }
 
-    
     var ChannelsTimer: Timer? = nil
 
     @IBOutlet var ChannelsTableView: UITableView!
@@ -33,7 +32,8 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
     private let Interactive = DispatchQueue(label: "Interactive", qos: .userInteractive )
 
     @IBOutlet weak var searchBar: UISearchBar!
-    
+ 	
+
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder() // hides the keyboard.
     }
@@ -106,19 +106,11 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
             }
             
         }
-        
-
-        
-        self.title == categoryTitle ? UpdateTableView(scrollPosition: .none) : UpdateTableView(scrollPosition: .middle) 
-
+    
+        self.title == categoryTitle ? UpdateTableView(scrollPosition: .none) : UpdateTableView(scrollPosition: .middle)
         self.title = categoryTitle
-
-
-        
-        
         
         NotificationCenter.default.addObserver(self, selector: #selector(UpdateTableView), name: .updateChannelsView, object: nil)
-
     }
         
     
@@ -210,9 +202,9 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
     
     override func tableView(_ tableView : UITableView, didSelectRowAt indexPath: IndexPath) {
 		
-        if !freshChannels { return }
+        //if !freshChannels { return }
         
-        freshChannels = false
+       // freshChannels = false
         
         let localCell = tableView.cellForRow(at: indexPath)! as UITableViewCell
         localCell.isSelected = true
@@ -220,7 +212,7 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
         localCell.tintColor = .systemBlue
         localCell.contentView.backgroundColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0) //iOS 13
 
-        self.view.endEditing(true)
+        //self.view.endEditing(true)
         
         if let text = localCell.textLabel?.text {
             currentChannelName = text
@@ -241,15 +233,42 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
             }
             
             lastCategory = categoryTitle
-            
             UpdateTableView(scrollPosition: .none)
+            
+            let iPad : Bool
+            let iPadHeight = self.view.frame.height
+            
+            switch iPadHeight {
+                //iPad Pro 12.9"
+                case 1024.0 :
+                    iPad = true
+                //iPad 11"
+                case 834.0 :
+                    iPad = true
+                //iPad 9"
+                case 810.0 :
+                    iPad = true
+                //iPad 9"
+                case 768.0 :
+                    iPad = true
 
-            DispatchQueue.global().async {
-                let this = Player.shared
-                currentChannel != previousChannel || this.player.isDead || this.state != .playing ? this.new(.stream) : () //playing
+                default :
+                    iPad = false
             }
-               
+            
+            DispatchQueue.main.async {
+                let this = Player.shared
+                let doit = currentChannel != previousChannel || this.player.isDead || this.state != .playing
+                doit ? this.new(.stream) : () //playing
+                
+                //determine if we should switch views
+                (doit || !iPad) ? (self.performSegue(withIdentifier: "playerViewSegue", sender: localCell)) : ()
+
+            }
+            
         }
+        
+		return
     }
     
     // MARK: - Table view data source
@@ -260,7 +279,12 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return filterData.count
     }
-  
+  	
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "test" {
+            print("HEST")
+        }
+    }
     
     //Display the channels view
     override func tableView(_ tableView: UITableView,

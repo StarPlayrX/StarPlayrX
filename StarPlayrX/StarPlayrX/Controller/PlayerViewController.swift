@@ -20,8 +20,11 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     //UI Variables
     var PlayerView =  UIView()
     
+    
     var Artist          = UILabel()
     var Song            = UILabel()
+    var ArtistSong      = UILabel()
+    
     var VolumeSlider    = UISlider()
     var AirPlay         = AVRoutePickerView()
     
@@ -29,23 +32,18 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     var allStarButton   = UIButton(type: UIButton.ButtonType.custom)
     var AlbumArt        = UIImageView()
     
-    var centerWidth     = CGFloat(0)
-    var positionBottom  = CGFloat(0)
-    var positionRight   = CGFloat(0)
-    var sliderWidth     = CGFloat(0)
-   
+    //Art Queue
+    public let ArtQueue = DispatchQueue(label: "ArtQueue", qos: .background )
     
+
     //MARK: draw Player View
-    func drawPlayerView(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat, wire: Bool) -> UIView {
+    func drawPlayerView(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat, iPad: Bool) -> UIView {
         let drawView = UIView(frame: CGRect(x: 0, y: 0, width: width, height: height))
-            // drawView.center = CGPoint(x: x, y: y)
         
+        drawView.backgroundColor = UIColor(displayP3Red: 35 / 255, green: 37 / 255, blue: 39 / 255, alpha: 1.0)
 
-        	
-        if wire {
-            drawView.backgroundColor = UIColor(displayP3Red: 35 / 255, green: 37 / 255, blue: 38 / 255, alpha: 1.0) //iOS 13
-            drawView.backgroundColor = .purple
-
+        if !iPad {
+            drawView.center = CGPoint(x: x, y: y)
         }
        
         self.mainView.addSubview(drawView)
@@ -61,7 +59,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         
         if wire {
             drawView.backgroundColor = .orange
-            drawView.alpha = 0.25
         }
         
         self.PlayerView.addSubview(drawView)
@@ -153,16 +150,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         
         let iPhoneHeight = self.mainView.frame.height
         let iPhoneWidth = self.mainView.frame.width
-
-		
-       // let view = UIView()
-        
-
-        /*let drawView = UIView(frame: CGRect(x: 0, y: 0, width: iPhoneWidth - navBarWidth, height: iPhoneHeight))
-        drawView.backgroundColor = .green
-        self.view.addSubview(drawView)*/
-       
-
         
         print("iPhoneHeight: ",iPhoneHeight, "iPhoneWidth: ",iPhoneWidth)
         //MARK: Here is we are checking if the user as an iPhone X (it has 18 more pixels in height / Status bar)
@@ -176,107 +163,172 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
             let tabY = self.tabBarController?.tabBar.frame.size.height {
             	let y = frameY - navY - tabY
                 print("1")
-        		PlayerView = drawPlayerView(x: self.view.frame.size.width / 2, y: (frameY) / 2, width: self.view.frame.size.width, height: y, wire: true)
+            PlayerView = drawPlayerView(x: self.view.frame.size.width / 2, y: (frameY) / 2, width: self.view.frame.size.width, height: y, iPad: false)
         } else {
             print("2")
 			iPad = true
-            PlayerView = drawPlayerView(x: 0, y: 0, width: iPhoneWidth - navBarWidth, height: iPhoneHeight - tabBarHeight, wire: true)
+            PlayerView = drawPlayerView(x: 0, y: 0, width: iPhoneWidth - navBarWidth, height: iPhoneHeight - tabBarHeight, iPad: true)
 
         }
         
         //MARK: Offset Values
-       let iPhoneOffset = CGFloat(13)
+        let iPhoneOffset = CGFloat(13) //kicks up some graphics
         
-        
-        //MARK: LABEL CUSTOMIZATIONS
+        //MARK: CUSTOMIZATIONS
         let labelOffset: CGFloat
         let labelHeight: CGFloat
         let fontSize: CGFloat
-        
+        let iPadAlbumClearSpace: CGFloat
+        let AlbumArtSizeX: CGFloat
+        let AlbumArtSizeY: CGFloat
+        let centerX: CGFloat
+        let centerY: CGFloat
+        let iPadTabHeightFactor: CGFloat
         //MARK: TO DO - iPad Sizes
         switch iPhoneHeight {
             
             //iPhone 11 Pro Max
             case 896.0 :
-             	labelOffset = 133
+                labelOffset = 133
                 labelHeight = 90
                 fontSize = 18
-            
-        	//iPhone 11 Pro / iPhone X
+                iPadAlbumClearSpace = 0
+                AlbumArtSizeX = PlayerView.frame.size.width
+                AlbumArtSizeY = PlayerView.frame.size.height
+                centerX = PlayerView.frame.size.width / 2
+                centerY = PlayerView.frame.size.height / 2 - iPhoneOffset
+            	iPadTabHeightFactor = 0
+            //iPhone 11 Pro / iPhone X
             case 812.0 :
                 labelOffset = 110
-            	labelHeight = 90
+                labelHeight = 90
                 fontSize = 18
-	
+                iPadAlbumClearSpace = 0
+                AlbumArtSizeX = PlayerView.frame.size.width
+                AlbumArtSizeY = PlayerView.frame.size.height
+                centerX = PlayerView.frame.size.width / 2
+                centerY = PlayerView.frame.size.height / 2 - iPhoneOffset
+                iPadTabHeightFactor = 0
+
             //iPhone 8 Plus
             case 736.0 :
                 labelOffset = 86
                 labelHeight = 60
                 fontSize = 18
+                iPadAlbumClearSpace = 0
+                AlbumArtSizeX = PlayerView.frame.size.width
+                AlbumArtSizeY = PlayerView.frame.size.height
+                centerX = PlayerView.frame.size.width / 2
+                centerY = PlayerView.frame.size.height / 2 - iPhoneOffset
+                iPadTabHeightFactor = 0
 
             //iPhone 7/8/SE 2nd Gen
             case 667.0 :
                 labelOffset = 70
                 labelHeight = 60
                 fontSize = 17
-            
+                iPadAlbumClearSpace = 0
+                AlbumArtSizeX = PlayerView.frame.size.width
+                AlbumArtSizeY = PlayerView.frame.size.height
+                centerX = PlayerView.frame.size.width / 2
+                centerY = PlayerView.frame.size.height / 2 - iPhoneOffset
+                iPadTabHeightFactor = 0
+
             //iPhone SE 1st Gen
             case 568.0 :
                 labelOffset = 48
                 labelHeight = 60
                 fontSize = 16
+                iPadAlbumClearSpace = 0
+                AlbumArtSizeX = PlayerView.frame.size.width
+                AlbumArtSizeY = PlayerView.frame.size.height
+                centerX = PlayerView.frame.size.width / 2
+                centerY = PlayerView.frame.size.height / 2 - iPhoneOffset
+                iPadTabHeightFactor = 0
+
+            //iPad Pro 12.9"
+            case 1024.0 :
+                labelOffset = 48
+                labelHeight = 60
+                fontSize = 18
+                iPadAlbumClearSpace = 200
+                AlbumArtSizeX = PlayerView.frame.size.width - iPadAlbumClearSpace
+                AlbumArtSizeY = PlayerView.frame.size.height - iPadAlbumClearSpace
+                centerX = PlayerView.frame.size.width / 2
+                centerY = (PlayerView.frame.size.height - tabBarHeight) / 2
+                iPadTabHeightFactor = 1.9
+
+            //iPad 11"
+            case 834.0 :
+                labelOffset = 0
+                labelHeight = 60
+                fontSize = 17
+                iPadAlbumClearSpace = 185
+                AlbumArtSizeX = PlayerView.frame.size.width - iPadAlbumClearSpace
+                AlbumArtSizeY = PlayerView.frame.size.height - iPadAlbumClearSpace
+                centerX = PlayerView.frame.size.width / 2
+                centerY = (PlayerView.frame.size.height - tabBarHeight) / 2
+                iPadTabHeightFactor = 2.2
             
+            //iPad 9"
+            case 810.0 :
+                labelOffset = 0
+                labelHeight = 30
+                fontSize = 16
+                iPadAlbumClearSpace = 150
+                AlbumArtSizeX = PlayerView.frame.size.width - iPadAlbumClearSpace
+                AlbumArtSizeY = PlayerView.frame.size.height - iPadAlbumClearSpace
+                centerX = PlayerView.frame.size.width / 2
+                centerY = (PlayerView.frame.size.height - tabBarHeight) / 2
+                iPadTabHeightFactor = 1.7
+            
+
+            //iPad 9"
+            case 768.0 :
+                labelOffset = 0
+                labelHeight = 30
+                fontSize = 16
+                iPadAlbumClearSpace = 140
+                AlbumArtSizeX = PlayerView.frame.size.width - iPadAlbumClearSpace
+                AlbumArtSizeY = PlayerView.frame.size.height - iPadAlbumClearSpace
+                centerX = PlayerView.frame.size.width / 2
+                centerY = (PlayerView.frame.size.height - tabBarHeight) / 2
+                iPadTabHeightFactor = 1.425
+
             default :
                 labelOffset = 48
                 labelHeight = 60
                 fontSize = 16
-
-        }
-        
-        
-        //MARK: Draw our Album Art Object
-        
-        //MARK: LABEL CUSTOMIZATIONS
-        let AlbumArtSizeX: CGFloat
-        let AlbumArtSizeY: CGFloat
-        let centerX: CGFloat
-        let centerY: CGFloat
-        
-        //MARK: TO DO - iPad Sizes
-        switch iPad {
-        
-            //iPhone 11 Pro Max
-            case true :
-                AlbumArtSizeX = PlayerView.frame.size.width - 200
-                AlbumArtSizeY = PlayerView.frame.size.height - 200
-                centerX = PlayerView.frame.size.width / 2
-                centerY = PlayerView.frame.size.height / 2
-            
-            //iPhone 11 Pro / iPhone X
-            case false :
+                iPadAlbumClearSpace = 0
                 AlbumArtSizeX = PlayerView.frame.size.width
                 AlbumArtSizeY = PlayerView.frame.size.height
                 centerX = PlayerView.frame.size.width / 2
-                centerY = (frameY) / 2 - iPhoneOffset
+                centerY = PlayerView.frame.size.height / 2 - iPhoneOffset
+                iPadTabHeightFactor = 0
         }
         
-        
-		
-        AlbumArt = drawAlbumView(x: centerX, y: centerY, width: AlbumArtSizeX, height: AlbumArtSizeX, wire: true)
-
-
+        AlbumArt = drawAlbumView(x: centerX, y: centerY, width: AlbumArtSizeX, height: AlbumArtSizeX, wire: false)
+        AlbumArt.layer.shadowColor = UIColor(displayP3Red: 35 / 2 / 255, green: 37 / 2 / 255, blue: 39 / 2 / 255, alpha: 1.0).cgColor
+        AlbumArt.layer.shadowOpacity = 1.0
+        AlbumArt.layer.shadowOffset = .zero
+        AlbumArt.layer.shadowRadius = fontSize * 2
+        AlbumArt.layer.shadowPath = UIBezierPath(rect: AlbumArt.bounds).cgPath
+        AlbumArt.alpha = 0.0
+            
         //MARK: Draw Artist Label
-        Artist = drawLabels(x: centerX, y: (AlbumArtSizeY - AlbumArtSizeX - labelOffset) / 2 - iPhoneOffset, width: AlbumArtSizeX, height: labelHeight, align: .center, color: .white, text: "Artist Label", font: .systemFont(ofSize: fontSize, weight: UIFont.Weight.semibold), wire: true)
         
-        Song = drawLabels(x: centerX, y: (PlayerView.frame.size.height + PlayerView.frame.size.width + labelOffset) / 2 - iPhoneOffset, width: AlbumArtSizeX, height: labelHeight, align: .center, color: .white, text: "Song Label", font: .systemFont(ofSize: fontSize, weight: UIFont.Weight.medium), wire: true)
-
-        
+        if !iPad {
+            Artist = drawLabels(x: centerX, y: (AlbumArtSizeY - AlbumArtSizeX - labelOffset) / 2 - iPhoneOffset, width: AlbumArtSizeX, height: labelHeight, align: .center, color: .white, text: "", font: .systemFont(ofSize: fontSize, weight: UIFont.Weight.semibold), wire: true)
+            
+            Song = drawLabels(x: centerX, y: (PlayerView.frame.size.height + PlayerView.frame.size.width + labelOffset) / 2 - iPhoneOffset, width: AlbumArtSizeX, height: labelHeight, align: .center, color: .white, text: "", font: .systemFont(ofSize: fontSize, weight: UIFont.Weight.medium), wire: true)
+        } else {
+            
+            ArtistSong = drawLabels(x: centerX, y: AlbumArtSizeY + (tabBarHeight * iPadTabHeightFactor), width: AlbumArtSizeX, height: labelHeight, align: .center, color: .white, text: "", font: .systemFont(ofSize: fontSize, weight: UIFont.Weight.semibold), wire: true)
+        }
+    
         //defines the variables we are using. Might tweak this add and some constants
-        centerWidth = CGFloat( PlayerView.frame.size.width / 2 )
-        sliderWidth = CGFloat( PlayerView.frame.size.width - 120 )
-        positionBottom = CGFloat( PlayerView.frame.size.height - 30 )
-        positionRight = CGFloat( PlayerView.frame.size.width - 30 )
-        
+        let sliderWidth = CGFloat( PlayerView.frame.size.width - 120 )
+        let positionBottom = CGFloat( PlayerView.frame.size.height - 30 )
         let buttonOffset = CGFloat(30)
     	let buttonSize = CGFloat(28)
         let airplaySize = CGFloat(52)
@@ -356,16 +408,24 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     final override func viewDidLoad() {
         super.viewDidLoad()
 
-
+		print("VIEW DID LOAD.")
        	setObservers()
     }
     
     @objc func GotNowPlayingInfo(){
         Artist.accessibilityLabel = nowPlaying.artist + ". " + nowPlaying.song + "."
+        ArtistSong.accessibilityLabel = nowPlaying.artist + ". " + nowPlaying.song + "."
+
         Artist.isHighlighted = true
         AlbumArt.accessibilityLabel = "Album Art, " + nowPlaying.artist + ". " + nowPlaying.song + "."
         
         DispatchQueue.main.async {
+            UILabel.transition(with: self.ArtistSong,
+                               duration:0.4,
+                               options: .transitionCrossDissolve,
+                               animations: { self.ArtistSong.text = nowPlaying.artist + " • " + nowPlaying.song + " — " + currentChannelName  },
+                               completion: nil)
+            
             UILabel.transition(with: self.Artist,
                                duration:0.4,
                                options: .transitionCrossDissolve,
@@ -381,8 +441,12 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
             UIView.transition(with: self.AlbumArt,
                               duration:0.4,
                               options: .transitionCrossDissolve,
-                              animations: { self.AlbumArt.image = nowPlaying.image },
+                              animations: { _ = [self.AlbumArt.image = nowPlaying.image, self.AlbumArt.alpha = 1.0] },
                               completion: nil)
+            
+            
+            
+            
             
         }
     }
@@ -391,6 +455,53 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
     override var prefersHomeIndicatorAutoHidden : Bool { return true }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        //AP2VolumeSlider.setValue(AP2Volume.shared()?.getVolume() ?? 0.25, animated: false)
+        title = currentChannelName
+        
+ 
+        syncArt()
+        //startup()
+        //checkForAllStar()
+        //setObservers()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        freshChannels = true
+        
+        //invalidateTimer()
+        
+        
+        //DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        //    self.shutdownVolume()
+        //}
+        
+        //removeObservers()
+    }
+    
+    
+    func syncArt() {
+        
+     
+            
+        if let md5 = Player.shared.MD5(String(CACurrentMediaTime().description)) {
+        	Player.shared.previousMD5 = md5
+        } else {
+            let str = "Hello, Last Star Player X."
+            Player.shared.previousMD5 = Player.shared.MD5(String(str)) ?? str
+        }
+         
+        ArtQueue.async {
+            if Player.shared.player.isReady {
+                if let i = channelArray.firstIndex(where: {$0.channel == currentChannel}) {
+                    let item = channelArray[i].largeChannelArtUrl
+                    Player.shared.updateDisplay(key: currentChannel, cache: Player.shared.pdtCache, channelArt: item)
+                }
+            }
+        }
+    }
+    
 
 }
     /*var PlayerTimer : Timer? 	=  nil
@@ -410,9 +521,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     
     @IBOutlet weak var routerView: UIView!
     
-    //Art Queue
-    public let ArtQueue = DispatchQueue(label: "ArtQueue", qos: .background )
-    
+   
     //Notifications
     var localChannelArt = ""
     var localAlbumArt = ""
@@ -455,25 +564,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         PulsarAnimation()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        AP2VolumeSlider.setValue(AP2Volume.shared()?.getVolume() ?? 0.25, animated: false)
-        title = currentChannelName
-        syncArt()
-        startup()
-        checkForAllStar()
-        setObservers()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        freshChannels = true
-        
-        invalidateTimer()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.shutdownVolume()
-        }
-        
-        removeObservers()
-    }
+
     
     func setupAirPlayButton() {
         let buttonFrame = CGRect(x: 0, y: 0, width: 50, height: 50)
@@ -617,21 +708,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
             PlayerTimer = Timer.scheduledTimer(timeInterval: 15.0, target: self, selector: #selector(UpdatePlayerView), userInfo: nil, repeats: true)
         }
     }
-    
-    func syncArt() {
-        
-        Player.shared.previousMD5 = Player.shared.MD5(String(CACurrentMediaTime().description))!
-
-        ArtQueue.async {
-            if Player.shared.player.isReady {
-                if let i = channelArray.firstIndex(where: {$0.channel == currentChannel}) {
-                    let item = channelArray[i].largeChannelArtUrl
-                    Player.shared.updateDisplay(key: currentChannel, cache: Player.shared.pdtCache, channelArt: item)
-                }
-            }
-        }
-    }
-    
+   
     
     //View Did Load
     override func viewDidLoad() {

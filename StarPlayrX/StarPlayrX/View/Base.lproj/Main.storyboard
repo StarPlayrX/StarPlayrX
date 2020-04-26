@@ -207,7 +207,7 @@
                     <view key="view" contentMode="scaleToFill" id="s6n-37-h9b">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" systemColor="systemOrangeColor" red="1" green="0.58431372550000005" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.13725490196078433" green="0.14509803921568626" blue="0.15294117647058825" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <viewLayoutGuide key="safeArea" id="zYK-uv-bfU"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Player" image="player_icon" selectedImage="player_icon" id="sVH-Ch-BbI"/>
@@ -277,7 +277,7 @@
         <!--Channels-->
         <scene sceneID="xzI-ay-BLG">
             <objects>
-                <viewController title="Channels" extendedLayoutIncludesOpaqueBars="YES" id="9DU-cP-DPZ" userLabel="Channels" customClass="ChannelsViewController" customModule="StarPlayrX" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="test" title="Channels" extendedLayoutIncludesOpaqueBars="YES" id="9DU-cP-DPZ" userLabel="Channels" customClass="ChannelsViewController" customModule="StarPlayrX" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="singleLineEtched" sectionIndexMinimumDisplayRowCount="1" rowHeight="1" sectionHeaderHeight="1" sectionFooterHeight="1" contentViewInsetsToSafeArea="NO" id="gHg-U0-Vfc">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -323,9 +323,6 @@
                                 <color key="backgroundColor" red="0.078431372549019607" green="0.086274509803921567" blue="0.094117647058823528" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="0.0"/>
-                                <connections>
-                                    <segue destination="mRL-AH-mN3" kind="showDetail" id="bYd-H0-dP5"/>
-                                </connections>
                             </tableViewCell>
                         </prototypes>
                     </tableView>
@@ -334,6 +331,7 @@
                     <connections>
                         <outlet property="ChannelsTableView" destination="gHg-U0-Vfc" id="f0Q-Wn-g6s"/>
                         <outlet property="searchBar" destination="Xfl-bD-RZD" id="j4w-Uz-pTr"/>
+                        <segue destination="mRL-AH-mN3" kind="showDetail" identifier="playerViewSegue" id="3hP-OV-kZG"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="T2g-uC-7Eo" sceneMemberID="firstResponder"/>

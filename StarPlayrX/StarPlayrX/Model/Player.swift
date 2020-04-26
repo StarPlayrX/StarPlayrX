@@ -207,7 +207,7 @@ final class Player {
             
             if var img = UIImage(named: "starplayr_placeholder") {
                  img = img.withBackground(color: UIColor(displayP3Red: 19 / 255, green: 20 / 255, blue: 36 / 255, alpha: 1.0))
-                 img = self.resizeLargeImage(image: img, targetSize: CGSize(width: 720, height: 720))
+                 img = self.resizeLargeImage(image: img, targetSize: CGSize(width: 1440, height: 1440))
                 return img
             } else {
                 return nil
@@ -218,6 +218,9 @@ final class Player {
             if var img = image {
                 img = img.withBackground(color: UIColor(displayP3Red: 19 / 255, green: 20 / 255, blue: 36 / 255, alpha: 1.0))
                 img = self.resizeLargeImage(image: img, targetSize: CGSize(width: 720, height: 720))
+                img = self.resizeLargeImage(image: img, targetSize: CGSize(width: 1080, height: 1080))
+                img = self.resizeLargeImage(image: img, targetSize: CGSize(width: 1440, height: 1440))
+
                 nowPlaying.image = img
                 self.setnowPlayingInfo(channel: nowPlaying.channel, song: nowPlaying.song, artist: nowPlaying.artist, imageData:img)
 
@@ -237,6 +240,8 @@ final class Player {
             
             //Get album art
             if nowPlaying.albumArt.contains(string: "http") {
+                
+                print( nowPlaying.albumArt)
                 ImageAsync(endpoint: nowPlaying.albumArt, ImageHandler: { (img) -> Void in
                     displayArt(image: img)
                 })

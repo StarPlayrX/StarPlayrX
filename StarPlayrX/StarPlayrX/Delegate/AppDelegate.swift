@@ -16,24 +16,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     
-    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
-        let deviceType = UIDevice().type
+    /*func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
         
-        // iPhoneX which is portrait only
-        if deviceType == .iPhoneX || deviceType == .iPhoneXSMax {
+        let d = UIDevice.current.orientation
+         
+        if d.isLandscape {
+            return .landscape
+
+        } else if d.isFlat {
+            return .landscape
+
+        } else if d.isPortrait {
             return .portrait
+
+        } else if d.isValidInterfaceOrientation {
+            return [.portrait,.portraitUpsideDown]
         }
         
-        // All other iPhone screen sizes
-        if deviceType == .iPhone8 || deviceType == .iPhone8Plus || deviceType == .iPhoneSE {
-            return [.portrait,.portraitUpsideDown] //brings back upsidedown on non-iPhoneX's
-            
-        } else if deviceType == .iPad {
-            return .landscape
-        } else {
-            return .landscape
-        }
-    }
+         return .portrait
+    }*/
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.

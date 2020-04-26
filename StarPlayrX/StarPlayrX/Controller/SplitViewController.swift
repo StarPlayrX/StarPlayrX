@@ -26,11 +26,12 @@ class SplitViewController: UISplitViewController, UISplitViewControllerDelegate 
             appearance.shadowImage = .none
             appearance.shadowColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0)
             appearance.backgroundColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0)
-            appearance.titleTextAttributes =  [ NSAttributedString.Key.foregroundColor : UIColor.white ]
+            appearance.titleTextAttributes =  [ .foregroundColor : UIColor.white ]
             navigationController?.navigationBar.standardAppearance = appearance
             navigationController?.navigationBar.layer.borderWidth = 0.0
         }
         
+        self.view.backgroundColor = UIColor(displayP3Red: 35 / 255, green: 37 / 255, blue: 39 / 255, alpha: 1.0)
         
     }
     
