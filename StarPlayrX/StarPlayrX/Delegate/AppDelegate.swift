@@ -31,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } else if deviceType == .iPad {
             return .landscape
         } else {
-            return .portrait
+            return .landscape
         }
     }
 

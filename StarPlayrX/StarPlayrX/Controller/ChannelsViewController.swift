@@ -22,8 +22,7 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
 	
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
     override var prefersHomeIndicatorAutoHidden : Bool { return true }
-    override var prefersStatusBarHidden: Bool { return false }
-    override var preferredStatusBarStyle: UIStatusBarStyle { return .lightContent }
+
     
     var ChannelsTimer: Timer? = nil
 
@@ -146,23 +145,14 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+      
         ChannelsTableView.delegate = self
         UpdateTableView()
         
-        self.clearsSelectionOnViewWillAppear = true
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        
-        if let appearance = navigationController?.navigationBar.standardAppearance {
-            appearance.shadowImage = nil
-            appearance.shadowColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0)
-            appearance.backgroundColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0)
-            navigationController?.navigationBar.standardAppearance = appearance
-            navigationController?.navigationBar.layer.borderWidth = 0.0
-        }
-
-        searchBar.backgroundColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0) //iOS 13
-        searchBar.barTintColor = UIColor(displayP3Red: 41 / 255, green: 42 / 255, blue: 48 / 255, alpha: 1.0) //iOS 12....
+        //self.clearsSelectionOnViewWillAppear = true
+    
+        searchBar.backgroundColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0)
+        searchBar.barTintColor = UIColor(displayP3Red: 41 / 255, green: 42 / 255, blue: 48 / 255, alpha: 1.0)
         searchBar.delegate = self
         ChannelsTableView.rowHeight = 80
         ChannelsTableView.estimatedRowHeight = 80

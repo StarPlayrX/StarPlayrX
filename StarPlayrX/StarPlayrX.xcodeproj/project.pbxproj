@@ -145,12 +145,12 @@
 			isa = PBXGroup;
 			children = (
 				5F5C5088244CCAB900A35D76 /* StarPlayrX.entitlements */,
+				5F5C5034244CC15E00A35D76 /* Delegate */,
 				5F5C5046244CC24D00A35D76 /* Model */,
 				5FFF9DAF244D398700D795DA /* View */,
 				5F5C5033244CC14E00A35D76 /* Controller */,
 				5F5C503A244CC1B400A35D76 /* AP2Volume */,
 				5F5C5035244CC1A100A35D76 /* Data */,
-				5F5C5034244CC15E00A35D76 /* Delegate */,
 				5F5C5013244CBBD300A35D76 /* Assets.xcassets */,
 				5F5C5018244CBBD300A35D76 /* Info.plist */,
 			);
@@ -503,7 +503,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = StarPlayrX/StarPlayrX.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 469UCUB275;
 				HEADER_SEARCH_PATHS = "/Users/todd/CameoKit/.build/checkouts/**";
 				INFOPLIST_FILE = StarPlayrX/Info.plist;
@@ -516,7 +516,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.toddbruss.StarPlayr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "StarPlayrX/AP2Volume/StarPlayrX-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-Osize";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -529,7 +529,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = StarPlayrX/StarPlayrX.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 469UCUB275;
 				HEADER_SEARCH_PATHS = "/Users/todd/CameoKit/.build/checkouts/**";
 				INFOPLIST_FILE = StarPlayrX/Info.plist;
@@ -542,6 +542,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.toddbruss.StarPlayr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "StarPlayrX/AP2Volume/StarPlayrX-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

@@ -15,20 +15,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="starplayr_logo" translatesAutoresizingMaskIntoConstraints="NO" id="42k-A6-cPj">
-                                <rect key="frame" x="7" y="413" width="400" height="70"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="400" id="d0W-Tm-6bF"/>
-                                    <constraint firstAttribute="height" constant="70" id="saO-DT-qAn"/>
-                                </constraints>
+                            <imageView verifyAmbiguity="off" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" image="starplayr_logo" translatesAutoresizingMaskIntoConstraints="NO" id="42k-A6-cPj">
+                                <rect key="frame" x="20" y="44" width="374" height="808"/>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="42k-A6-cPj" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="D6k-u5-dgm"/>
-                            <constraint firstItem="42k-A6-cPj" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="S2w-R0-YBQ"/>
-                            <constraint firstItem="42k-A6-cPj" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="UI9-VW-L0j"/>
-                            <constraint firstItem="42k-A6-cPj" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="gpC-Yb-KaC"/>
+                            <constraint firstItem="42k-A6-cPj" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="GcD-WN-5n3"/>
+                            <constraint firstItem="42k-A6-cPj" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="PzT-3D-ff9"/>
+                            <constraint firstItem="42k-A6-cPj" firstAttribute="trailing" secondItem="Ze5-6b-2t3" secondAttribute="trailingMargin" id="RnR-G3-9d5"/>
+                            <constraint firstItem="42k-A6-cPj" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" id="Xn1-kB-JBW"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>

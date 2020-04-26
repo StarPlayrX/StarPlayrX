@@ -10,14 +10,15 @@ import UIKit
 
 class TabController: UITabBarController {
     
+   
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
     override var prefersHomeIndicatorAutoHidden : Bool { return true }
-    override var prefersStatusBarHidden: Bool { return false }
-    override var preferredStatusBarStyle: UIStatusBarStyle { return .lightContent }
 
     override func viewDidLoad() {
         super.viewDidLoad()
  		
+      
+
         let appearance = tabBar.standardAppearance
         appearance.shadowImage = nil
         appearance.shadowColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0)
@@ -58,7 +59,7 @@ extension TabController: UITabBarControllerDelegate  {
         }
         
         if fromView != toView {
-            UIView.transition(from: fromView, to: toView, duration: 0.3, options: [.transitionCrossDissolve], completion: nil)
+            UIView.transition(from: fromView, to: toView, duration: 0.3, options: [.transitionCrossDissolve], completion: nil)           
         }
     
         return true

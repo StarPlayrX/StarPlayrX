@@ -8,29 +8,33 @@
 
 import UIKit
 import AVKit
+
+var navBarWidth = CGFloat(375.0)
 //UIGestureRecognizerDelegate
 class SiriusViewController: UITableViewController {
     var pdtTimer: Timer? = nil
     
+    
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
     override var prefersHomeIndicatorAutoHidden : Bool { return true }
-    override var prefersStatusBarHidden: Bool { return false }
-    override var preferredStatusBarStyle: UIStatusBarStyle { return .lightContent }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+      
         
         restartPDT()
         
         SPXCache(run: true)
         
-        if let appearance = navigationController?.navigationBar.standardAppearance {
-            appearance.shadowImage = nil
-            appearance.shadowColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0)
-            appearance.backgroundColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0)
-            navigationController?.navigationBar.standardAppearance = appearance
-            navigationController?.navigationBar.layer.borderWidth = 0.0
-        }
+    
+        /*self.navigationController!.navigationBar.barStyle = .black
+        self.navigationController!.navigationBar.isTranslucent = true
+        self.navigationController!.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+        self.navigationController!.navigationBar.tintColor = #colorLiteral(red: 1, green: 0.99997437, blue: 0.9999912977, alpha: 1)*/
+        
+        let leftCol = (self.navigationController!.navigationBar.frame.width)
+
         
         self.tableView.rowHeight = 60.0
         tableView.separatorColor = UIColor.black

@@ -11,11 +11,361 @@
 import UIKit
 import AVKit
 
-var setPlayerObservers = false
 
 //UIGestureRecognizerDelegate
 class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
-    var PlayerTimer : Timer? 	=  nil
+	
+    @IBOutlet weak var mainView: UIView!
+    
+    //UI Variables
+    var PlayerView =  UIView()
+    
+    var Artist          = UILabel()
+    var Song            = UILabel()
+    var VolumeSlider    = UISlider()
+    var AirPlay         = AVRoutePickerView()
+    
+    var PlayerX         = UIButton()
+    var allStarButton   = UIButton(type: UIButton.ButtonType.custom)
+    var AlbumArt        = UIImageView()
+    
+    var centerWidth     = CGFloat(0)
+    var positionBottom  = CGFloat(0)
+    var positionRight   = CGFloat(0)
+    var sliderWidth     = CGFloat(0)
+   
+    
+    //MARK: draw Player View
+    func drawPlayerView(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat, wire: Bool) -> UIView {
+        let drawView = UIView(frame: CGRect(x: 0, y: 0, width: width, height: height))
+        drawView.center = CGPoint(x: x, y: y)
+        
+
+        
+        if wire {
+            drawView.backgroundColor = UIColor(displayP3Red: 35 / 255, green: 37 / 255, blue: 38 / 255, alpha: 1.0) //iOS 13
+        }
+       
+        self.view.addSubview(drawView)
+        
+        return drawView
+    }
+   
+    
+    //MARK: draw Album Art View
+    func drawAlbumView(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat, wire: Bool) -> UIImageView {
+        let drawView = UIImageView(frame: CGRect(x: 0, y: 0, width: width, height: height))
+        drawView.center = CGPoint(x: x, y: y)
+        
+        if wire {
+            drawView.backgroundColor = .orange
+        }
+        
+        self.view.addSubview(drawView)
+        
+        return drawView
+    }
+
+    
+    //MARK: draw labels
+    func drawLabels(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat,
+                       align: NSTextAlignment, color: UIColor, text: String = "",
+                       font: UIFont, wire: Bool) -> UILabel {
+        
+        let drawView = UILabel(frame: CGRect(x: 0, y: 0, width: width, height: height))
+        drawView.center = CGPoint(x: x, y: y)
+        
+        if wire {
+            drawView.textColor = color
+        }
+        
+        drawView.textAlignment = align
+        
+        drawView.text = text
+        drawView.font = font
+        drawView.numberOfLines = 2
+        
+        self.PlayerView.addSubview(drawView)
+        
+        return drawView
+    }
+
+    
+    //MARK: Draw VolumeSlider
+    func drawVolumeSlider(centerX: CGFloat, centerY: CGFloat, rectX: CGFloat, rectY: CGFloat, width: CGFloat, height: CGFloat) -> UISlider {
+        
+        let slider = UISlider(frame:CGRect(x: rectX, y: rectY, width: width, height: height))
+        slider.center = CGPoint(x: centerX, y: centerY)
+        
+        slider.minimumValue = 0
+        slider.maximumValue = 1
+        slider.isContinuous = true
+        slider.tintColor = .systemBlue
+        
+        slider.setThumbImage(UIImage(named: "knob"), for: .normal)
+        slider.setThumbImage(UIImage(named: "knob"), for: .highlighted)
+        
+        //mySlider.addTarget(self, action: #selector(ViewController.sliderValueDidChange(_:)), for: .valueChanged)
+        
+        self.PlayerView.addSubview(slider)
+        return slider
+    }
+    
+    
+    //MARK: Draw Buttons
+    func drawButtons(centerX: CGFloat, centerY: CGFloat, rectX: CGFloat, rectY: CGFloat, width: CGFloat, height: CGFloat, wire: Bool) -> UIButton {
+        
+        let button = UIButton(frame:CGRect(x: rectX, y: rectY, width: width, height: height))
+        button.center = CGPoint(x: centerX, y: centerY)
+        
+        if wire { button.backgroundColor = .systemBlue }
+        
+        //mySlider.addTarget(self, action: #selector(ViewController.sliderValueDidChange(_:)), for: .valueChanged)
+        
+        self.PlayerView.addSubview(button)
+        return button
+    }
+    
+    
+    //MARK: Draw Buttons
+    func drawAirPlay(centerX: CGFloat, centerY: CGFloat, rectX: CGFloat, rectY: CGFloat, width: CGFloat, height: CGFloat, wire: Bool) -> AVRoutePickerView {
+        
+        let airplayButton = AVRoutePickerView(frame:CGRect(x: rectX, y: rectY, width: width, height: height))
+        airplayButton.center = CGPoint(x: centerX, y: centerY)
+        
+        if wire { airplayButton.backgroundColor = .systemBlue }
+        
+        airplayButton.prioritizesVideoDevices = false
+        airplayButton.delegate = self
+        airplayButton.activeTintColor = UIColor.systemBlue
+        airplayButton.tintColor = .systemBlue
+        
+        self.PlayerView.addSubview(airplayButton)
+        return airplayButton
+    }
+    
+    
+    override func loadView() {
+        super.loadView()
+        
+        let iPhoneHeight = self.mainView.frame.height
+        let iPhoneWidth = self.mainView.frame.width
+
+		
+        let view = UIView()
+        
+
+        let drawView = UIView(frame: CGRect(x: 0, y: 0, width: iPhoneWidth - navBarWidth, height: iPhoneHeight))
+        drawView.backgroundColor = .green
+        self.mainView.addSubview(drawView)
+       
+
+        
+        print("iPhoneHeight: ",iPhoneHeight, "iPhoneWidth: ",iPhoneWidth)
+        //MARK: Here is we are checking if the user as an iPhone X (it has 18 more pixels in height / Status bar)
+        /*let isIphoneX = (iPhoneHeight == 896.0 || iPhoneHeight == 812.0) ? CGFloat(18) : CGFloat(0)
+        
+        let frameY = iPhoneHeight - isIphoneX
+        
+        //MARK: Draws out main Player View object : visible "Safe Area" only - calculated
+        if let navY = self.navigationController?.navigationBar.frame.size.height,
+            let tabY = self.tabBarController?.tabBar.frame.size.height {
+            	let y = frameY - navY - tabY
+            	
+        		PlayerView = drawPlayerView(x: self.view.frame.size.width / 2, y: (frameY) / 2, width: self.view.frame.size.width, height: y, wire: true)
+        } else {
+            PlayerView = drawPlayerView(x: self.view.frame.size.width / 2, y: (frameY) / 2, width: self.view.frame.size.width, height: self.view.frame.size.height, wire: true)
+
+        }
+        
+        //MARK: Offset Values
+        let iPhoneOffset = CGFloat(13)
+        
+        
+        //MARK: LABEL CUSTOMIZATIONS
+        let labelOffset: CGFloat
+        let labelHeight: CGFloat
+        let fontSize: CGFloat
+        
+        //MARK: TO DO - iPad Sizes
+        switch iPhoneHeight {
+            
+            //iPhone 11 Pro Max
+            case 896.0 :
+             	labelOffset = 133
+                labelHeight = 90
+                fontSize = 18
+            
+        	//iPhone 11 Pro / iPhone X
+            case 812.0 :
+                labelOffset = 110
+            	labelHeight = 90
+                fontSize = 18
+	
+            //iPhone 8 Plus
+            case 736.0 :
+                labelOffset = 86
+                labelHeight = 60
+                fontSize = 18
+
+            //iPhone 7/8/SE 2nd Gen
+            case 667.0 :
+                labelOffset = 70
+                labelHeight = 60
+                fontSize = 17
+            
+            //iPhone SE 1st Gen
+            case 568.0 :
+                labelOffset = 48
+                labelHeight = 60
+                fontSize = 16
+            
+            default :
+                labelOffset = 48
+                labelHeight = 60
+                fontSize = 16
+
+        }
+        
+        
+        //MARK: Draw our Album Art Object
+        let AlbumArtSizeX = PlayerView.frame.size.width
+        let AlbumArtSizeY = PlayerView.frame.size.height
+
+        let centerX = PlayerView.frame.size.width / 2
+        let centerY = (frameY) / 2 - iPhoneOffset
+
+        AlbumArt = drawAlbumView(x: centerX, y: centerY, width: AlbumArtSizeX, height: AlbumArtSizeX, wire: true)
+
+        //MARK: Draw Artist Label
+        Artist = drawLabels(x: centerX, y: (AlbumArtSizeY - AlbumArtSizeX - labelOffset) / 2 - iPhoneOffset, width: AlbumArtSizeX, height: labelHeight, align: .center, color: .white, text: "Artist Label", font: .systemFont(ofSize: fontSize, weight: UIFont.Weight.semibold), wire: true)
+        
+        Song = drawLabels(x: centerX, y: (PlayerView.frame.size.height + PlayerView.frame.size.width + labelOffset) / 2 - iPhoneOffset, width: AlbumArtSizeX, height: labelHeight, align: .center, color: .white, text: "Song Label", font: .systemFont(ofSize: fontSize, weight: UIFont.Weight.medium), wire: true)
+
+        
+        //defines the variables we are using. Might tweak this add and some constants
+        centerWidth = CGFloat( PlayerView.frame.size.width / 2 )
+        sliderWidth = CGFloat( PlayerView.frame.size.width - 120 )
+        positionBottom = CGFloat( PlayerView.frame.size.height - 30 )
+        positionRight = CGFloat( PlayerView.frame.size.width - 30 )
+        
+        let buttonOffset = CGFloat(30)
+    	let buttonSize = CGFloat(28)
+        let airplaySize = CGFloat(52)
+
+        VolumeSlider = drawVolumeSlider(centerX: centerX, centerY: positionBottom, rectX: 0, rectY: 0, width: sliderWidth, height: labelHeight)
+        PlayerX = drawButtons(centerX: buttonOffset, centerY: positionBottom, rectX: 0, rectY: 0, width: buttonSize, height: buttonSize, wire: false)
+        updatePlayPauseIcon(play: true)
+    
+        AirPlay = drawAirPlay(centerX: AlbumArtSizeX - buttonOffset, centerY: positionBottom, rectX: 0, rectY: 0, width: airplaySize, height: airplaySize, wire: false)
+        
+        setAllStarButton()
+        */
+    }
+
+    
+    func setObservers() {
+        //NotificationCenter.default.addObserver(self, selector: #selector(OnDidUpdatePlay), name: .didUpdatePlay, object: nil)
+        //NotificationCenter.default.addObserver(self, selector: #selector(OnDidUpdatePause), name: .didUpdatePause, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(GotNowPlayingInfo), name: .gotNowPlayingInfo, object: nil)
+        //NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: .willEnterForegroundNotification, object: nil)
+    }
+    //update
+    func updatePlayPauseIcon(play: Bool) {
+        
+        //we know it's playing
+        if Player.shared.player.rate > 0 || play {
+            self.PlayerX.setImage(UIImage(named: "pause_button"), for: .normal)
+        } else {
+            self.PlayerX.setImage(UIImage(named: "play_button"), for: .normal)
+        }
+    }
+    
+    
+    func setAllStarButton() {
+        allStarButton.setImage(UIImage(named: "star_on"), for: .normal)
+        allStarButton.accessibilityLabel = "All Stars Preset"
+        allStarButton.addTarget(self, action:#selector(AllStarX), for: .touchUpInside)
+        allStarButton.frame = CGRect(x: 0, y: 0, width: 35, height: 35)
+        let barButton = UIBarButtonItem(customView: allStarButton)
+        
+        self.navigationItem.rightBarButtonItem = barButton
+        self.navigationItem.rightBarButtonItem?.tintColor = .white
+    }
+    
+    
+    @objc func AllStarX() {
+        let sp = Player.shared
+        sp.SPXPresets = [String]()
+        
+        var index = -1
+        for d in channelArray {
+            index = index + 1
+            if d.channel == currentChannel {
+                channelArray[index].preset = !channelArray[index].preset
+                
+                if channelArray[index].preset {
+                    allStarButton.setImage(UIImage(named: "star_on"), for: .normal)
+                    allStarButton.accessibilityLabel = "All Stars Preset On, \(currentChannelName)"
+                    
+                } else {
+                    allStarButton.setImage(UIImage(named: "star_off"), for: .normal)
+                    allStarButton.accessibilityLabel = "All Stars Preset Off, \(currentChannelName)"
+                    
+                }
+            }
+            
+            if channelArray[index].preset {
+                sp.SPXPresets.append(d.channel)
+            }
+        }
+        
+        if !sp.SPXPresets.isEmpty {
+            UserDefaults.standard.set(sp.SPXPresets, forKey: "SPXPresets")
+        }
+    }
+    
+    final override func viewDidLoad() {
+        super.viewDidLoad()
+
+
+       	setObservers()
+    }
+    
+    @objc func GotNowPlayingInfo(){
+        Artist.accessibilityLabel = nowPlaying.artist + ". " + nowPlaying.song + "."
+        Artist.isHighlighted = true
+        AlbumArt.accessibilityLabel = "Album Art, " + nowPlaying.artist + ". " + nowPlaying.song + "."
+        
+        DispatchQueue.main.async {
+            UILabel.transition(with: self.Artist,
+                               duration:0.4,
+                               options: .transitionCrossDissolve,
+                               animations: { self.Artist.text = nowPlaying.artist },
+                               completion: nil)
+            
+            UILabel.transition(with: self.Song,
+                               duration:0.4,
+                               options: .transitionCrossDissolve,
+                               animations: { self.Song.text = nowPlaying.song },
+                               completion: nil)
+            
+            UIView.transition(with: self.AlbumArt,
+                              duration:0.4,
+                              options: .transitionCrossDissolve,
+                              animations: { self.AlbumArt.image = nowPlaying.image },
+                              completion: nil)
+            
+        }
+    }
+    
+    
+    
+    override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
+    override var prefersHomeIndicatorAutoHidden : Bool { return true }
+
+}
+    /*var PlayerTimer : Timer? 	=  nil
     var playerViewTimerX     	=  Timer()
     var playerLock 				= false
     var allStarButton 			= UIButton(type: UIButton.ButtonType.custom)
@@ -42,14 +392,8 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     var setAlbumArt = false
     var maxAlbumAttempts = 3
     
-    //constraint outlets
-    @IBOutlet weak var ArtistSongViewTop: NSLayoutConstraint!
-    @IBOutlet weak var AlbumArtTop: NSLayoutConstraint!
-    @IBOutlet weak var SongLabelTop: NSLayoutConstraint!
-    @IBOutlet weak var SongLabelBottom: NSLayoutConstraint!
-    @IBOutlet weak var AlbumArtCenterX: NSLayoutConstraint!
+   
     
-    //end constraints
     @IBOutlet weak var PlayButtonImage: UIButton!
     @IBOutlet weak var albumArt: UIImageView!
     @IBOutlet weak var ArtistLabel: UILabel!
@@ -72,6 +416,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
          
         }
     }
+    
     @IBAction func PlayButton(_ sender: Any) {
         PlayPause()
     }
@@ -268,86 +613,12 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
 
         addSlider()
         
-        setupAirPlayButton()
-        
-        //PlayerPDT()
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        
-        if let appearance = navigationController?.navigationBar.standardAppearance {
-            appearance.shadowImage = nil
-            appearance.shadowColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0)
-            appearance.backgroundColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0)
-            navigationController?.navigationBar.standardAppearance = appearance
-            navigationController?.navigationBar.layer.borderWidth = 0.0
-        }
-        
-        
-        allStarButton.setImage(UIImage(named: "star_on"), for: .normal)
-        allStarButton.accessibilityLabel = "All Stars Preset"
-        allStarButton.addTarget(self, action:#selector(TB), for: .touchUpInside)
-        allStarButton.frame = CGRect(x: 0, y: 0, width: 35, height: 35)
-        let barButton = UIBarButtonItem(customView: allStarButton)
-        
-        self.navigationItem.rightBarButtonItem = barButton
-        self.navigationItem.rightBarButtonItem?.tintColor = .systemBlue
-        //let logoutBarButtonItem = UIBarButtonItem(title: "Star", style: .done, target: self, action: #selector(TB))
-        //self.navigationItem.rightBarButtonItem  = logoutBarButtonItem
+    
         
         let deviceType = UIDevice().type
         var multiplier = CGFloat()
         var zoomed = false
-        
-        DispatchQueue.main.async {
-            if deviceType == .iPhoneX {
-                multiplier = CGFloat(0.999999) // just under 1 works
-                self.ArtistSongViewTop.constant = 15 // add some space to the top
-                self.SongLabelTop.constant = 0
-                self.AlbumArtTop.constant = 15
-                
-            } else if deviceType == .iPhoneXSMax {
-                multiplier = CGFloat(0.999999) // just under 1 works
-                self.ArtistSongViewTop.constant = 20 // add even more space to the top
-                self.SongLabelTop.constant = 5
-                self.AlbumArtTop.constant = 15
-                
-            } else if deviceType == .iPhone8Plus {
-                multiplier = CGFloat(0.999999) // just under 1 works
-                self.ArtistSongViewTop.constant = 0 // add even more space to the top
-                self.AlbumArtTop.constant = 0
-                self.SongLabelTop.constant = 0
-                self.SongLabelBottom.constant = 0
-                
-            } else if deviceType == .iPhone8 && !zoomed || deviceType == .iPhone8Plus && zoomed {
-                multiplier = CGFloat(0.9)
-            } else if deviceType == .iPhoneSE || deviceType == .iPhone8 && zoomed  {
-                multiplier = CGFloat(0.75)
-            } else if deviceType == .iPad {
-                multiplier = CGFloat(0.7) // just under 1 works
-                self.ArtistSongViewTop.constant = 0 // add some space to the top
-                self.AlbumArtCenterX.constant = -30
-                self.SongLabelTop.constant = 0
-                self.AlbumArtTop.constant = 0
-                self.SongLabelBottom.constant = 0
-            }
-            
-            if multiplier != 0 {
-                self.albumArt?.translatesAutoresizingMaskIntoConstraints = false
-                self.albumArt?.addConstraint(NSLayoutConstraint(
-                    item: self.albumArt as Any, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal,
-                    toItem: self.albumArt, attribute: NSLayoutConstraint.Attribute.width, multiplier: multiplier, constant: 0))
-            }
-            
-            //iPhone 8 Plus and zoomed
-            if (UIScreen.main.bounds.size.height == 667.0 && UIScreen.main.nativeScale > UIScreen.main.scale){
-                zoomed = true
-                //iPhone 8 and zoomed
-            } else if (UIScreen.main.bounds.size.height == 568.0 && UIScreen.main.nativeScale > UIScreen.main.scale) {
-                zoomed = true
-            }
-            
-            self.navigationController?.navigationBar.shadowImage = UIImage()
-            
-        }
+   
         
         ArtistLabel.text = ""
         SongLabel.text = ""
@@ -398,7 +669,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     }
     
     
-    
     func invalidateTimer() {
         self.playerViewTimerX.invalidate()
     }
@@ -423,9 +693,9 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         switch UIApplication.shared.applicationState {
             
             case .active:
-                () //airplayRunner()
+                airplayRunner()
             case .background:
-                () //airplayRunner()
+              	airplayRunner()
             default:
                 ()
         }
@@ -434,17 +704,17 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     
     func startVolumeTimer() {
         invalidateTimer()
-        self.playerViewTimerX = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(systemVolumeUpdater), userInfo: nil, repeats: true)
+        self.playerViewTimerX = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(systemVolumeUpdater), userInfo: nil, repeats: true)
     }
     
     func routePickerViewWillBeginPresentingRoutes(_ routePickerView: AVRoutePickerView) {
         systemVolumeUpdater()
-        //startVolumeTimer()
+        startVolumeTimer()
         PulsarAnimation()
     }
     
     func routePickerViewDidEndPresentingRoutes(_ routePickerView: AVRoutePickerView) {
-        //invalidateTimer()
+        invalidateTimer()
         systemVolumeUpdater()
         PulsarAnimation()
     }
@@ -594,7 +864,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     }
 }
 
-
+*/
 /*
  
  let audioSession = AVAudioSession()

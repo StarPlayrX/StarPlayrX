@@ -14,10 +14,10 @@ private let LoginQueue = DispatchQueue(label: "LoginQueue", qos: .userInteractiv
 
 class LoginViewController: UIViewController {
 
+   
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
     override var prefersHomeIndicatorAutoHidden : Bool { return true }
-   	override var prefersStatusBarHidden: Bool { return false }
-   	override var preferredStatusBarStyle: UIStatusBarStyle { return .lightContent }
+
     
     @IBAction func starplayrx_dot_com(_ sender: Any) {
         website(url: "https://starplayrx.com")
@@ -441,15 +441,8 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         Networkability().start()
 
-        self.navigationController?.navigationBar.shadowImage = UIImage()
         
-        if let appearance = navigationController?.navigationBar.standardAppearance {
-            appearance.shadowImage = nil
-            appearance.shadowColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0)
-            appearance.backgroundColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0)
-            navigationController?.navigationBar.standardAppearance = appearance
-            navigationController?.navigationBar.layer.borderWidth = 0.0
-        }
+       
   
         tabItem(index: 1, enable: false, selectItem: false)
         
