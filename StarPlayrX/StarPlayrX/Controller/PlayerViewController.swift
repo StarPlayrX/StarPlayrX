@@ -38,15 +38,17 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     //MARK: draw Player View
     func drawPlayerView(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat, wire: Bool) -> UIView {
         let drawView = UIView(frame: CGRect(x: 0, y: 0, width: width, height: height))
-        drawView.center = CGPoint(x: x, y: y)
+            // drawView.center = CGPoint(x: x, y: y)
         
 
-        
+        	
         if wire {
             drawView.backgroundColor = UIColor(displayP3Red: 35 / 255, green: 37 / 255, blue: 38 / 255, alpha: 1.0) //iOS 13
+            drawView.backgroundColor = .purple
+
         }
        
-        self.view.addSubview(drawView)
+        self.mainView.addSubview(drawView)
         
         return drawView
     }
@@ -59,9 +61,10 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         
         if wire {
             drawView.backgroundColor = .orange
+            drawView.alpha = 0.25
         }
         
-        self.view.addSubview(drawView)
+        self.PlayerView.addSubview(drawView)
         
         return drawView
     }
@@ -152,34 +155,37 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         let iPhoneWidth = self.mainView.frame.width
 
 		
-        let view = UIView()
+       // let view = UIView()
         
 
-        let drawView = UIView(frame: CGRect(x: 0, y: 0, width: iPhoneWidth - navBarWidth, height: iPhoneHeight))
+        /*let drawView = UIView(frame: CGRect(x: 0, y: 0, width: iPhoneWidth - navBarWidth, height: iPhoneHeight))
         drawView.backgroundColor = .green
-        self.mainView.addSubview(drawView)
+        self.view.addSubview(drawView)*/
        
 
         
         print("iPhoneHeight: ",iPhoneHeight, "iPhoneWidth: ",iPhoneWidth)
         //MARK: Here is we are checking if the user as an iPhone X (it has 18 more pixels in height / Status bar)
-        /*let isIphoneX = (iPhoneHeight == 896.0 || iPhoneHeight == 812.0) ? CGFloat(18) : CGFloat(0)
+        let isIphoneX = (iPhoneHeight == 896.0 || iPhoneHeight == 812.0) ? CGFloat(18) : CGFloat(0)
         
         let frameY = iPhoneHeight - isIphoneX
         
+        var iPad = false
         //MARK: Draws out main Player View object : visible "Safe Area" only - calculated
         if let navY = self.navigationController?.navigationBar.frame.size.height,
             let tabY = self.tabBarController?.tabBar.frame.size.height {
             	let y = frameY - navY - tabY
-            	
+                print("1")
         		PlayerView = drawPlayerView(x: self.view.frame.size.width / 2, y: (frameY) / 2, width: self.view.frame.size.width, height: y, wire: true)
         } else {
-            PlayerView = drawPlayerView(x: self.view.frame.size.width / 2, y: (frameY) / 2, width: self.view.frame.size.width, height: self.view.frame.size.height, wire: true)
+            print("2")
+			iPad = true
+            PlayerView = drawPlayerView(x: 0, y: 0, width: iPhoneWidth - navBarWidth, height: iPhoneHeight - tabBarHeight, wire: true)
 
         }
         
         //MARK: Offset Values
-        let iPhoneOffset = CGFloat(13)
+       let iPhoneOffset = CGFloat(13)
         
         
         //MARK: LABEL CUSTOMIZATIONS
@@ -229,13 +235,35 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         
         
         //MARK: Draw our Album Art Object
-        let AlbumArtSizeX = PlayerView.frame.size.width
-        let AlbumArtSizeY = PlayerView.frame.size.height
-
-        let centerX = PlayerView.frame.size.width / 2
-        let centerY = (frameY) / 2 - iPhoneOffset
-
+        
+        //MARK: LABEL CUSTOMIZATIONS
+        let AlbumArtSizeX: CGFloat
+        let AlbumArtSizeY: CGFloat
+        let centerX: CGFloat
+        let centerY: CGFloat
+        
+        //MARK: TO DO - iPad Sizes
+        switch iPad {
+        
+            //iPhone 11 Pro Max
+            case true :
+                AlbumArtSizeX = PlayerView.frame.size.width - 200
+                AlbumArtSizeY = PlayerView.frame.size.height - 200
+                centerX = PlayerView.frame.size.width / 2
+                centerY = PlayerView.frame.size.height / 2
+            
+            //iPhone 11 Pro / iPhone X
+            case false :
+                AlbumArtSizeX = PlayerView.frame.size.width
+                AlbumArtSizeY = PlayerView.frame.size.height
+                centerX = PlayerView.frame.size.width / 2
+                centerY = (frameY) / 2 - iPhoneOffset
+        }
+        
+        
+		
         AlbumArt = drawAlbumView(x: centerX, y: centerY, width: AlbumArtSizeX, height: AlbumArtSizeX, wire: true)
+
 
         //MARK: Draw Artist Label
         Artist = drawLabels(x: centerX, y: (AlbumArtSizeY - AlbumArtSizeX - labelOffset) / 2 - iPhoneOffset, width: AlbumArtSizeX, height: labelHeight, align: .center, color: .white, text: "Artist Label", font: .systemFont(ofSize: fontSize, weight: UIFont.Weight.semibold), wire: true)
@@ -257,10 +285,10 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         PlayerX = drawButtons(centerX: buttonOffset, centerY: positionBottom, rectX: 0, rectY: 0, width: buttonSize, height: buttonSize, wire: false)
         updatePlayPauseIcon(play: true)
     
-        AirPlay = drawAirPlay(centerX: AlbumArtSizeX - buttonOffset, centerY: positionBottom, rectX: 0, rectY: 0, width: airplaySize, height: airplaySize, wire: false)
+        AirPlay = drawAirPlay(centerX: PlayerView.frame.size.width - buttonOffset, centerY: positionBottom, rectX: 0, rectY: 0, width: airplaySize, height: airplaySize, wire: false)
         
         setAllStarButton()
-        */
+        
     }
 
     

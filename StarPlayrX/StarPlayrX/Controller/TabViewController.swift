@@ -8,6 +8,7 @@
 
 import UIKit
 
+var tabBarHeight = CGFloat(65.0)
 class TabController: UITabBarController {
     
    
@@ -26,7 +27,7 @@ class TabController: UITabBarController {
         tabBar.standardAppearance = appearance
         tabBar.layer.borderWidth = 0.0
         tabBar.clipsToBounds = true
-     
+       
         delegate = self
     }
     

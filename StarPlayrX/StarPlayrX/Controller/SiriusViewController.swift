@@ -10,6 +10,7 @@ import UIKit
 import AVKit
 
 var navBarWidth = CGFloat(375.0)
+
 //UIGestureRecognizerDelegate
 class SiriusViewController: UITableViewController {
     var pdtTimer: Timer? = nil
@@ -33,8 +34,9 @@ class SiriusViewController: UITableViewController {
         self.navigationController!.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
         self.navigationController!.navigationBar.tintColor = #colorLiteral(red: 1, green: 0.99997437, blue: 0.9999912977, alpha: 1)*/
         
-        let leftCol = (self.navigationController!.navigationBar.frame.width)
-
+        navBarWidth = (self.navigationController!.navigationBar.frame.width)
+		
+        tabBarHeight = self.tabBarController!.tabBar.frame.height
         
         self.tableView.rowHeight = 60.0
         tableView.separatorColor = UIColor.black
