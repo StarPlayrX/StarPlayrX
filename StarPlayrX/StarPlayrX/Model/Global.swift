@@ -68,8 +68,18 @@ var gCookies = false
 var gLava = false
 var gUser = Dictionary<String, (pass:String, channel: String, token: String, loggedin: Bool, guid: String, gupid: String, consumer: String)>()
 
-var freshChannels = false
+var tabBarHeight = CGFloat(65.0)
+var navBarWidth = CGFloat(375.0)
 
+var lastchannel = ""
+var currentChannelName = ""
+var selectedRow : IndexPath? = nil
+var lastCategory = "Init Cat"
+var globalSearchText = ""
+
+typealias CompletionHandler = (_ success:Bool) -> Void
+typealias ImageHandler = (_ image:UIImage?) -> Void
+typealias DictionaryHandler = (_ dict:NSDictionary?) -> Void
 
 enum PlayerState {
     case playing

@@ -8,7 +8,6 @@
 
 import UIKit
 
-var tabBarHeight = CGFloat(65.0)
 class TabController: UITabBarController {
     
    

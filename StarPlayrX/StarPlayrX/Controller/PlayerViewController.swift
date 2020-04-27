@@ -14,12 +14,14 @@ import AVKit
 
 //UIGestureRecognizerDelegate
 class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
-	
+    
+    override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
+    override var prefersHomeIndicatorAutoHidden : Bool { return true }
+    
     @IBOutlet weak var mainView: UIView!
     
     //UI Variables
     var PlayerView =  UIView()
-    
     
     var Artist          = UILabel()
     var Song            = UILabel()
@@ -57,6 +59,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         let drawView = UIImageView(frame: CGRect(x: 0, y: 0, width: width, height: height))
         drawView.center = CGPoint(x: x, y: y)
         
+        print(   drawView.center )
         if wire {
             drawView.backgroundColor = .orange
         }
@@ -151,24 +154,23 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         let iPhoneHeight = self.mainView.frame.height
         let iPhoneWidth = self.mainView.frame.width
         
-        print("iPhoneHeight: ",iPhoneHeight, "iPhoneWidth: ",iPhoneWidth)
+        //print("iPhoneHeight: ",iPhoneHeight, "iPhoneWidth: ",iPhoneWidth)
+        
         //MARK: Here is we are checking if the user as an iPhone X (it has 18 more pixels in height / Status bar)
         let isIphoneX = (iPhoneHeight == 896.0 || iPhoneHeight == 812.0) ? CGFloat(18) : CGFloat(0)
         
         let frameY = iPhoneHeight - isIphoneX
         
         var iPad = false
+        
         //MARK: Draws out main Player View object : visible "Safe Area" only - calculated
         if let navY = self.navigationController?.navigationBar.frame.size.height,
             let tabY = self.tabBarController?.tabBar.frame.size.height {
             	let y = frameY - navY - tabY
-                print("1")
             PlayerView = drawPlayerView(x: self.view.frame.size.width / 2, y: (frameY) / 2, width: self.view.frame.size.width, height: y, iPad: false)
         } else {
-            print("2")
 			iPad = true
             PlayerView = drawPlayerView(x: 0, y: 0, width: iPhoneWidth - navBarWidth, height: iPhoneHeight - tabBarHeight, iPad: true)
-
         }
         
         //MARK: Offset Values
@@ -185,6 +187,8 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         let centerY: CGFloat
         let iPadTabHeightFactor: CGFloat
         //MARK: TO DO - iPad Sizes
+        
+ 
         switch iPhoneHeight {
             
             //iPhone 11 Pro Max
@@ -193,21 +197,14 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                 labelHeight = 90
                 fontSize = 18
                 iPadAlbumClearSpace = 0
-                AlbumArtSizeX = PlayerView.frame.size.width
-                AlbumArtSizeY = PlayerView.frame.size.height
-                centerX = PlayerView.frame.size.width / 2
-                centerY = PlayerView.frame.size.height / 2 - iPhoneOffset
-            	iPadTabHeightFactor = 0
+                iPadTabHeightFactor = 0
+            
             //iPhone 11 Pro / iPhone X
             case 812.0 :
                 labelOffset = 110
                 labelHeight = 90
                 fontSize = 18
                 iPadAlbumClearSpace = 0
-                AlbumArtSizeX = PlayerView.frame.size.width
-                AlbumArtSizeY = PlayerView.frame.size.height
-                centerX = PlayerView.frame.size.width / 2
-                centerY = PlayerView.frame.size.height / 2 - iPhoneOffset
                 iPadTabHeightFactor = 0
 
             //iPhone 8 Plus
@@ -216,10 +213,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                 labelHeight = 60
                 fontSize = 18
                 iPadAlbumClearSpace = 0
-                AlbumArtSizeX = PlayerView.frame.size.width
-                AlbumArtSizeY = PlayerView.frame.size.height
-                centerX = PlayerView.frame.size.width / 2
-                centerY = PlayerView.frame.size.height / 2 - iPhoneOffset
                 iPadTabHeightFactor = 0
 
             //iPhone 7/8/SE 2nd Gen
@@ -228,10 +221,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                 labelHeight = 60
                 fontSize = 17
                 iPadAlbumClearSpace = 0
-                AlbumArtSizeX = PlayerView.frame.size.width
-                AlbumArtSizeY = PlayerView.frame.size.height
-                centerX = PlayerView.frame.size.width / 2
-                centerY = PlayerView.frame.size.height / 2 - iPhoneOffset
                 iPadTabHeightFactor = 0
 
             //iPhone SE 1st Gen
@@ -240,10 +229,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                 labelHeight = 60
                 fontSize = 16
                 iPadAlbumClearSpace = 0
-                AlbumArtSizeX = PlayerView.frame.size.width
-                AlbumArtSizeY = PlayerView.frame.size.height
-                centerX = PlayerView.frame.size.width / 2
-                centerY = PlayerView.frame.size.height / 2 - iPhoneOffset
                 iPadTabHeightFactor = 0
 
             //iPad Pro 12.9"
@@ -252,10 +237,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                 labelHeight = 60
                 fontSize = 18
                 iPadAlbumClearSpace = 200
-                AlbumArtSizeX = PlayerView.frame.size.width - iPadAlbumClearSpace
-                AlbumArtSizeY = PlayerView.frame.size.height - iPadAlbumClearSpace
-                centerX = PlayerView.frame.size.width / 2
-                centerY = (PlayerView.frame.size.height - tabBarHeight) / 2
                 iPadTabHeightFactor = 1.9
 
             //iPad 11"
@@ -264,10 +245,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                 labelHeight = 60
                 fontSize = 17
                 iPadAlbumClearSpace = 185
-                AlbumArtSizeX = PlayerView.frame.size.width - iPadAlbumClearSpace
-                AlbumArtSizeY = PlayerView.frame.size.height - iPadAlbumClearSpace
-                centerX = PlayerView.frame.size.width / 2
-                centerY = (PlayerView.frame.size.height - tabBarHeight) / 2
                 iPadTabHeightFactor = 2.2
             
             //iPad 9"
@@ -276,10 +253,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                 labelHeight = 30
                 fontSize = 16
                 iPadAlbumClearSpace = 150
-                AlbumArtSizeX = PlayerView.frame.size.width - iPadAlbumClearSpace
-                AlbumArtSizeY = PlayerView.frame.size.height - iPadAlbumClearSpace
-                centerX = PlayerView.frame.size.width / 2
-                centerY = (PlayerView.frame.size.height - tabBarHeight) / 2
                 iPadTabHeightFactor = 1.7
             
 
@@ -289,22 +262,40 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                 labelHeight = 30
                 fontSize = 16
                 iPadAlbumClearSpace = 140
-                AlbumArtSizeX = PlayerView.frame.size.width - iPadAlbumClearSpace
-                AlbumArtSizeY = PlayerView.frame.size.height - iPadAlbumClearSpace
-                centerX = PlayerView.frame.size.width / 2
-                centerY = (PlayerView.frame.size.height - tabBarHeight) / 2
                 iPadTabHeightFactor = 1.425
 
+            //Default is iPhone SE
             default :
                 labelOffset = 48
                 labelHeight = 60
                 fontSize = 16
                 iPadAlbumClearSpace = 0
+                iPadTabHeightFactor = 0
+        }
+        
+        //MARK: Common constants - for iPhone and iPad
+        switch (iPhoneHeight, iPad) {
+        
+            //MARK: iPhone
+            case (568.0,false), (667.0,false), (736.0,false), (812.0,false), (896.0,false) :
                 AlbumArtSizeX = PlayerView.frame.size.width
                 AlbumArtSizeY = PlayerView.frame.size.height
                 centerX = PlayerView.frame.size.width / 2
                 centerY = PlayerView.frame.size.height / 2 - iPhoneOffset
-                iPadTabHeightFactor = 0
+            
+            //MARK: iPad
+            case (768.0,true), (810.0,true), (834.0,true), (1024.0,true) :
+                AlbumArtSizeX = PlayerView.frame.size.width - iPadAlbumClearSpace
+                AlbumArtSizeY = PlayerView.frame.size.height - iPadAlbumClearSpace
+                centerX = PlayerView.frame.size.width / 2
+                centerY = (PlayerView.frame.size.height - tabBarHeight) / 2
+            
+            default:
+                //defaults to iPhone
+                AlbumArtSizeX = PlayerView.frame.size.width
+                AlbumArtSizeY = PlayerView.frame.size.height
+                centerX = PlayerView.frame.size.width / 2
+                centerY = PlayerView.frame.size.height / 2 - iPhoneOffset
         }
         
         AlbumArt = drawAlbumView(x: centerX, y: centerY, width: AlbumArtSizeX, height: AlbumArtSizeX, wire: false)
@@ -315,15 +306,17 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         AlbumArt.layer.shadowPath = UIBezierPath(rect: AlbumArt.bounds).cgPath
         AlbumArt.alpha = 0.0
             
-        //MARK: Draw Artist Label
+        //MARK: Draw Artist / Song Labels
         
-        if !iPad {
+        if iPad {
+            //MARK: iPad Combo Artist • Song — Channel Label
+            ArtistSong = drawLabels(x: centerX, y: AlbumArtSizeY + (tabBarHeight * iPadTabHeightFactor), width: AlbumArtSizeX, height: labelHeight, align: .center, color: .white, text: "", font: .systemFont(ofSize: fontSize, weight: UIFont.Weight.semibold), wire: true)
+        } else {
+            //MARK: iPhone has separate Artist / Song labels without Channel Label (which is in the nav bar)
             Artist = drawLabels(x: centerX, y: (AlbumArtSizeY - AlbumArtSizeX - labelOffset) / 2 - iPhoneOffset, width: AlbumArtSizeX, height: labelHeight, align: .center, color: .white, text: "", font: .systemFont(ofSize: fontSize, weight: UIFont.Weight.semibold), wire: true)
             
             Song = drawLabels(x: centerX, y: (PlayerView.frame.size.height + PlayerView.frame.size.width + labelOffset) / 2 - iPhoneOffset, width: AlbumArtSizeX, height: labelHeight, align: .center, color: .white, text: "", font: .systemFont(ofSize: fontSize, weight: UIFont.Weight.medium), wire: true)
-        } else {
             
-            ArtistSong = drawLabels(x: centerX, y: AlbumArtSizeY + (tabBarHeight * iPadTabHeightFactor), width: AlbumArtSizeX, height: labelHeight, align: .center, color: .white, text: "", font: .systemFont(ofSize: fontSize, weight: UIFont.Weight.semibold), wire: true)
         }
     
         //defines the variables we are using. Might tweak this add and some constants
@@ -334,9 +327,12 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         let airplaySize = CGFloat(52)
 
         VolumeSlider = drawVolumeSlider(centerX: centerX, centerY: positionBottom, rectX: 0, rectY: 0, width: sliderWidth, height: labelHeight)
+        addSlider()
+        
         PlayerX = drawButtons(centerX: buttonOffset, centerY: positionBottom, rectX: 0, rectY: 0, width: buttonSize, height: buttonSize, wire: false)
+        PlayerX.addTarget(self, action: #selector(PlayPause), for: .touchUpInside)
+
         updatePlayPauseIcon(play: true)
-    
         AirPlay = drawAirPlay(centerX: PlayerView.frame.size.width - buttonOffset, centerY: positionBottom, rectX: 0, rectY: 0, width: airplaySize, height: airplaySize, wire: false)
         
         setAllStarButton()
@@ -350,17 +346,28 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         NotificationCenter.default.addObserver(self, selector: #selector(GotNowPlayingInfo), name: .gotNowPlayingInfo, object: nil)
         //NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: .willEnterForegroundNotification, object: nil)
     }
-    //update
-    func updatePlayPauseIcon(play: Bool) {
-        
-        //we know it's playing
-        if Player.shared.player.rate > 0 || play {
-            self.PlayerX.setImage(UIImage(named: "pause_button"), for: .normal)
-        } else {
-            self.PlayerX.setImage(UIImage(named: "play_button"), for: .normal)
-        }
-    }
     
+    
+    //MARK: Update Play Pause Icon
+    func updatePlayPauseIcon(play: Bool? = nil) {
+        
+        switch play {
+            case .none :
+                
+                Player.shared.state == PlayerState.playing ?
+                    self.PlayerX.setImage(UIImage(named: "pause_button"), for: .normal) :
+                    self.PlayerX.setImage(UIImage(named: "play_button"), for:  .normal)
+            
+            case .some(true) :
+                
+                self.PlayerX.setImage(UIImage(named: "pause_button"), for: .normal)
+            
+            case .some(false) :
+                
+                self.PlayerX.setImage(UIImage(named: "play_button"), for:  .normal)
+        }
+        
+    }
     
     func setAllStarButton() {
         allStarButton.setImage(UIImage(named: "star_on"), for: .normal)
@@ -443,18 +450,25 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                               options: .transitionCrossDissolve,
                               animations: { _ = [self.AlbumArt.image = nowPlaying.image, self.AlbumArt.alpha = 1.0] },
                               completion: nil)
-            
-            
-            
-            
-            
         }
     }
     
-    
-    
-    override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
-    override var prefersHomeIndicatorAutoHidden : Bool { return true }
+    @objc func PlayPause() {
+        if Player.shared.player.isBusy && Player.shared.state == PlayerState.playing {
+            updatePlayPauseIcon(play: false)
+            Player.shared.state = .paused
+            Player.shared.pause()
+        } else {
+            updatePlayPauseIcon(play: true)
+            Player.shared.state = .stream
+            
+            DispatchQueue.global().async {
+                Player.shared.player.pause()
+                Player.shared.playX()
+            }
+            
+        }
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         //AP2VolumeSlider.setValue(AP2Volume.shared()?.getVolume() ?? 0.25, animated: false)
@@ -468,7 +482,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        freshChannels = true
         
         //invalidateTimer()
         
@@ -480,11 +493,9 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         //removeObservers()
     }
     
-    
+    //MARK: Update the screen
     func syncArt() {
-        
-     
-            
+    
         if let md5 = Player.shared.MD5(String(CACurrentMediaTime().description)) {
         	Player.shared.previousMD5 = md5
         } else {
@@ -502,6 +513,38 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         }
     }
     
+    //MARK: Adjust the volume
+    @objc func VolumeChanged(slider: UISlider, event: UIEvent) {
+        
+        if let touchEvent = event.allTouches?.first {
+            switch touchEvent.phase {
+                case .began:
+					()
+                    //removeVolumeObserver()
+                case .moved:
+                    DispatchQueue.main.async {
+                        AP2Volume.shared().setVolume(slider.value)
+                }
+                case .ended:
+                    ()
+                    //DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                       // self.setVolumeObserver()
+                    //}
+                default:
+                    return
+            }
+        }
+    }
+    
+    //MARK: Add Volume Slider Action
+    func addSlider() {
+        VolumeSlider.addTarget(self, action: #selector(VolumeChanged(slider:event:)), for: .valueChanged)
+    }
+    
+    //MARK: Remove Volume Slider Action
+    func removeSlider() {
+        VolumeSlider.removeTarget(nil, action: #selector(VolumeChanged(slider:event:)), for: .valueChanged)
+    }
 
 }
     /*var PlayerTimer : Timer? 	=  nil
@@ -537,22 +580,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     @IBOutlet weak var SongLabel: UILabel!
     
     
-    func PlayPause() {
-        if Player.shared.player.isBusy && Player.shared.state == PlayerState.playing {
-            updatePlayPauseIcon(play: false)
-            Player.shared.state = .paused
-            Player.shared.pause()
-        } else {
-            updatePlayPauseIcon(play: true)
-            Player.shared.state = .stream
-            
-            DispatchQueue.global().async {
-                Player.shared.player.pause()
-                Player.shared.playX()
-            }
-         
-        }
-    }
+   
     
     @IBAction func PlayButton(_ sender: Any) {
         PlayPause()
@@ -826,36 +854,8 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     
     @IBOutlet weak var AP2VolumeSlider: UISlider!
     
-    //MARK: Pump up the Volume
-    @objc func AP2VolumeChanged(slider: UISlider, event: UIEvent) {
-        
-        if let touchEvent = event.allTouches?.first {
-            switch touchEvent.phase {
-                case .began:
-                    sliderIsMoving = true
-                    removeVolumeObserver()
-                case .moved:
-                    DispatchQueue.main.async {
-                        AP2Volume.shared().setVolume(slider.value)
-                }
-                case .ended:
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                        self.setVolumeObserver()
-                        self.sliderIsMoving = false
-                }
-                default:
-                    return
-            }
-        }
-    }
+  
     
-    func addSlider() {
-        AP2VolumeSlider.addTarget(self, action: #selector(AP2VolumeChanged(slider:event:)), for: .valueChanged)
-    }
-    
-    func removeSlider() {
-        AP2VolumeSlider.removeTarget(nil, action: nil, for: .valueChanged)
-    }
     
     @objc func gotVolumeDidChange(_ notification: NSNotification) {
         if sliderIsMoving { return }

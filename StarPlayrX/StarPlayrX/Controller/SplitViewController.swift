@@ -6,13 +6,7 @@
 //  Copyright © 2020 Todd Bruss. All rights reserved.
 //
 
-
 import UIKit
-
-
-
-import UIKit
-
 
 class SplitViewController: UISplitViewController, UISplitViewControllerDelegate {
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }

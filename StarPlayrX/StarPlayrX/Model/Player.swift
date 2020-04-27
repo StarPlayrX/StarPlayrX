@@ -14,6 +14,7 @@ import MediaAccessibility
 import PerfectHTTPServer
 import PerfectHTTP
 import CryptoKit
+import CoreImage
 
 final class Player {
     static let shared = Player()
@@ -197,6 +198,32 @@ final class Player {
         }
     }
     
+    public func chooseFilter(fileName:String, values:[Float],filterKeys:[String],image:UIImage) -> UIImage {
+        let context = CIContext()
+        let filter = CIFilter(name: fileName)
+        for i in 0..<filterKeys.count {
+            filter?.setValue(values[i], forKey:filterKeys[i])
+        }
+        filter?.setValue(CIImage(image: image), forKey: kCIInputImageKey)
+        let result = filter?.outputImage
+        if let cgimage = context.createCGImage(result!, from: result!.extent) {
+            return UIImage(cgImage: cgimage)
+        }
+        
+        return image
+    }
+    
+    public func chooseFilterCategories(name:String,values:[Float],filterKeys:[String],image:UIImage) -> UIImage {
+        let filters = CIFilter.filterNames(inCategory: name)
+        for filter in filters {
+            if filter == "CIUnsharpMask" {
+                let newImage = self.chooseFilter(fileName: filter, values: values, filterKeys: filterKeys, image: image)
+                return newImage
+            }
+        }
+        
+        return image
+    }
     
     //loading the album art
     //MARK: Todd
@@ -213,14 +240,17 @@ final class Player {
                 return nil
             }
         }
+
         
         func displayArt(image: UIImage?) {
             if var img = image {
                 img = img.withBackground(color: UIColor(displayP3Red: 19 / 255, green: 20 / 255, blue: 36 / 255, alpha: 1.0))
                 img = self.resizeLargeImage(image: img, targetSize: CGSize(width: 720, height: 720))
+                img = self.chooseFilterCategories(name: kCICategorySharpen, values: [0.0625,0.125], filterKeys: [kCIInputRadiusKey,kCIInputIntensityKey], image: img)
                 img = self.resizeLargeImage(image: img, targetSize: CGSize(width: 1080, height: 1080))
+                img = self.chooseFilterCategories(name: kCICategorySharpen, values: [0.125,0.25], filterKeys: [kCIInputRadiusKey,kCIInputIntensityKey], image: img)
                 img = self.resizeLargeImage(image: img, targetSize: CGSize(width: 1440, height: 1440))
-
+                img = self.chooseFilterCategories(name: kCICategorySharpen, values: [0.25,0.5], filterKeys: [kCIInputRadiusKey,kCIInputIntensityKey], image: img)
                 nowPlaying.image = img
                 self.setnowPlayingInfo(channel: nowPlaying.channel, song: nowPlaying.song, artist: nowPlaying.artist, imageData:img)
 
@@ -257,6 +287,7 @@ final class Player {
              
     }
     
+   
     func resizeLargeImage(image: UIImage, targetSize: CGSize) -> UIImage {
         let rect = CGRect(x: 0, y: 0, width: targetSize.width, height: targetSize.height)
         
@@ -419,7 +450,9 @@ final class Player {
             try avSession.setActive(true)
             
         } catch {
-            //print("Did Not Play")
+
+
+
             print(error)
         }
         
@@ -473,3 +506,5 @@ final class Player {
  mpc4.setValue(strV, forKey: "volume" )
  
  */
+
+

@@ -9,9 +9,6 @@
 import UIKit
 import AVKit
 
-var navBarWidth = CGFloat(375.0)
-
-//UIGestureRecognizerDelegate
 class SiriusViewController: UITableViewController {
     var pdtTimer: Timer? = nil
     
@@ -134,11 +131,7 @@ class SiriusViewController: UITableViewController {
     
     
     override func viewWillDisappear(_ animated: Bool) {
-        freshChannels = true
         
-        //if Player.shared.player.isReady {
-         //   Timer.scheduledTimer(timeInterval: 2.5, target: self, selector: #selector(SPXCache), userInfo: nil, repeats: false)
-        //}
     }
     
     override func viewWillAppear(_ animated: Bool) {

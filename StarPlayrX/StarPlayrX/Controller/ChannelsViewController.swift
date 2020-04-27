@@ -8,16 +8,6 @@
 
 import UIKit
 
-var lastchannel = ""
-var currentChannelName = ""
-var selectedRow : IndexPath? = nil
-var lastCategory = "Init Cat"
-var globalSearchText = ""
-
-typealias CompletionHandler = (_ success:Bool) -> Void
-typealias ImageHandler = (_ image:UIImage?) -> Void
-typealias DictionaryHandler = (_ dict:NSDictionary?) -> Void
-
 class ChannelsViewController: UITableViewController,UISearchBarDelegate {
 	
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
