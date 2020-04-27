@@ -34,6 +34,12 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     var allStarButton   = UIButton(type: UIButton.ButtonType.custom)
     var AlbumArt        = UIImageView()
     
+    //other variables
+    let rounder = Float(10000.0)
+    var sliderIsMoving = false
+    var channelString = "Channels"
+
+    
     //Art Queue
     public let ArtQueue = DispatchQueue(label: "ArtQueue", qos: .background )
     
@@ -59,7 +65,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         let drawView = UIImageView(frame: CGRect(x: 0, y: 0, width: width, height: height))
         drawView.center = CGPoint(x: x, y: y)
         
-        print(   drawView.center )
         if wire {
             drawView.backgroundColor = .orange
         }
@@ -340,13 +345,44 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     }
 
     
+    @objc func OnDidUpdatePlay(){
+        DispatchQueue.main.async {
+            self.updatePlayPauseIcon(play: true)
+        }
+    }
+    
+    
+    @objc func OnDidUpdatePause(){
+        DispatchQueue.main.async {
+            self.updatePlayPauseIcon(play: false)
+        }
+    }
+    
+    //MARK: Start Observers
+    func setVolumeObserver() {
+        NotificationCenter.default.addObserver(self, selector: #selector(gotVolumeDidChange), name: .gotVolumeDidChange, object: nil)
+    }
+
+    func removeVolumeObserver() {
+        NotificationCenter.default.removeObserver(self, name: .gotVolumeDidChange, object: nil)
+    }
+    
     func setObservers() {
-        //NotificationCenter.default.addObserver(self, selector: #selector(OnDidUpdatePlay), name: .didUpdatePlay, object: nil)
-        //NotificationCenter.default.addObserver(self, selector: #selector(OnDidUpdatePause), name: .didUpdatePause, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(OnDidUpdatePlay), name: .didUpdatePlay, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(OnDidUpdatePause), name: .didUpdatePause, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(GotNowPlayingInfo), name: .gotNowPlayingInfo, object: nil)
         //NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: .willEnterForegroundNotification, object: nil)
     }
     
+    func removeObservers() {
+        NotificationCenter.default.removeObserver(self, name: .didUpdatePlay, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .didUpdatePause, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .gotNowPlayingInfo, object: nil)
+        //NotificationCenter.default.removeObserver(self, name: .willEnterForegroundNotification, object: nil)
+        //NotificationCenter.default.removeObserver(self, name: .gotVolumeDidChange, object: nil)
+    }
+    //MARK: End Observers
+
     
     //MARK: Update Play Pause Icon
     func updatePlayPauseIcon(play: Bool? = nil) {
@@ -414,8 +450,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     
     final override func viewDidLoad() {
         super.viewDidLoad()
-
-		print("VIEW DID LOAD.")
        	setObservers()
     }
     
@@ -478,7 +512,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         syncArt()
         //startup()
         //checkForAllStar()
-        //setObservers()
+        setObservers()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -490,7 +524,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         //    self.shutdownVolume()
         //}
         
-        //removeObservers()
+    	removeObservers()
     }
     
     //MARK: Update the screen
@@ -545,6 +579,63 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     func removeSlider() {
         VolumeSlider.removeTarget(nil, action: #selector(VolumeChanged(slider:event:)), for: .valueChanged)
     }
+    
+    
+    @objc func gotVolumeDidChange(_ notification: NSNotification) {
+        if sliderIsMoving { return }
+        if let volume = notification.userInfo?["AVSystemController_AudioVolumeNotificationParameter"] as? Float {
+            
+            if Player.shared.avSession.currentRoute.outputs.first?.portType == .airPlay {
+                let vol = AP2Volume.shared()?.getVolume()
+                if vol == volume {
+                    return
+                }
+            }
+            
+            let slider = VolumeSlider.value
+            
+            let roundedSlider = round(rounder * slider) / rounder
+            let roundedVolume = round(rounder * volume) / rounder
+            if roundedSlider != roundedVolume {
+                
+                DispatchQueue.main.async {
+                    self.VolumeSlider.setValue(volume, animated: true)
+                }
+            }
+            
+        } else {
+            //This creates a one time loop back if volume comes back nil
+            systemVolumeUpdater()
+        }
+    }
+    
+    @objc func systemVolumeUpdater() {
+        switch UIApplication.shared.applicationState {
+            
+            case .active:
+                airplayRunner()
+            case .background:
+                airplayRunner()
+            default:
+                ()
+        }
+    }
+    
+    func airplayRunner() {
+        if tabBarController?.tabBar.selectedItem?.title == channelString && title == currentChannelName {
+            if Player.shared.avSession.currentRoute.outputs.first?.portType == .airPlay {
+                AP2Volume.shared().setVolumeBy(0.0)
+            } else {
+                if let vol = AP2Volume.shared()?.getVolume() {
+                    DispatchQueue.main.async {
+                        self.VolumeSlider.setValue(vol, animated: true)
+                    }
+                }
+            }
+            
+            //isSliderEnabled()
+        }
+    }
 
 }
     /*var PlayerTimer : Timer? 	=  nil
@@ -553,9 +644,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     var allStarButton 			= UIButton(type: UIButton.ButtonType.custom)
     var preVolume 				= Float(-1.0)
     
-    var sliderIsMoving = false
-    var channels = "Channels"
-    var rounder = Float(10000.0)
     
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
     override var prefersHomeIndicatorAutoHidden : Bool { return true }
@@ -607,14 +695,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     }
     
     
-    func setVolumeObserver() {
-        NotificationCenter.default.addObserver(self, selector: #selector(gotVolumeDidChange), name: .gotVolumeDidChange, object: nil)
-    }
-  
-    
-    func removeVolumeObserver() {
-        NotificationCenter.default.removeObserver(self, name: .gotVolumeDidChange, object: nil)
-    }
+   
     
     
     //set tab item
@@ -768,24 +849,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         setVolumeObserver()
     }
     
-    @objc func OnDidUpdatePlay(){
-        DispatchQueue.main.async {
-            if let pbi = self.PlayButtonImage  {
-                pbi.setImage(UIImage(named: "pause_button"), for: .normal)
-            }
-        }
-    }
-    
-    
-    @objc func OnDidUpdatePause(){
-        
-        DispatchQueue.main.async {
-            if let pbi = self.PlayButtonImage  {
-                pbi.setImage(UIImage(named: "play_button"), for: .normal)
-            }
-        }
-    }
-    
+   
     
     override func accessibilityPerformMagicTap() -> Bool {
         PlayPause()
@@ -806,33 +870,9 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         self.playerViewTimerX.invalidate()
     }
     
-    func airplayRunner() {
-        if tabBarController?.tabBar.selectedItem?.title == channels && title == currentChannelName {
-            if Player.shared.avSession.currentRoute.outputs.first?.portType == .airPlay {
-                AP2Volume.shared().setVolumeBy(0.0)
-            } else {
-                if let vol = AP2Volume.shared()?.getVolume() {
-                    DispatchQueue.main.async {
-                        self.AP2VolumeSlider.setValue(vol, animated: true)
-                    }
-                }
-            }
-            
-            isSliderEnabled()
-        }
-    }
+   
     
-    @objc func systemVolumeUpdater() {
-        switch UIApplication.shared.applicationState {
-            
-            case .active:
-                airplayRunner()
-            case .background:
-              	airplayRunner()
-            default:
-                ()
-        }
-    }
+ 
     
     
     func startVolumeTimer() {
@@ -856,35 +896,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     
   
     
-    
-    @objc func gotVolumeDidChange(_ notification: NSNotification) {
-        if sliderIsMoving { return }
-        if let volume = notification.userInfo?["AVSystemController_AudioVolumeNotificationParameter"] as? Float {
-            
-            if Player.shared.avSession.currentRoute.outputs.first?.portType == .airPlay {
-                let vol = AP2Volume.shared()?.getVolume()
-                if vol == volume {
-                    return
-                }
-            }
-            
-            let slider = AP2VolumeSlider.value
-            
-            let roundedSlider = round(rounder * slider) / rounder
-            let roundedVolume = round(rounder * volume) / rounder
-            if roundedSlider != roundedVolume {
-                
-                DispatchQueue.main.async {
-                    self.AP2VolumeSlider.setValue(volume, animated: true)
-                }
-            }
-            
-        } else {
-            //This creates a one time loop back if volume comes back nil
-            systemVolumeUpdater()
-        }
-    }
-    
+
     
     func Pulsar() {
         let pulseAnimation = CABasicAnimation(keyPath: "opacity")
@@ -960,13 +972,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         }
     }
     
-    func removeObservers() {
-        NotificationCenter.default.removeObserver(self, name: .didUpdatePlay, object: nil)
-        NotificationCenter.default.removeObserver(self, name: .didUpdatePause, object: nil)
-        NotificationCenter.default.removeObserver(self, name: .gotNowPlayingInfo, object: nil)
-        NotificationCenter.default.removeObserver(self, name: .willEnterForegroundNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: .gotVolumeDidChange, object: nil)
-    }
+    
 }
 
 */
