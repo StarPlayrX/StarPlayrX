@@ -118,7 +118,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     }
     
     
-    
     func startVolumeTimer() {
         invalidateTimer()
         self.playerViewTimerX = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(systemVolumeUpdater), userInfo: nil, repeats: true)
@@ -155,7 +154,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     
     override func loadView() {
         super.loadView()
-        syncArt()
         
         var iPhone = true
         var NavY = CGFloat(0)
@@ -190,46 +188,22 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         } else {
             ArtistSong = draw.ArtistSongiPad(playerView: PlayerView)
         }
-        
-        /*
-        //MARK: Draw Artist / Song Labels
-        
-        if iPad {
-            //MARK: iPad Combo Artist • Song — Channel Label
-            ArtistSong = draw.drawLabels(playerView: PlayerView, x: centerX, y: labelOffset, width: AlbumArtSizeX, height: labelHeight, align: .center, color: .white, text: "", font: .systemFont(ofSize: fontSize, weight: UIFont.Weight.semibold), wire: true)
-        } else {
-            //MARK: iPhone has separate Artist / Song labels without Channel Label (which is in the nav bar)
-  
-        }
-        
-        let sliderWidth = CGFloat( PlayerView.frame.size.width - 120 )
-        let positionBottom = CGFloat( PlayerView.frame.size.height - SE )
-        let buttonOffset = CGFloat(30)
-        let buttonSize = CGFloat(30)
-        let airplaySize = CGFloat(52)
-        
-        VolumeSlider = draw.drawVolumeSlider(playerView: PlayerView, centerX: centerX, centerY: positionBottom, rectX: 0, rectY: 0, width: sliderWidth, height: labelHeight)
-        addSlider()
-        
-        PlayerXL = draw.drawButtons(playerView: PlayerView, centerX: centerX, centerY: positionBottom - playPauseY, rectX: 0, rectY: 0, width: buttonSize * playPauseScale, height: buttonSize * playPauseScale, wire: false)
-        
+     
+        VolumeSlider = draw.VolumeSliders(playerView: PlayerView)
+        addSliderAction()
+		
+        PlayerXL = draw.PlayerButton(playerView: PlayerView)
         PlayerXL.addTarget(self, action: #selector(PlayPause), for: .touchUpInside)
-        
-        SpeakerView = draw.drawImage(playerView: PlayerView, centerX: buttonOffset, centerY: positionBottom, rectX: 0, rectY: 0, width: buttonSize, height: buttonSize, wire: false)
-        
-        let speakerImage = UIImage(named:"speaker1")
-        SpeakerView.image = speakerImage
-        
+		
+        SpeakerView = draw.SpeakerImage(playerView: PlayerView)
         updatePlayPauseIcon(play: true)
-        
         setAllStarButton()
         
-        let ap = draw.drawAirPlay(airplayView: AirPlayView, playerView: PlayerView, centerX: self.PlayerView.frame.size.width - buttonOffset, centerY: positionBottom, rectX: 0, rectY: 0, width: airplaySize, height: airplaySize, wire: false)
+        let vp = draw.AirPlay(airplayView: AirPlayView, playerView: PlayerView)
         
-        AirPlayView = ap[0] as! UIView
-        AirPlayBtn  = ap[1] as! AVRoutePickerView
+        AirPlayBtn = vp.picker
+        AirPlayView = vp.view
 
-        */
     }
     
     func startupVolume() {
@@ -441,6 +415,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        syncArt()
         VolumeSlider.setValue(AP2Volume.shared().getVolume(), animated: false)
         title = currentChannelName
         startup()
@@ -555,7 +530,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     
     
     //MARK: Add Volume Slider Action
-    func addSlider() {
+    func addSliderAction() {
         VolumeSlider.addTarget(self, action: #selector(VolumeChanged(slider:event:)), for: .valueChanged)
     }
     
@@ -679,16 +654,10 @@ enum Speakers : String {
     case speaker10 = "speaker10"
 }
 
-
-
-
-
-
 /*var PlayerTimer : Timer? 	=  nil
  var playerLock 				= false
  var allStarButton 			= UIButton(type: UIButton.ButtonType.custom)
  var preVolume 				= Float(-1.0)
- 
  
  override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
  override var prefersHomeIndicatorAutoHidden : Bool { return true }
@@ -697,7 +666,6 @@ enum Speakers : String {
  
  @IBOutlet weak var routerView: UIView!
  
- 
  //Notifications
  var localChannelArt = ""
  var localAlbumArt = ""
@@ -705,24 +673,6 @@ enum Speakers : String {
  var setAlbumArt = false
  var maxAlbumAttempts = 3
 
- 
- 
-
- 
- 
-
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
  @objc func UpdatePlayerView() {
  
  if let i = channelArray.firstIndex(where: {$0.channel == currentChannel}) {
@@ -732,10 +682,6 @@ enum Speakers : String {
  
  }
  
- 
-
- 
- 
  //View Did Load
  override func viewDidLoad() {
  super.viewDidLoad()
@@ -743,47 +689,10 @@ enum Speakers : String {
  removeObservers()
  
  addSlider()
- 
- 
- 
- let deviceType = UIDevice().type
- var multiplier = CGFloat()
- var zoomed = false
- 
- 
- ArtistLabel.text = ""
- SongLabel.text = ""
- 
 
- 
- 
  setAlbumArt = false
-
- 
  setVolumeObserver()
- }
- 
- 
 
- 
-
- 
- 
- 
- 
- 
- 
- 
- 
-
-
- 
- }
- 
-
- 
- }
- 
  */
 /*
  

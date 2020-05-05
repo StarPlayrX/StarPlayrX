@@ -10,7 +10,7 @@ import UIKit
 import AVKit
 
 final class Draw {
-	
+    
     //MARK: Offset Values
     let iPhoneOffset = CGFloat(13) //kicks up some graphics
     let iPhoneXtraPx = CGFloat(18)
@@ -19,12 +19,18 @@ final class Draw {
     let iPhoneXReg	 = CGFloat(812.0)
     let mainGray     = UIColor(displayP3Red: 35 / 255, green: 37 / 255, blue: 39 / 255, alpha: 1.0)
     let shadowColor	 = UIColor(displayP3Red: 35 / 2 / 255, green: 37 / 2 / 255, blue: 39 / 2 / 255, alpha: 1.0)
-    let iPhoneHeight : CGFloat
-    let iPhoneWidth  : CGFloat
-    var isIphoneX    : CGFloat
-    let frameY       : CGFloat
-    let iPhoneY      : CGFloat
-	
+    let buttonOffset = CGFloat(30)
+    let buttonSize 	 = CGFloat(30)
+    let airplaySize  = CGFloat(52)
+    
+    let iPhoneHeight   : CGFloat
+    let iPhoneWidth    : CGFloat
+    var isIphoneX      : CGFloat
+    let frameY         : CGFloat
+    let iPhoneY        : CGFloat
+    var sliderWidth    : CGFloat = 0
+    var positionBottom : CGFloat = 0
+    
     let isPhone		 : Bool
     //let PosX   	 : CGFloat
     //let PosY		 : CGFloat
@@ -88,13 +94,39 @@ final class Draw {
     
     //MARK: 4 - Draw Artist and Song Labels for iPhone
     func ArtistSongiPhone(playerView: UIView ) -> [UILabel] {
-    	let artist = self.drawLabels(playerView: playerView, x: centerX, y: (AlbumArtSizeY - AlbumArtSizeX - labelOffset) / 2 - iPhoneOffset, width: AlbumArtSizeX, height: labelHeight, align: .center, color: .white, text: "", font: .systemFont(ofSize: fontSize, weight: UIFont.Weight.semibold), wire: true)
+        let artist = self.drawLabels(playerView: playerView, x: centerX, y: (AlbumArtSizeY - AlbumArtSizeX - labelOffset) / 2 - iPhoneOffset, width: AlbumArtSizeX, height: labelHeight, align: .center, color: .white, text: "", font: .systemFont(ofSize: fontSize, weight: UIFont.Weight.semibold), wire: true)
+        
+        let song = self.drawLabels(playerView: playerView, x: centerX, y: (AlbumArtSizeY - AlbumArtSizeX - labelOffset2) / 2 - iPhoneOffset, width: AlbumArtSizeX, height: labelHeight, align: .center, color: .systemGray, text: "", font: .systemFont(ofSize: fontSize, weight: UIFont.Weight.medium), wire: true)
+        
+        return [artist,song]
+    }
     
-    	let song = self.drawLabels(playerView: playerView, x: centerX, y: (AlbumArtSizeY - AlbumArtSizeX - labelOffset2) / 2 - iPhoneOffset, width: AlbumArtSizeX, height: labelHeight, align: .center, color: .systemGray, text: "", font: .systemFont(ofSize: fontSize, weight: UIFont.Weight.medium), wire: true)
+    //MARK: 5 - Draw Volume Slider
+    func VolumeSliders(playerView: UIView) -> UISlider {
+        let volumeSlider = self.drawVolumeSlider(playerView: playerView, centerX: centerX, centerY: positionBottom, rectX: 0, rectY: 0, width: sliderWidth, height: labelHeight)
+		
+        return volumeSlider
+    }
     
-    	return [artist,song]
-	}
+    //MARK: 6 - Draw Player button
+    func PlayerButton(playerView: UIView) -> UIButton {
+        let player = self.drawButtons(playerView: playerView, centerX: centerX, centerY: positionBottom - playPauseY, rectX: 0, rectY: 0, width: buttonSize * playPauseScale, height: buttonSize * playPauseScale, wire: false)
+        return player
+    }
     
+    //MARK: 7 - Draw
+    func SpeakerImage(playerView: UIView) -> UIImageView {
+        let speakerView = self.drawImage(playerView: playerView, centerX: buttonOffset, centerY: positionBottom, rectX: 0, rectY: 0, width: buttonSize, height: buttonSize, wire: false)
+        return speakerView
+    }
+    
+    //MARK: 8 - Draw AirPlay Button
+    func AirPlay(airplayView: UIView, playerView: UIView) -> (view: UIView, picker: AVRoutePickerView ) {
+        
+        let vp = self.drawAirPlay(airplayView: airplayView, playerView: playerView, centerX: playerView.frame.size.width - buttonOffset, centerY: positionBottom, rectX: 0, rectY: 0, width: airplaySize, height: airplaySize, wire: false)
+    
+        return vp
+    }
     
     init( frame: CGRect, isPhone: Bool, NavY: CGFloat, TabY: CGFloat) {
         
@@ -111,7 +143,7 @@ final class Draw {
         isIphoneX = (maxPro || iPhonX) ? iPhoneXtraPx : iPhoneNoXtra
         frameY = iPhoneHeight - isIphoneX
         self.iPhoneY = frameY - NavY - TabY
-
+        
         //Drawing code constants
         switch iPhoneHeight {
             
@@ -220,8 +252,6 @@ final class Draw {
                 playPauseY = 70
                 playPauseScale = 2
         }
-        
-        
     }
     
     
@@ -230,7 +260,7 @@ final class Draw {
         let drawView = UIView(frame: CGRect(x: 0, y: 0, width: width, height: height))
         
         drawView.backgroundColor = self.mainGray
-
+        
         if isPhone {
             drawView.center = CGPoint(x: x, y: y)
         }
@@ -246,6 +276,7 @@ final class Draw {
                 AlbumArtSizeY = drawView.frame.size.height
                 centerX = drawView.frame.size.width / 2
                 centerY = drawView.frame.size.height / 2 - iPhoneOffset
+                positionBottom = CGFloat( drawView.frame.size.height - 30 )
             
             //MARK: Regular iPhones (SE1 / 8 / 8 Plus)
             case (568.0,true), (667.0,true), (736.0,true) :
@@ -253,6 +284,7 @@ final class Draw {
                 AlbumArtSizeY = drawView.frame.size.height - 60
                 centerX = drawView.frame.size.width / 2
                 centerY = drawView.frame.size.height / 2 - iPhoneOffset
+                positionBottom = CGFloat( drawView.frame.size.height - 25 )
             
             //MARK: iPad
             case (768.0,false), (810.0,false), (834.0,false), (1024.0,false) :
@@ -260,15 +292,31 @@ final class Draw {
                 AlbumArtSizeY = drawView.frame.size.height - (iPadAlbumClearSpace * 1.333)
                 centerX = drawView.frame.size.width / 2
                 centerY = (drawView.frame.size.height - tabBarHeight) / 2
+                positionBottom = CGFloat( drawView.frame.size.height - 30 )
             
             default:
-                //defaults to iPhone
-                AlbumArtSizeX = drawView.frame.size.width
-                AlbumArtSizeY = drawView.frame.size.height
-                centerX = drawView.frame.size.width / 2
-                centerY = drawView.frame.size.height / 2 - iPhoneOffset
+                //defaults to Regular
+                if isPhone {
+                    AlbumArtSizeX = drawView.frame.size.width - 60
+                    AlbumArtSizeY = drawView.frame.size.height - 60
+                    centerX = drawView.frame.size.width / 2
+                    centerY = drawView.frame.size.height / 2 - iPhoneOffset
+                    positionBottom = CGFloat( drawView.frame.size.height - 25 )
+                } else {
+                    //iPad
+                    AlbumArtSizeX = drawView.frame.size.width - (iPadAlbumClearSpace * 1.333)
+                    AlbumArtSizeY = drawView.frame.size.height - (iPadAlbumClearSpace * 1.333)
+                    centerX = drawView.frame.size.width / 2
+                    centerY = (drawView.frame.size.height - tabBarHeight) / 2
+                    positionBottom = CGFloat( drawView.frame.size.height - 30 )
+            }
+            
+            
         }
-           
+        
+        //common among all sizes
+        sliderWidth = CGFloat( drawView.frame.size.width - 120 )
+        
         return drawView
     }
     
@@ -287,7 +335,7 @@ final class Draw {
         return drawView
     }
     
-   
+    
     //MARK: draw labels
     func drawLabels(playerView: UIView, x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat,
                     align: NSTextAlignment, color: UIColor, text: String = "",
@@ -349,20 +397,21 @@ final class Draw {
     
     func drawImage(playerView: UIView, centerX: CGFloat, centerY: CGFloat, rectX: CGFloat, rectY: CGFloat, width: CGFloat, height: CGFloat, wire: Bool) -> UIImageView {
         
-        let button = UIImageView(frame:CGRect(x: rectX, y: rectY, width: width, height: height))
-        button.center = CGPoint(x: centerX, y: centerY)
+        let image = UIImageView(frame:CGRect(x: rectX, y: rectY, width: width, height: height))
+        image.center = CGPoint(x: centerX, y: centerY)
         
-        if wire { button.backgroundColor = .systemBlue }
+        if wire { image.backgroundColor = .systemBlue }
         
-        //mySlider.addTarget(self, action: #selector(ViewController.sliderValueDidChange(_:)), for: .valueChanged)
+        let speakerImage = UIImage(named:Speakers.speaker1.rawValue)
+        image.image = speakerImage
         
-        playerView.addSubview(button)
-        return button
+        playerView.addSubview(image)
+        return image
     }
     
     
     //MARK: Draw Buttons
-    func drawAirPlay(airplayView: UIView, playerView: UIView, centerX: CGFloat, centerY: CGFloat, rectX: CGFloat, rectY: CGFloat, width: CGFloat, height: CGFloat, wire: Bool) -> Array<Any>   {
+    func drawAirPlay(airplayView: UIView, playerView: UIView, centerX: CGFloat, centerY: CGFloat, rectX: CGFloat, rectY: CGFloat, width: CGFloat, height: CGFloat, wire: Bool) -> (view:UIView, picker: AVRoutePickerView)  {
         
         var airplayView = airplayView
         
@@ -370,12 +419,6 @@ final class Draw {
         airplayView.center = CGPoint(x: centerX, y: centerY)
         
         if wire { airplayView.backgroundColor = .systemPink }
-        
-        /*airplayButton.prioritizesVideoDevices = false
-         airplayButton.delegate = self
-         airplayButton.activeTintColor = UIColor.systemBlue
-         airplayButton.tintColor = .systemBlue*/
-        
         playerView.addSubview(airplayView)
         
         func setupAirPlayButton() -> AVRoutePickerView {
@@ -394,7 +437,6 @@ final class Draw {
         
         let apButton = setupAirPlayButton()
         
-        return [airplayView,apButton]
+        return (view:airplayView, picker: apButton)
     }
-    
 }
