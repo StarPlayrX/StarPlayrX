@@ -27,3 +27,6 @@ internal func GetAsync(endpoint: String, DictionaryHandler: @escaping Dictionary
     task.resume()
     
 }
+
+
+

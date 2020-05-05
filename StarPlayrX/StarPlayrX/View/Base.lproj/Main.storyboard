@@ -265,7 +265,7 @@
         <scene sceneID="52H-bx-fTE">
             <objects>
                 <splitViewController extendedLayoutIncludesOpaqueBars="YES" id="0h7-zq-JPc" userLabel="SplitViewController" customClass="SplitViewController" customModule="StarPlayrX" customModuleProvider="target" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Channels" image="channels_icon" selectedImage="channels_icon" id="0fY-Qx-TYX" userLabel="MVC"/>
+                    <tabBarItem key="tabBarItem" title="Channels" image="channels_icon" selectedImage="channels_icon" id="0fY-Qx-TYX" userLabel="Channels"/>
                     <connections>
                         <segue destination="hQY-n7-UBh" kind="relationship" relationship="masterViewController" id="eqh-H6-iiB"/>
                     </connections>

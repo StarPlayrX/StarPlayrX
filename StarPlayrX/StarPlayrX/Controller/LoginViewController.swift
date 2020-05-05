@@ -75,11 +75,18 @@ class LoginViewController: UIViewController {
         self.loginButton.alpha = 0.5
         self.view?.endEditing(true)
         
+        
+        var ping : String? = nil
+        
         let pingUrl = "http://localhost:" + String(Player.shared.port) + "/ping"
-        let ping = TextSync(endpoint: pingUrl, method: "ping")
+        TextSync(endpoint: pingUrl, TextHandler: { (p) -> Void in
+            ping = p
+        })
+        
+        repeat {usleep(25000)} while ping == nil
         
         //Check if Local Web Server is Up
-        if ping == "403" || ping != "pong" {
+        if let pg = ping, pg != "pong" {
             print("Launching the Server.")
             LaunchServer()
         }
@@ -253,7 +260,17 @@ class LoginViewController: UIViewController {
 
                 //get large art checksum
                 let checksumUrl = secure + domain + ":" + secureport2 + "/large/checksum"
-                let lgChecksum = TextSync(endpoint: checksumUrl, method: "large-checksum")
+                
+                var largeChecksum : String? = nil
+                
+
+                TextSync(endpoint: checksumUrl, TextHandler: { (checksum) -> Void in
+                    largeChecksum = checksum
+                })
+                
+                repeat {usleep(25000)}  while largeChecksum == nil
+
+                guard let lgChecksum = largeChecksum else { print("FATAL ERROR, could not get text."); return }
                 
                 UserDefaults.standard.set(lgChecksum, forKey: "largeChecksumXD")
                 
@@ -351,14 +368,11 @@ class LoginViewController: UIViewController {
                 self.progressBar?.setProgress(0.85, animated: true)
             }
             
-            Player.shared.updatePDT(completionHandler: { (success) -> Void in
-                // do nothing
+            /*Player.shared.updatePDT(completionHandler: { (success) -> Void in
                 if success {
-                    print("HELLOWORLD!")
-                    
-                  //do nothing
+                    //do nothing
                 }
-            })
+            })*/
                         
             DispatchQueue.main.async {
                 self.progressBar?.setProgress(0.9, animated: true)
@@ -431,7 +445,7 @@ class LoginViewController: UIViewController {
         }
         
         if selectItem {
-            self.tabBarController!.selectedIndex = index
+            self.tabBarController?.selectedIndex = index
         }
     }
     
@@ -439,8 +453,8 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        Networkability().start()
-
+        
+	
         
        
   

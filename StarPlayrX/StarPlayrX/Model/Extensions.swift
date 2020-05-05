@@ -35,13 +35,18 @@ extension UIImage {
 extension AVQueuePlayer {
     
     var isReady: Bool {
+        var returnValue : Bool? = nil
+        
         let pingUrl = "http://localhost:" + String(Player.shared.port) + "/ping"
-        let ping = TextSync(endpoint: pingUrl, method: "ping")
-        if ping == "pong" {
-            return true
-        } else {
-            return false
-        }
+        TextSync(endpoint: pingUrl, TextHandler: { (ping) -> Void in
+            returnValue = (ping == "pong") ? true : false
+        })
+        
+        repeat {usleep(25000)} while returnValue == nil
+        
+        guard let RV = returnValue else { return false }
+     
+    	return RV
     }
     
     var isTwin: Bool {
@@ -63,6 +68,8 @@ extension Notification.Name {
     static let didUpdatePause = Notification.Name("didUpdatePause")
     static let updateChannelsView = Notification.Name("updateChannelsView")
     static let gotNowPlayingInfo = Notification.Name("gotNowPlayingInfo")
+    static let gotNowPlayingInfoAnimated = Notification.Name("gotNowPlayingInfoAnimated")
+
     static let gotSessionInterruption = AVAudioSession.interruptionNotification
     static let gotRouteChangeNotification = AVAudioSession.routeChangeNotification
     static let gotVolumeDidChange = NSNotification.Name(rawValue: "AVSystemController_SystemVolumeDidChangeNotification")

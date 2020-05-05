@@ -179,7 +179,7 @@ final class Player {
     }
 
     //MARK: Update our display
-    func updateDisplay(key: String, cache: [String : Any], channelArt: String) {
+    func updateDisplay(key: String, cache: [String : Any], channelArt: String, _ animated: Bool = true) {
         if let value  = cache[key] as? [String: String],
             let artist = value["artist"] as String?,
             let song   = value["song"] as String?,
@@ -194,7 +194,7 @@ final class Player {
             nowPlaying.channel = key
             nowPlaying.channelArt = channelArt
             nowPlaying.albumArt = image
-            updateNowPlayingX()
+            updateNowPlayingX(animated)
         }
     }
     
@@ -227,7 +227,7 @@ final class Player {
     
     //loading the album art
     //MARK: Todd
-    func updateNowPlayingX() {
+    func updateNowPlayingX(_ animated: Bool = true) {
         
         
         func demoImage() -> UIImage? {
@@ -259,7 +259,12 @@ final class Player {
                 self.setnowPlayingInfo(channel: nowPlaying.channel, song: nowPlaying.song, artist: nowPlaying.artist, imageData: i)
             }
             
-            DispatchQueue.main.async { NotificationCenter.default.post(name: .gotNowPlayingInfo, object: nil) }
+            if animated {
+                DispatchQueue.main.async { NotificationCenter.default.post(name: .gotNowPlayingInfoAnimated, object: nil) }
+
+            } else {
+                DispatchQueue.main.async { NotificationCenter.default.post(name: .gotNowPlayingInfo, object: nil) }
+            }
        
         }
         
@@ -270,8 +275,6 @@ final class Player {
             
             //Get album art
             if nowPlaying.albumArt.contains(string: "http") {
-                
-                print( nowPlaying.albumArt)
                 ImageAsync(endpoint: nowPlaying.albumArt, ImageHandler: { (img) -> Void in
                     displayArt(image: img)
                 })
@@ -450,9 +453,6 @@ final class Player {
             try avSession.setActive(true)
             
         } catch {
-
-
-
             print(error)
         }
         

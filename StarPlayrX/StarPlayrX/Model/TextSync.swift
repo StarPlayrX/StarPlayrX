@@ -1,54 +1,26 @@
 import Foundation
 
-internal func TextSync(endpoint: String, method: String ) -> String {
+internal func TextSync(endpoint: String, TextHandler: @escaping TextHandler)  {
+    guard let url = URL(string: endpoint) else { TextHandler("error"); return}
     
-    //MARK - for Sync
-    let semaphore = DispatchSemaphore(value: 0)
+    var urlReq = URLRequest(url: url)
+    urlReq.httpMethod = "GET"
+    urlReq.timeoutInterval = TimeInterval(2)
+    urlReq.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
     
-    var syncData = String()
-    
-    let http_method = "GET"
-    let time_out = 10
-    
-    let url = URL(string: endpoint)
-    var urlReq = URLRequest(url: url!)
-    
-    urlReq.httpMethod = http_method
-    urlReq.timeoutInterval = TimeInterval(time_out)
-    
-    let task = URLSession.shared.dataTask(with: urlReq ) { ( returndata, response, error ) in
-        var status = 400
-        if response != nil {
-            let result = response as! HTTPURLResponse
-            status = result.statusCode
-        }
+    let task = URLSession.shared.dataTask(with: urlReq ) { ( data, _, _ ) in
         
-        if status == 200 {
-            
-            do { let result =
-                String(NSString(data: returndata!, encoding: String.Encoding.utf8.rawValue)!)
-                
-                syncData = result
-
-            } 
-        } else {
-            syncData = "403"
-        }
+        guard
+            let d = data,
+            let text = String(data: d, encoding: .utf8)
+            else { TextHandler("error"); return }
         
-        //MARK - for Sync
-        semaphore.signal()
+        TextHandler(text)
     }
     
-    
-  
-    
     task.resume()
-    
-    //MARK - for Sync
-    _ = semaphore.wait(timeout: .distantFuture)
-    
-    return syncData
-
-    
 }
+
+
+
 

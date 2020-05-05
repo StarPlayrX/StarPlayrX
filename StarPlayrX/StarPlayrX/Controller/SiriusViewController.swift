@@ -19,20 +19,10 @@ class SiriusViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-      
-        
         restartPDT()
-        
         SPXCache(run: true)
-        
-    
-        /*self.navigationController!.navigationBar.barStyle = .black
-        self.navigationController!.navigationBar.isTranslucent = true
-        self.navigationController!.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-        self.navigationController!.navigationBar.tintColor = #colorLiteral(red: 1, green: 0.99997437, blue: 0.9999912977, alpha: 1)*/
-        
-        navBarWidth = (self.navigationController!.navigationBar.frame.width)
-		
+
+        navBarWidth  = self.navigationController!.navigationBar.frame.width
         tabBarHeight = self.tabBarController!.tabBar.frame.height
         
         self.tableView.rowHeight = 60.0
@@ -53,7 +43,7 @@ class SiriusViewController: UITableViewController {
             if Player.shared.state == .playing {
                 Player.shared.pause()
                 Player.shared.state = PlayerState.interrupted
-                while (!networkIsConnected) { usleep(250000) } //hold
+                while (!Networkability.shared.networkIsConnected) { usleep(250000) } //hold
                 DispatchQueue.main.async { Player.shared.new(.stream) }
             }
         }

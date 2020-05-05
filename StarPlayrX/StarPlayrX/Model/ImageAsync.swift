@@ -9,25 +9,19 @@ import Foundation
 import UIKit
 
 internal func ImageAsync(endpoint: String, ImageHandler: @escaping ImageHandler ) {
+    guard let url = URL(string: endpoint) else { ImageHandler(.none); return }
+
+    var urlReq = URLRequest(url: url)
+    urlReq.httpMethod = "GET"
+    urlReq.timeoutInterval = TimeInterval(2)
+    urlReq.cachePolicy = .returnCacheDataElseLoad
     
-    func getURLRequest() -> URLRequest? {
-        if let url = URL(string: endpoint) {
-            var urlReq = URLRequest(url: url)
-            urlReq.httpMethod = "GET"
-            urlReq.timeoutInterval = TimeInterval(15)
-            urlReq.cachePolicy = .returnCacheDataElseLoad
-            return urlReq
-        }
+    let task = URLSession.shared.dataTask(with: urlReq ) { ( data, _, _ ) in
         
-        return nil
-    }
-    
-    let task = URLSession.shared.dataTask(with: getURLRequest()! ) { ( image, _, _ ) in
+        guard let d = data else { ImageHandler(.none); return }
         
-        image == .none ? ImageHandler(.none) : ImageHandler(UIImage(data: image!))
-        
+        ImageHandler(UIImage(data: d))
     }
     
     task.resume()
-
 }

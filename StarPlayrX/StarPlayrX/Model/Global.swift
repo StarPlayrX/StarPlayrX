@@ -77,9 +77,11 @@ var selectedRow : IndexPath? = nil
 var lastCategory = "Init Cat"
 var globalSearchText = ""
 
+//Completion Handlers
 typealias CompletionHandler = (_ success:Bool) -> Void
 typealias ImageHandler = (_ image:UIImage?) -> Void
 typealias DictionaryHandler = (_ dict:NSDictionary?) -> Void
+typealias TextHandler = (_ text:String?) -> Void
 
 enum PlayerState {
     case playing

@@ -7,24 +7,28 @@
 //
 
 import Network
-let monitor = NWPathMonitor()
-var networkIsConnected = Bool()
-var networkIsWiFi = Bool()
-var networkIsTripped = false
+
 
 public class Networkability {
     
+    static var shared = Networkability()
+    
+    let monitor = NWPathMonitor()
+    var networkIsConnected = Bool()
+    var networkIsWiFi = Bool()
+    var networkIsTripped = false
+    
     func start() {
         
-        monitor.pathUpdateHandler = { path in
+        self.monitor.pathUpdateHandler = { path in
             
-            networkIsConnected = (path.status == .satisfied)
+            self.networkIsConnected = (path.status == .satisfied)
             
-            if !networkIsConnected {
-                networkIsTripped = true
+            if !self.networkIsConnected {
+                self.networkIsTripped = true
             }
         
-            networkIsWiFi = path.usesInterfaceType(.wifi)
+            self.networkIsWiFi = path.usesInterfaceType(.wifi)
         }
         
         let queue = DispatchQueue(label: "Monitor")

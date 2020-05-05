@@ -86,6 +86,28 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
         
     }
     
+    
+    //MARK: Update the screen
+    func syncArt() {
+        
+        if let md5 = Player.shared.MD5(String(CACurrentMediaTime().description)) {
+            Player.shared.previousMD5 = md5
+        } else {
+            let str = "Hello, Last Star Player X."
+            Player.shared.previousMD5 = Player.shared.MD5(String(str)) ?? str
+        }
+        
+        //ArtQueue.async {
+            if Player.shared.player.isReady {
+                if let i = channelArray.firstIndex(where: {$0.channel == currentChannel}) {
+                    let item = channelArray[i].largeChannelArtUrl
+                    Player.shared.updateDisplay(key: currentChannel, cache: Player.shared.pdtCache, channelArt: item)
+                }
+            }
+       // }
+    }
+    
+    
     override func viewWillAppear(_ animated: Bool) {
         
         if let searchbartext = searchBar.text {
@@ -205,6 +227,7 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
         //self.view.endEditing(true)
         
         if let text = localCell.textLabel?.text {
+
             currentChannelName = text
             
             let previousChannel = currentChannel
@@ -212,6 +235,8 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
             if let channel = text.components(separatedBy: " ").first {
                 currentChannel = channel
             }
+            
+
             
             selectedRow = indexPath
             
@@ -251,7 +276,6 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
                 let doit = currentChannel != previousChannel || this.player.isDead || this.state != .playing
                 doit ? this.new(.stream) : () //playing
                 
-                //determine if we should switch views
                 (doit || !iPad) ? (self.performSegue(withIdentifier: "playerViewSegue", sender: localCell)) : ()
 
             }
@@ -270,11 +294,7 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
         return filterData.count
     }
   	
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "test" {
-            print("HEST")
-        }
-    }
+
     
     //Display the channels view
     override func tableView(_ tableView: UITableView,

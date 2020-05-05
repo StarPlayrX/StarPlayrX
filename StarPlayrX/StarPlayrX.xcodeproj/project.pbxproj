@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5F381C17245F568E009BA91D /* Draw.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F381C16245F568E009BA91D /* Draw.swift */; };
 		5F5C5009244CBBD300A35D76 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5008244CBBD300A35D76 /* AppDelegate.swift */; };
 		5F5C500B244CBBD300A35D76 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C500A244CBBD300A35D76 /* SceneDelegate.swift */; };
 		5F5C5012244CBBD300A35D76 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5F5C5010244CBBD300A35D76 /* Main.storyboard */; };
@@ -24,7 +25,6 @@
 		5F5C505A244CC26000A35D76 /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5047244CC26000A35D76 /* Login.swift */; };
 		5F5C505B244CC26000A35D76 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5048244CC26000A35D76 /* Player.swift */; };
 		5F5C505C244CC26000A35D76 /* PortFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5049244CC26000A35D76 /* PortFinder.swift */; };
-		5F5C505D244CC26000A35D76 /* nowPlaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C504A244CC26000A35D76 /* nowPlaying.swift */; };
 		5F5C505E244CC26000A35D76 /* Channels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C504B244CC26000A35D76 /* Channels.swift */; };
 		5F5C505F244CC26000A35D76 /* PostSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C504C244CC26000A35D76 /* PostSync.swift */; };
 		5F5C5060244CC26000A35D76 /* ReadDataFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C504D244CC26000A35D76 /* ReadDataFile.swift */; };
@@ -34,7 +34,6 @@
 		5F5C5064244CC26000A35D76 /* iPhone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5051244CC26000A35D76 /* iPhone.swift */; };
 		5F5C5065244CC26000A35D76 /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5052244CC26000A35D76 /* Global.swift */; };
 		5F5C5066244CC26000A35D76 /* LaunchServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5053244CC26000A35D76 /* LaunchServer.swift */; };
-		5F5C5067244CC26000A35D76 /* Xtra.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5054244CC26000A35D76 /* Xtra.swift */; };
 		5F5C5068244CC26000A35D76 /* Cookies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5055244CC26000A35D76 /* Cookies.swift */; };
 		5F5C5069244CC26000A35D76 /* textSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5056244CC26000A35D76 /* textSync.swift */; };
 		5F5C506A244CC26000A35D76 /* Networkabilty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5057244CC26000A35D76 /* Networkabilty.swift */; };
@@ -53,6 +52,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5F381C16245F568E009BA91D /* Draw.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Draw.swift; sourceTree = "<group>"; };
+		5F381C18245F66BD009BA91D /* test */ = {isa = PBXFileReference; explicitFileType = text.script.python; path = test; sourceTree = "<group>"; };
 		5F5C5005244CBBD300A35D76 /* StarPlayrX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StarPlayrX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F5C5008244CBBD300A35D76 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5F5C500A244CBBD300A35D76 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -74,7 +75,6 @@
 		5F5C5047244CC26000A35D76 /* Login.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
 		5F5C5048244CC26000A35D76 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		5F5C5049244CC26000A35D76 /* PortFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PortFinder.swift; sourceTree = "<group>"; };
-		5F5C504A244CC26000A35D76 /* nowPlaying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = nowPlaying.swift; sourceTree = "<group>"; };
 		5F5C504B244CC26000A35D76 /* Channels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Channels.swift; sourceTree = "<group>"; };
 		5F5C504C244CC26000A35D76 /* PostSync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostSync.swift; sourceTree = "<group>"; };
 		5F5C504D244CC26000A35D76 /* ReadDataFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadDataFile.swift; sourceTree = "<group>"; };
@@ -84,7 +84,6 @@
 		5F5C5051244CC26000A35D76 /* iPhone.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iPhone.swift; sourceTree = "<group>"; };
 		5F5C5052244CC26000A35D76 /* Global.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		5F5C5053244CC26000A35D76 /* LaunchServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LaunchServer.swift; sourceTree = "<group>"; };
-		5F5C5054244CC26000A35D76 /* Xtra.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Xtra.swift; sourceTree = "<group>"; };
 		5F5C5055244CC26000A35D76 /* Cookies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cookies.swift; sourceTree = "<group>"; };
 		5F5C5056244CC26000A35D76 /* textSync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = textSync.swift; sourceTree = "<group>"; };
 		5F5C5057244CC26000A35D76 /* Networkabilty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Networkabilty.swift; sourceTree = "<group>"; };
@@ -183,6 +182,7 @@
 				5F5C501E244CBCD500A35D76 /* SiriusViewController.swift */,
 				5F5C5022244CBCD500A35D76 /* ChannelsViewController.swift */,
 				5F5C5020244CBCD500A35D76 /* PlayerViewController.swift */,
+				5F381C18245F66BD009BA91D /* test */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -218,6 +218,7 @@
 		5F5C5046244CC24D00A35D76 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				5F381C16245F568E009BA91D /* Draw.swift */,
 				5F5C504B244CC26000A35D76 /* Channels.swift */,
 				5F5C5055244CC26000A35D76 /* Cookies.swift */,
 				5F5C5059244CC26000A35D76 /* DataSync.swift */,
@@ -230,13 +231,11 @@
 				5F5C5053244CC26000A35D76 /* LaunchServer.swift */,
 				5F5C5047244CC26000A35D76 /* Login.swift */,
 				5F5C5057244CC26000A35D76 /* Networkabilty.swift */,
-				5F5C504A244CC26000A35D76 /* nowPlaying.swift */,
 				5F5C5048244CC26000A35D76 /* Player.swift */,
 				5F5C5049244CC26000A35D76 /* PortFinder.swift */,
 				5F5C504C244CC26000A35D76 /* PostSync.swift */,
 				5F5C504D244CC26000A35D76 /* ReadDataFile.swift */,
 				5F5C5056244CC26000A35D76 /* textSync.swift */,
-				5F5C5054244CC26000A35D76 /* Xtra.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -335,14 +334,13 @@
 				5F5C5061244CC26000A35D76 /* channelLoader.swift in Sources */,
 				5F5C506A244CC26000A35D76 /* Networkabilty.swift in Sources */,
 				5F5C506B244CC26000A35D76 /* ImageAsync.swift in Sources */,
-				5F5C5067244CC26000A35D76 /* Xtra.swift in Sources */,
+				5F381C17245F568E009BA91D /* Draw.swift in Sources */,
 				5F5C5060244CC26000A35D76 /* ReadDataFile.swift in Sources */,
 				5F5C505A244CC26000A35D76 /* Login.swift in Sources */,
 				5F5C5041244CC20800A35D76 /* AP2Volume.m in Sources */,
 				5F5C5025244CBCD500A35D76 /* TabViewController.swift in Sources */,
 				5F5C5009244CBBD300A35D76 /* AppDelegate.swift in Sources */,
 				5F5C5068244CC26000A35D76 /* Cookies.swift in Sources */,
-				5F5C505D244CC26000A35D76 /* nowPlaying.swift in Sources */,
 				5F5C5066244CC26000A35D76 /* LaunchServer.swift in Sources */,
 				5F5C500B244CBBD300A35D76 /* SceneDelegate.swift in Sources */,
 				5F5C5026244CBCD500A35D76 /* PlayerViewController.swift in Sources */,
