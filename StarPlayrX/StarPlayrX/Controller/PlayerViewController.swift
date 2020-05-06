@@ -21,7 +21,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     @IBOutlet weak var mainView: UIView!
     
     //UI Variables
-    var PlayerView       = UIView()
+    var PlayerView      = UIView()
     
     var Artist          = UILabel()
     var Song            = UILabel()
@@ -30,8 +30,8 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     var VolumeSlider    = UISlider()
     
     var AirPlayView     = UIView()
-    var AirPlayBtn : AVRoutePickerView = AVRoutePickerView()
-
+    var AirPlayBtn      = AVRoutePickerView()
+    
     var SpeakerView     = UIImageView()
     
     var PlayerXL        = UIButton()
@@ -47,41 +47,8 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     var channelString = "Channels"
     var playerViewTimerX =  Timer()
     
-    let speakerSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 28)
-    
     //Art Queue
     public let ArtQueue = DispatchQueue(label: "ArtQueue", qos: .background )
-    
-    @objc func TB() {
-        let sp = Player.shared
-        sp.SPXPresets = [String]()
-        
-        var index = -1
-        for d in channelArray {
-            index += 1
-            if d.channel == currentChannel {
-                channelArray[index].preset = !channelArray[index].preset
-                
-                if channelArray[index].preset {
-                    allStarButton.setImage(UIImage(named: "star_on"), for: .normal)
-                    allStarButton.accessibilityLabel = "All Stars Preset On, \(currentChannelName)"
-                    
-                } else {
-                    allStarButton.setImage(UIImage(named: "star_off"), for: .normal)
-                    allStarButton.accessibilityLabel = "All Stars Preset Off, \(currentChannelName)"
-                    
-                }
-            }
-            
-            if channelArray[index].preset {
-                sp.SPXPresets.append(d.channel)
-            }
-        }
-        
-        if !sp.SPXPresets.isEmpty {
-            UserDefaults.standard.set(sp.SPXPresets, forKey: "SPXPresets")
-        }
-    }
     
     func Pulsar() {
         let pulseAnimation = CABasicAnimation(keyPath: "opacity")
@@ -151,7 +118,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
             }
         }
     }
-    
+
     override func loadView() {
         super.loadView()
         
@@ -166,7 +133,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
             NavY = navY
             TabY = tabY
             iPhone = true
-
+            
         } else if let tabY = self.tabBarController?.tabBar.frame.size.height {
             
             NavY = 0
@@ -188,13 +155,13 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         } else {
             ArtistSong = draw.ArtistSongiPad(playerView: PlayerView)
         }
-     
+        
         VolumeSlider = draw.VolumeSliders(playerView: PlayerView)
         addSliderAction()
-		
+        
         PlayerXL = draw.PlayerButton(playerView: PlayerView)
         PlayerXL.addTarget(self, action: #selector(PlayPause), for: .touchUpInside)
-		
+        
         SpeakerView = draw.SpeakerImage(playerView: PlayerView)
         updatePlayPauseIcon(play: true)
         setAllStarButton()
@@ -203,7 +170,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         
         AirPlayBtn = vp.picker
         AirPlayView = vp.view
-
+        
     }
     
     func startupVolume() {
@@ -242,11 +209,10 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     func setObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(OnDidUpdatePlay), name: .didUpdatePlay, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(OnDidUpdatePause), name: .didUpdatePause, object: nil)
-        
         NotificationCenter.default.addObserver(self, selector: #selector(GotNowPlayingInfoAnimated), name: .gotNowPlayingInfoAnimated, object: nil)
-        
-            NotificationCenter.default.addObserver(self, selector: #selector(GotNowPlayingInfo), name: .gotNowPlayingInfo, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(GotNowPlayingInfo), name: .gotNowPlayingInfo, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: .willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(gotVolumeDidChange), name: .gotVolumeDidChange, object: nil)
     }
     
     func removeObservers() {
@@ -254,8 +220,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         NotificationCenter.default.removeObserver(self, name: .didUpdatePause, object: nil)
         NotificationCenter.default.removeObserver(self, name: .gotNowPlayingInfoAnimated, object: nil)
         NotificationCenter.default.removeObserver(self, name: .gotNowPlayingInfo, object: nil)
-
-    	NotificationCenter.default.removeObserver(self, name: .willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .willEnterForegroundNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: .gotVolumeDidChange, object: nil)
     }
     //MARK: End Observers
@@ -323,7 +288,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         }
     }
     
-	//MARK: Magic tap for the rest of us
+    //MARK: Magic tap for the rest of us
     @objc func doubleTapped() {
         PlayPause()
     }
@@ -380,11 +345,12 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                                   completion: nil)
             }
         } else {
+            self.AlbumArt.image = nowPlaying.image
+            self.AlbumArt.alpha = 1.0
             self.ArtistSong.text = nowPlaying.artist + " • " + nowPlaying.song + " — " + currentChannelName
             self.Artist.text = nowPlaying.artist
             self.Song.text = nowPlaying.song
-            self.AlbumArt.image = nowPlaying.image
-            self.AlbumArt.alpha = 1.0
+            
         }
     }
     
@@ -422,6 +388,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         checkForAllStar()
         setObservers()
         isSliderEnabled()
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -507,7 +474,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         if let touchEvent = event.allTouches?.first {
             switch touchEvent.phase {
                 case .began:
-                    ()
                     removeVolumeObserver()
                 
                 case .moved:
@@ -515,13 +481,9 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                         let value = slider.value
                         AP2Volume.shared().setVolume(value)
                         self.setSpeakers(value: value)
-                        
                 }
                 case .ended:
-                    ()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                        self.setVolumeObserver()
-                }
+                    setVolumeObserver()
                 default:
                     return
             }
@@ -621,22 +583,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         syncArt()
     }
     
-    
-    //set tab item
-    /*func tabItem(index: Int, enable: Bool, selectItem: Bool) {
-        let tabBarArray = self.tabBarController?.tabBar.items
-        
-        if let tabBarItems = tabBarArray, tabBarItems.count > 0 {
-            let tabBarItem = tabBarItems[index]
-            tabBarItem.isEnabled = enable
-        }
-        
-        if selectItem {
-            self.tabBarController!.selectedIndex = index
-        }
-    }*/
-    
-    
 }
 
 //Speakers enum
@@ -653,52 +599,3 @@ enum Speakers : String {
     case speaker9 = "speaker9"
     case speaker10 = "speaker10"
 }
-
-/*var PlayerTimer : Timer? 	=  nil
- var playerLock 				= false
- var allStarButton 			= UIButton(type: UIButton.ButtonType.custom)
- var preVolume 				= Float(-1.0)
- 
- override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
- override var prefersHomeIndicatorAutoHidden : Bool { return true }
- override var prefersStatusBarHidden: Bool { return false }
- override var preferredStatusBarStyle: UIStatusBarStyle { return .lightContent }
- 
- @IBOutlet weak var routerView: UIView!
- 
- //Notifications
- var localChannelArt = ""
- var localAlbumArt = ""
- var preArtistSong = ""
- var setAlbumArt = false
- var maxAlbumAttempts = 3
-
- @objc func UpdatePlayerView() {
- 
- if let i = channelArray.firstIndex(where: {$0.channel == currentChannel}) {
- let item = channelArray[i].largeChannelArtUrl
- Player.shared.updateDisplay(key: currentChannel, cache: Player.shared.pdtCache, channelArt: item)
- }
- 
- }
- 
- //View Did Load
- override func viewDidLoad() {
- super.viewDidLoad()
- 
- removeObservers()
- 
- addSlider()
-
- setAlbumArt = false
- setVolumeObserver()
-
- */
-/*
- 
- let audioSession = AVAudioSession()
- try? audioSession.setActive(true)
- audioSession.addObserver(self, forKeyPath: "outputVolume", options: NSKeyValueObservingOptions.new, context: nil)
- 
- 
- */

@@ -19,9 +19,9 @@ public func cookies(channelid: String) -> (success: Bool, message: String, data:
     let request = ["channelid":channelid] as Dictionary
     let result = PostSync(request: request, endpoint: endpoint, method: method )
     
-    if let message = result.data["message"] as? String,
-       let success = result.data["success"] as? Bool,
-       let data = result.data["data"] as? String {
+    if let message = result.data?["message"] as? String,
+        let success = result.data?["success"] as? Bool,
+        let data = result.data?["data"] as? String {
         return (success: success, message: message, data: data)
     }
     

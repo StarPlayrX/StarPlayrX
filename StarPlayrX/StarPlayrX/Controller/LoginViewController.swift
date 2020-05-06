@@ -79,25 +79,23 @@ class LoginViewController: UIViewController {
         var ping : String? = nil
         
         let pingUrl = "http://localhost:" + String(Player.shared.port) + "/ping"
-        TextSync(endpoint: pingUrl, TextHandler: { (p) -> Void in
+        TextAsync(endpoint: pingUrl, TextHandler: { (p) -> Void in
             ping = p
+            
+            //Check if Local Web Server is Up
+            if let pg = ping, pg != "pong" {
+                print("Launching the Server.")
+                LaunchServer()
+            }
+            
+            DispatchQueue.main.async {
+                self.progressBar?.setProgress(0.05, animated: true)
+            }
+            
+            DispatchQueue.main.async {
+                self.loginUpdate()
+            }
         })
-        
-        repeat {usleep(25000)} while ping == nil
-        
-        //Check if Local Web Server is Up
-        if let pg = ping, pg != "pong" {
-            print("Launching the Server.")
-            LaunchServer()
-        }
-        
-        DispatchQueue.main.async {
-            self.progressBar?.setProgress(0.05, animated: true)
-        }
-        
-        DispatchQueue.main.async {
-            self.loginUpdate()
-        }
     }
     
     func loginUpdate() {
@@ -161,11 +159,20 @@ class LoginViewController: UIViewController {
                 self.progressBar?.setProgress(0.3, animated: true)
             }
             
-            let returnData = getChannelList()
-            if returnData.success {
-                channelList = (returnData.data as! [String : Any])
-                self.artworkUpdate(channelLineUpId: channelLineUpId)
-            }
+            let endpoint = insecure + local + ":" + String(Player.shared.port) + "/api/v2/channels"
+            let method = "channels"
+            let request = ["channeltype" : "" ] as Dictionary
+            
+            PostAsync(request: request, endpoint: endpoint, method: method, TupleHandler: { ( result ) -> Void in
+                if let data = result?.data?["data"] as? [String : Any] {
+                    channelList = data
+                    self.artworkUpdate(channelLineUpId: channelLineUpId)
+                } else {
+                    //read channellist from disk?
+                    print("Error reading channels.")
+                }
+            })
+
         }
     }
     
@@ -264,7 +271,7 @@ class LoginViewController: UIViewController {
                 var largeChecksum : String? = nil
                 
 
-                TextSync(endpoint: checksumUrl, TextHandler: { (checksum) -> Void in
+                TextAsync(endpoint: checksumUrl, TextHandler: { (checksum) -> Void in
                     largeChecksum = checksum
                 })
                 
@@ -306,8 +313,12 @@ class LoginViewController: UIViewController {
                         var dataUrl = secure + domain
                         dataUrl = dataUrl +  ":" + String(secureport2)
                         dataUrl = dataUrl + "/large"
+                                                
+                        var d = Data()
                         
-                        let d = DataSync(endpoint: dataUrl, method: "large-art")
+                        DataAsync(endpoint: dataUrl, method: "large-art", DataHandler: { (data) -> Void in
+                            if let data = data { d = data }
+                        })
                         
                         //This error is near fatal, we will use the file on disk instead
                         if let chData = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(d) {

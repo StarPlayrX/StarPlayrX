@@ -30,8 +30,8 @@ class TabController: UITabBarController {
         delegate = self
     }
     
-    override open var supportedInterfaceOrientations : UIInterfaceOrientationMask {
-        let deviceType = UIDevice().type
+   // override open var supportedInterfaceOrientations : UIInterfaceOrientationMask {
+        /*let deviceType = UIDevice().type
         
         // iPhoneX which is portrait only
         if deviceType == .iPhoneX || deviceType == .iPhoneXSMax {
@@ -46,8 +46,8 @@ class TabController: UITabBarController {
             return .landscape
         } else {
             return .all // don't know what device that have, but it will still work just not optimized
-        }
-    }
+        }*/
+    //}
 }
 
 //TabViewController

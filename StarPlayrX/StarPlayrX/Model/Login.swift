@@ -38,18 +38,6 @@ func session() -> String {
 }
 
 
-//channels Helper Method
-func getChannelList() -> (success: Bool, message: String, data: NSDictionary) {
-    
-    let channelsTask = channels(channeltype: "number")
-    
-    if channelsTask.success {
-        return channelsTask
-    } else {
-        return (success: false, message: channelsTask.message, data: ["result": "failed"])
-    }
-    
-}
 
 //login User
 public func login(user: String, pass: String) -> (success: Bool, message: String, data: String) {
@@ -62,10 +50,10 @@ public func login(user: String, pass: String) -> (success: Bool, message: String
     let request = ["user":user,"pass":pass] as Dictionary
     
     let result = PostSync(request: request, endpoint: endpoint, method: method )
-    if result.data["message"] != nil {
-        message = result.data["message"] as! String
-        success = result.data["success"] as! Bool
-        data = result.data["data"] as! String
+    if result.data?["message"] != nil {
+        message = result.data?["message"] as! String
+        success = result.data?["success"] as! Bool
+        data = result.data?["data"] as! String
     } else {
         print("Error occurred logging in.")
     }
@@ -87,10 +75,10 @@ public func autologin(user: String, pass: String) -> (success: Bool, message: St
     
     let result = PostSync(request: request, endpoint: endpoint, method: method )
     
-    if result.data["message"] != nil {
-        message = result.data["message"] as! String
-        success = result.data["success"] as! Bool
-        data = result.data["data"] as! String
+    if result.data?["message"] != nil {
+        message = result.data?["message"] as! String
+        success = result.data?["success"] as! Bool
+        data = result.data?["data"] as! String
     } else {
         print("Error occurred logging in.")
     }

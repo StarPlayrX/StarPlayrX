@@ -38,7 +38,7 @@ extension AVQueuePlayer {
         var returnValue : Bool? = nil
         
         let pingUrl = "http://localhost:" + String(Player.shared.port) + "/ping"
-        TextSync(endpoint: pingUrl, TextHandler: { (ping) -> Void in
+        TextAsync(endpoint: pingUrl, TextHandler: { (ping) -> Void in
             returnValue = (ping == "pong") ? true : false
         })
         
@@ -69,7 +69,6 @@ extension Notification.Name {
     static let updateChannelsView = Notification.Name("updateChannelsView")
     static let gotNowPlayingInfo = Notification.Name("gotNowPlayingInfo")
     static let gotNowPlayingInfoAnimated = Notification.Name("gotNowPlayingInfoAnimated")
-
     static let gotSessionInterruption = AVAudioSession.interruptionNotification
     static let gotRouteChangeNotification = AVAudioSession.routeChangeNotification
     static let gotVolumeDidChange = NSNotification.Name(rawValue: "AVSystemController_SystemVolumeDidChangeNotification")

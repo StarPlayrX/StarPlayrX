@@ -8,9 +8,8 @@
 
 import Foundation
 
-typealias PostReturnTuple = (message: String, success: Bool, data: NSDictionary, response: HTTPURLResponse )
 
-internal func PostSync(request: Dictionary<String, Any>, endpoint: String, method: String) -> PostReturnTuple  {
+ func PostSync(request: Dictionary<String, Any>, endpoint: String, method: String) -> PostReturnTuple  {
  
     //MARK - for Sync
     let semaphore = DispatchSemaphore(value: 0)
@@ -97,7 +96,7 @@ internal func PostSync(request: Dictionary<String, Any>, endpoint: String, metho
                         
                     }
                     
-                    syncData = (message: method + " was successful.", success: true, data: result, response: resp as! HTTPURLResponse ) as! PostReturnTuple
+                syncData = (message: method + " was successful.", success: true, data: result, response: resp as? HTTPURLResponse ) as PostReturnTuple
                
             }
             

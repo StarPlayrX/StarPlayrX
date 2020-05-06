@@ -78,10 +78,14 @@ var lastCategory = "Init Cat"
 var globalSearchText = ""
 
 //Completion Handlers
-typealias CompletionHandler = (_ success:Bool) -> Void
-typealias ImageHandler = (_ image:UIImage?) -> Void
-typealias DictionaryHandler = (_ dict:NSDictionary?) -> Void
-typealias TextHandler = (_ text:String?) -> Void
+typealias CompletionHandler 	= (_ success:Bool) -> Void
+typealias ImageHandler 			= (_ image:UIImage?) -> Void
+typealias TupleHandler 			= (_ tuple:PostReturnTuple?) -> Void
+typealias DictionaryHandler 	= (_ dict:NSDictionary?) -> Void
+typealias DataHandler 			= (_ data:Data?) -> Void
+typealias TextHandler 			= (_ text:String?) -> Void
+
+typealias PostReturnTuple = (message: String, success: Bool, data: NSDictionary? , response: HTTPURLResponse? )
 
 enum PlayerState {
     case playing
