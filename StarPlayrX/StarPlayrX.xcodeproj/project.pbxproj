@@ -22,23 +22,16 @@
 		5F5C5041244CC20800A35D76 /* AP2Volume.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5040244CC20800A35D76 /* AP2Volume.m */; };
 		5F5C5044244CC22A00A35D76 /* bluenumbers.dms in Resources */ = {isa = PBXBuildFile; fileRef = 5F5C5042244CC22A00A35D76 /* bluenumbers.dms */; };
 		5F5C5045244CC22A00A35D76 /* demoart.dms in Resources */ = {isa = PBXBuildFile; fileRef = 5F5C5043244CC22A00A35D76 /* demoart.dms */; };
-		5F5C505A244CC26000A35D76 /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5047244CC26000A35D76 /* Login.swift */; };
 		5F5C505B244CC26000A35D76 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5048244CC26000A35D76 /* Player.swift */; };
 		5F5C505C244CC26000A35D76 /* PortFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5049244CC26000A35D76 /* PortFinder.swift */; };
-		5F5C505F244CC26000A35D76 /* PostSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C504C244CC26000A35D76 /* PostSync.swift */; };
 		5F5C5060244CC26000A35D76 /* ReadDataFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C504D244CC26000A35D76 /* ReadDataFile.swift */; };
 		5F5C5061244CC26000A35D76 /* channelLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C504E244CC26000A35D76 /* channelLoader.swift */; };
 		5F5C5062244CC26000A35D76 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C504F244CC26000A35D76 /* Extensions.swift */; };
-		5F5C5063244CC26000A35D76 /* GetAsync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5050244CC26000A35D76 /* GetAsync.swift */; };
 		5F5C5065244CC26000A35D76 /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5052244CC26000A35D76 /* Global.swift */; };
 		5F5C5066244CC26000A35D76 /* LaunchServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5053244CC26000A35D76 /* LaunchServer.swift */; };
-		5F5C5068244CC26000A35D76 /* Cookies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5055244CC26000A35D76 /* Cookies.swift */; };
-		5F5C5069244CC26000A35D76 /* TextAsync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5056244CC26000A35D76 /* TextAsync.swift */; };
 		5F5C506A244CC26000A35D76 /* Networkabilty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5057244CC26000A35D76 /* Networkabilty.swift */; };
-		5F5C506B244CC26000A35D76 /* ImageAsync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5058244CC26000A35D76 /* ImageAsync.swift */; };
-		5F5C506C244CC26000A35D76 /* DataAsync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5059244CC26000A35D76 /* DataAsync.swift */; };
 		5F5C510F244CD45400A35D76 /* CameoKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F5C50FF244CD45400A35D76 /* CameoKit.framework */; };
-		5F97A0BD246237EB004FE167 /* PostAsync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F97A0BC246237EB004FE167 /* PostAsync.swift */; };
+		5FDAD9BA2464EFBA008E38A8 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDAD9B92464EFBA008E38A8 /* Async.swift */; };
 		5FFF9D9C244D22B000D795DA /* COpenSSL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FFF9D93244D22B000D795DA /* COpenSSL.framework */; };
 		5FFF9D9E244D22B000D795DA /* PerfectCHTTPParser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FFF9D94244D22B000D795DA /* PerfectCHTTPParser.framework */; };
 		5FFF9DA0244D22B000D795DA /* PerfectCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FFF9D95244D22B000D795DA /* PerfectCrypto.framework */; };
@@ -70,24 +63,17 @@
 		5F5C5040244CC20800A35D76 /* AP2Volume.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AP2Volume.m; sourceTree = "<group>"; };
 		5F5C5042244CC22A00A35D76 /* bluenumbers.dms */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = bluenumbers.dms; sourceTree = "<group>"; };
 		5F5C5043244CC22A00A35D76 /* demoart.dms */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = demoart.dms; sourceTree = "<group>"; };
-		5F5C5047244CC26000A35D76 /* Login.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
 		5F5C5048244CC26000A35D76 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		5F5C5049244CC26000A35D76 /* PortFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PortFinder.swift; sourceTree = "<group>"; };
-		5F5C504C244CC26000A35D76 /* PostSync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostSync.swift; sourceTree = "<group>"; };
 		5F5C504D244CC26000A35D76 /* ReadDataFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadDataFile.swift; sourceTree = "<group>"; };
 		5F5C504E244CC26000A35D76 /* channelLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = channelLoader.swift; sourceTree = "<group>"; };
 		5F5C504F244CC26000A35D76 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
-		5F5C5050244CC26000A35D76 /* GetAsync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetAsync.swift; sourceTree = "<group>"; };
 		5F5C5052244CC26000A35D76 /* Global.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		5F5C5053244CC26000A35D76 /* LaunchServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LaunchServer.swift; sourceTree = "<group>"; };
-		5F5C5055244CC26000A35D76 /* Cookies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cookies.swift; sourceTree = "<group>"; };
-		5F5C5056244CC26000A35D76 /* TextAsync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextAsync.swift; sourceTree = "<group>"; };
 		5F5C5057244CC26000A35D76 /* Networkabilty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Networkabilty.swift; sourceTree = "<group>"; };
-		5F5C5058244CC26000A35D76 /* ImageAsync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageAsync.swift; sourceTree = "<group>"; };
-		5F5C5059244CC26000A35D76 /* DataAsync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataAsync.swift; sourceTree = "<group>"; };
 		5F5C5088244CCAB900A35D76 /* StarPlayrX.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StarPlayrX.entitlements; sourceTree = "<group>"; };
 		5F5C50FF244CD45400A35D76 /* CameoKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CameoKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		5F97A0BC246237EB004FE167 /* PostAsync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostAsync.swift; sourceTree = "<group>"; };
+		5FDAD9B92464EFBA008E38A8 /* Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Async.swift; path = StarPlayrX/Model/Async.swift; sourceTree = SOURCE_ROOT; };
 		5FFF9D93244D22B000D795DA /* COpenSSL.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = COpenSSL.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FFF9D94244D22B000D795DA /* PerfectCHTTPParser.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PerfectCHTTPParser.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FFF9D95244D22B000D795DA /* PerfectCrypto.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PerfectCrypto.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -214,41 +200,18 @@
 		5F5C5046244CC24D00A35D76 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				5F97A0BF24623F2B004FE167 /* SyncCalls */,
-				5F97A0BE24623E07004FE167 /* AsyncCalls */,
+				5FDAD9B92464EFBA008E38A8 /* Async.swift */,
 				5F381C16245F568E009BA91D /* Draw.swift */,
-				5F5C5055244CC26000A35D76 /* Cookies.swift */,
 				5F5C504F244CC26000A35D76 /* Extensions.swift */,
 				5F5C5052244CC26000A35D76 /* Global.swift */,
 				5F5C504E244CC26000A35D76 /* channelLoader.swift */,
 				5F5C5053244CC26000A35D76 /* LaunchServer.swift */,
-				5F5C5047244CC26000A35D76 /* Login.swift */,
 				5F5C5057244CC26000A35D76 /* Networkabilty.swift */,
 				5F5C5048244CC26000A35D76 /* Player.swift */,
 				5F5C5049244CC26000A35D76 /* PortFinder.swift */,
 				5F5C504D244CC26000A35D76 /* ReadDataFile.swift */,
 			);
 			path = Model;
-			sourceTree = "<group>";
-		};
-		5F97A0BE24623E07004FE167 /* AsyncCalls */ = {
-			isa = PBXGroup;
-			children = (
-				5F5C5059244CC26000A35D76 /* DataAsync.swift */,
-				5F5C5056244CC26000A35D76 /* TextAsync.swift */,
-				5F5C5050244CC26000A35D76 /* GetAsync.swift */,
-				5F97A0BC246237EB004FE167 /* PostAsync.swift */,
-				5F5C5058244CC26000A35D76 /* ImageAsync.swift */,
-			);
-			path = AsyncCalls;
-			sourceTree = "<group>";
-		};
-		5F97A0BF24623F2B004FE167 /* SyncCalls */ = {
-			isa = PBXGroup;
-			children = (
-				5F5C504C244CC26000A35D76 /* PostSync.swift */,
-			);
-			path = SyncCalls;
 			sourceTree = "<group>";
 		};
 		5FFF9DAF244D398700D795DA /* View */ = {
@@ -339,28 +302,21 @@
 				5F5C505C244CC26000A35D76 /* PortFinder.swift in Sources */,
 				5F5C5062244CC26000A35D76 /* Extensions.swift in Sources */,
 				5F5C505B244CC26000A35D76 /* Player.swift in Sources */,
-				5F5C5063244CC26000A35D76 /* GetAsync.swift in Sources */,
 				5F5C5028244CBCD500A35D76 /* ChannelsViewController.swift in Sources */,
 				5F5C5061244CC26000A35D76 /* channelLoader.swift in Sources */,
 				5F5C506A244CC26000A35D76 /* Networkabilty.swift in Sources */,
-				5F5C506B244CC26000A35D76 /* ImageAsync.swift in Sources */,
+				5FDAD9BA2464EFBA008E38A8 /* Async.swift in Sources */,
 				5F381C17245F568E009BA91D /* Draw.swift in Sources */,
 				5F5C5060244CC26000A35D76 /* ReadDataFile.swift in Sources */,
-				5F5C505A244CC26000A35D76 /* Login.swift in Sources */,
 				5F5C5041244CC20800A35D76 /* AP2Volume.m in Sources */,
 				5F5C5025244CBCD500A35D76 /* TabViewController.swift in Sources */,
 				5F5C5009244CBBD300A35D76 /* AppDelegate.swift in Sources */,
-				5F5C5068244CC26000A35D76 /* Cookies.swift in Sources */,
 				5F5C5066244CC26000A35D76 /* LaunchServer.swift in Sources */,
 				5F5C500B244CBBD300A35D76 /* SceneDelegate.swift in Sources */,
-				5F97A0BD246237EB004FE167 /* PostAsync.swift in Sources */,
 				5F5C5026244CBCD500A35D76 /* PlayerViewController.swift in Sources */,
-				5F5C506C244CC26000A35D76 /* DataAsync.swift in Sources */,
 				5F5C5024244CBCD500A35D76 /* SiriusViewController.swift in Sources */,
 				5F5C5029244CBCD500A35D76 /* LoginViewController.swift in Sources */,
-				5F5C505F244CC26000A35D76 /* PostSync.swift in Sources */,
 				5F5C5027244CBCD500A35D76 /* SplitViewController.swift in Sources */,
-				5F5C5069244CC26000A35D76 /* TextAsync.swift in Sources */,
 				5F5C5065244CC26000A35D76 /* Global.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

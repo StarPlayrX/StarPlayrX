@@ -10,6 +10,15 @@ import Foundation
 
 func checkTcpPortForListen(port: in_port_t) -> (Bool, descr: String) {
     
+    func release(socket: Int32) {
+        Darwin.shutdown(socket, SHUT_RDWR)
+        close(socket)
+    }
+    
+    func descriptionOfLastError() -> String {
+        return String.init(cString: (UnsafePointer(strerror(errno))))
+    }
+
     let socketFileDescriptor = socket(AF_INET, SOCK_STREAM, 0)
     if socketFileDescriptor == -1 {
         return (false, "SocketCreationFailed, \(descriptionOfLastError())")
@@ -39,11 +48,3 @@ func checkTcpPortForListen(port: in_port_t) -> (Bool, descr: String) {
     return (true, "\(port) is free for use")
 }
 
-func release(socket: Int32) {
-    Darwin.shutdown(socket, SHUT_RDWR)
-    close(socket)
-}
-
-func descriptionOfLastError() -> String {
-    return String.init(cString: (UnsafePointer(strerror(errno))))
-}

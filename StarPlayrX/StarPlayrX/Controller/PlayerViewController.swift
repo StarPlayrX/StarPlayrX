@@ -381,7 +381,9 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        syncArt()
+        if let _  = Artist.text?.isEmpty { Player.shared.syncArt() }
+        
+        
         VolumeSlider.setValue(AP2Volume.shared().getVolume(), animated: false)
         title = currentChannelName
         startup()
@@ -403,23 +405,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         removeObservers()
     }
     
-    //MARK: Update the screen
-    func syncArt() {
-        
-        if let md5 = Player.shared.MD5(String(CACurrentMediaTime().description)) {
-            Player.shared.previousMD5 = md5
-        } else {
-            let str = "Hello, Last Star Player X."
-            Player.shared.previousMD5 = Player.shared.MD5(String(str)) ?? str
-        }
-        
-        if Player.shared.player.isReady {
-            if let i = channelArray.firstIndex(where: {$0.channel == currentChannel}) {
-                let item = channelArray[i].largeChannelArtUrl
-                Player.shared.updateDisplay(key: currentChannel, cache: Player.shared.pdtCache, channelArt: item, false)
-            }
-        }
-    }
+    
     
     //MARK: Speaker Volume with Smooth Frame Animation
     func setSpeakers(value: Float) {
@@ -580,7 +566,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     
     @objc func willEnterForeground() {
         startup()
-        syncArt()
     }
     
 }

@@ -79,7 +79,7 @@ class LoginViewController: UIViewController {
         var ping : String? = nil
         
         let pingUrl = "http://localhost:" + String(Player.shared.port) + "/ping"
-        TextAsync(endpoint: pingUrl, TextHandler: { (p) -> Void in
+        Async.api.Text(endpoint: pingUrl, TextHandler: { (p) -> Void in
             ping = p
             
             //Check if Local Web Server is Up
@@ -107,31 +107,51 @@ class LoginViewController: UIViewController {
                 gPassword = pass
                 
                 //login user
-                let returnData = loginHelper(username: gUsername,
-                                             password: gPassword)
-                DispatchQueue.main.async {
-                    if returnData.success {
-                        UserDefaults.standard.set(gUsername, forKey: "user")
-                        UserDefaults.standard.set(gPassword, forKey: "pass")
-                        userid = returnData.data
-                        UserDefaults.standard.set(userid, forKey: "userid")
-                        
-                        self.sessionUpdate()
-                        
-                    } else {
-                        if returnData.data == "411" {
-                            self.progressBar?.setProgress(0.0, animated: true)
-                            self.closeStarPlayr(title: "Local Network Error",
-                                                message: returnData.message, action: "Close StarPlayrX")
-                        } else {
-                            self.progressBar?.setProgress(0.0, animated: true)
-                            self.showAlert(title: "Login Error",
-                                           message: returnData.message, action: "OK")
+                
+                
+                let endpoint = insecure + local + ":" + String(Player.shared.port)  + "/api/v2/autologin"
+                let method = "login"
+                let request = ["user":user,"pass":pass] as Dictionary
+                
+                
+                Async.api.Post(request: request, endpoint: endpoint, method: method, TupleHandler: { (result) -> Void in
+                    if let data = result?.data?["data"] as! String?,  let message = result?.data?["message"] as! String?, let success = result?.data?["success"] as! Bool?  {
+                       	
+                        DispatchQueue.main.async {
+                            if success {
+                                UserDefaults.standard.set(gUsername, forKey: "user")
+                                UserDefaults.standard.set(gPassword, forKey: "pass")
+                                userid = data
+                                UserDefaults.standard.set(userid, forKey: "userid")
+                                
+                                self.sessionUpdate()
+                                
+                            } else {
+                                if data == "411" {
+                                    self.progressBar?.setProgress(0.0, animated: true)
+                                    self.closeStarPlayr(title: "Local Network Error",
+                                                        message: message, action: "Close StarPlayrX")
+                                } else {
+                                    self.progressBar?.setProgress(0.0, animated: true)
+                                    self.showAlert(title: "Login Error",
+                                                   message: message, action: "OK")
+                                }
+                                self.loginButton.isEnabled = true
+                                self.loginButton.alpha = 1.0
+                            }
                         }
-                        self.loginButton.isEnabled = true
-                        self.loginButton.alpha = 1.0
+                        
+                        
+                    
+                    } else {
+                        print("Error occurred logging in.")
                     }
-                }
+                    
+                })
+                
+                
+                
+            
             }
         }
     }
@@ -143,11 +163,21 @@ class LoginViewController: UIViewController {
                 self.StatusField.text = "Success"
                 self.progressBar?.setProgress(0.2, animated: true)
             }
+      
+            let endpoint = insecure + local + ":" + String(Player.shared.port) + "/api/v2/session"
+            let method = "cookies"
+            let request = ["channelid":"siriushits1"] as Dictionary
             
-            let returndata = session()
-            DispatchQueue.main.async {
-                self.channelUpdate(channelLineUpId:returndata)
-            }
+            Async.api.Post(request: request, endpoint: endpoint, method: method, TupleHandler: { (result) -> Void in
+                if let data = result?.data?["data"] as? String {
+                    DispatchQueue.main.async {
+                        print(data)
+                        self.channelUpdate(channelLineUpId:data)
+                    }
+                } else {
+                    self.channelUpdate(channelLineUpId:"350")
+                }
+            })
         }
     }
     
@@ -163,7 +193,7 @@ class LoginViewController: UIViewController {
             let method = "channels"
             let request = ["channeltype" : "" ] as Dictionary
             
-            PostAsync(request: request, endpoint: endpoint, method: method, TupleHandler: { ( result ) -> Void in
+            Async.api.Post(request: request, endpoint: endpoint, method: method, TupleHandler: { ( result ) -> Void in
                 if let data = result?.data?["data"] as? [String : Any] {
                     channelList = data
                     self.artworkUpdate(channelLineUpId: channelLineUpId)
@@ -271,7 +301,7 @@ class LoginViewController: UIViewController {
                 var largeChecksum : String? = nil
                 
 
-                TextAsync(endpoint: checksumUrl, TextHandler: { (checksum) -> Void in
+                Async.api.Text(endpoint: checksumUrl, TextHandler: { (checksum) -> Void in
                     largeChecksum = checksum
                 })
                 
@@ -316,7 +346,7 @@ class LoginViewController: UIViewController {
                                                 
                         var d = Data()
                         
-                        DataAsync(endpoint: dataUrl, method: "large-art", DataHandler: { (data) -> Void in
+                        Async.api.CommanderData(endpoint: dataUrl, method: "large-art", DataHandler: { (data) -> Void in
                             if let data = data { d = data }
                         })
                         

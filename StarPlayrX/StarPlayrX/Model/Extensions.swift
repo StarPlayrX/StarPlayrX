@@ -38,7 +38,7 @@ extension AVQueuePlayer {
         var returnValue : Bool? = nil
         
         let pingUrl = "http://localhost:" + String(Player.shared.port) + "/ping"
-        TextAsync(endpoint: pingUrl, TextHandler: { (ping) -> Void in
+        Async.api.Text(endpoint: pingUrl, TextHandler: { (ping) -> Void in
             returnValue = (ping == "pong") ? true : false
         })
         

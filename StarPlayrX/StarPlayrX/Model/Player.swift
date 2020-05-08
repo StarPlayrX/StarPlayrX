@@ -58,11 +58,25 @@ final class Player {
         }
     }
     
-    //Read Write Cache for the PDT (Artist / Song / Album Art)
-    @objc func SPXCacheChannels() {
+	
+    //MARK: Update the screen
+    func syncArt() {
         
+        if let md5 = Player.shared.MD5(String(CACurrentMediaTime().description)) {
+            self.previousMD5 = md5
+        } else {
+            let str = "Hello, Last Star Player X."
+            self.previousMD5 = self.MD5(String(str)) ?? str
+        }
+        
+        if Player.shared.player.isReady {
+            if let i = channelArray.firstIndex(where: {$0.channel == currentChannel}) {
+                let item = channelArray[i].largeChannelArtUrl
+                self.updateDisplay(key: currentChannel, cache: self.pdtCache, channelArt: item, false)
+            }
+        }
     }
-
+    
     
     func playX() {
         NotificationCenter.default.post(name: .didUpdatePlay, object: nil)
@@ -275,11 +289,11 @@ final class Player {
             
             //Get album art
             if nowPlaying.albumArt.contains(string: "http") {
-                ImageAsync(endpoint: nowPlaying.albumArt, ImageHandler: { (img) -> Void in
+                Async.api.Imagineer(endpoint: nowPlaying.albumArt, ImageHandler: { (img) -> Void in
                     displayArt(image: img)
                 })
             } else {
-                ImageAsync(endpoint: nowPlaying.channelArt, ImageHandler: { (img) -> Void in
+                Async.api.Imagineer(endpoint: nowPlaying.channelArt, ImageHandler: { (img) -> Void in
                     displayArt(image: img)
                 })
             }
@@ -314,7 +328,7 @@ final class Player {
         
             let endpoint = insecure + local + ":" + String(Player.shared.port) + "/pdt"
         
-            GetAsync(endpoint: endpoint, DictionaryHandler: { (dict) -> Void in
+            Async.api.Get(endpoint: endpoint, DictionaryHandler: { (dict) -> Void in
                 
                 if let p = dict as? [String : Any], !p.isEmpty, let cache = p["data"] as? [String : Any], !cache.isEmpty {
                     self.pdtCache = cache

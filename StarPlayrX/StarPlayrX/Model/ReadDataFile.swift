@@ -9,6 +9,12 @@
 import Foundation
 
 func readLocalDataFile(filename:String) -> Data?  {
-
     try? NSData(contentsOfFile: Bundle.main.path(forResource: filename, ofType: "dms")!) as Data
 }
+
+// Semaphore Syntax
+
+/*let semaphore = DispatchSemaphore(value: 0)
+ semaphore.signal()
+ _ = semaphore.wait(timeout: .distantFuture)*/
+

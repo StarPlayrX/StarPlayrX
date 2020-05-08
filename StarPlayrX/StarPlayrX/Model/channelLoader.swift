@@ -78,6 +78,4 @@ func processChannelIcons()  {
             }
         }
     }
-    
-   // UserDefaults.standard.set(channelList, forKey: "channelList")
 }
