@@ -46,20 +46,27 @@ internal class Global  {
     var TalkCategories     = Array<String>()
     var SportsCategories   = Array<String>()
     var MiscCategories     = Array<String>()
+    
+    var SelectedRow : IndexPath? = nil
+    var SearchText = ""
+    var ChannelData = Dictionary<String, Data>()
+
+    internal var ChannelArray = tableData()
+    
+    var FilterData = tableData()
+    var ColdFilteredData = tableData()
+    
+    typealias NowPlayingType = (channel:String,artist:String,song:String,albumArt:String,channelArt:String, image: UIImage?)
+    var NowPlaying = (channel:"",artist:"",song:"",albumArt:"",channelArt:"", image: nil ) as NowPlayingType
 }
 
 
-typealias nowPlayingType = (channel:String,artist:String,song:String,albumArt:String,channelArt:String, image: UIImage?)
-var nowPlaying = (channel:"",artist:"",song:"",albumArt:"",channelArt:"", image: nil ) as nowPlayingType
+
 
 typealias tableData = [(searchString:String,name:String,channel:String,title:NSMutableAttributedString,detail:NSMutableAttributedString, image:UIImage, channelImage:UIImage, albumUrl:String, largeAlbumUrl: String, largeChannelArtUrl: String, category:String, preset: Bool)]
 
-var filterData = tableData()
-var coldFilteredData = tableData()
 
-var channelData = Dictionary<String, Data>()
-var XLchannelData = Dictionary<String, Data>()
-internal var channelArray = tableData()
+
 
 
 
@@ -72,8 +79,7 @@ internal var channelArray = tableData()
 
 
 
-var selectedRow : IndexPath? = nil
-var globalSearchText = ""
+
 
 //Completion Handlers
 typealias CompletionHandler 	= (_ success:Bool) -> Void

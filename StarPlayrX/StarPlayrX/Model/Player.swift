@@ -40,7 +40,7 @@ final class Player {
     var maxAlbumAttempts = 3
     var state : PlayerState? = nil
     
-
+    
     func resetAirPlayVolumeX() {
         if avSession.currentRoute.outputs.first?.portType == .airPlay {
             DispatchQueue.main.async {
@@ -62,7 +62,7 @@ final class Player {
         }
     }
     
-	
+    
     //MARK: Update the screen
     func syncArt() {
         
@@ -74,8 +74,8 @@ final class Player {
         }
         
         if g.Server.isReady {
-            if let i = channelArray.firstIndex(where: {$0.channel == g.currentChannel}) {
-                let item = channelArray[i].largeChannelArtUrl
+            if let i = g.ChannelArray.firstIndex(where: {$0.channel == g.currentChannel}) {
+                let item = g.ChannelArray[i].largeChannelArtUrl
                 self.updateDisplay(key: g.currentChannel, cache: self.pdtCache, channelArt: item, false)
             }
         }
@@ -84,7 +84,7 @@ final class Player {
     
     func playX() {
         let g = Global.obj
-
+        
         NotificationCenter.default.post(name: .didUpdatePlay, object: nil)
         state = .buffering
         
@@ -135,7 +135,7 @@ final class Player {
         }
         
         g.Server.isReady ? stream() : launchServer()
-                    
+        
     }
     
     func change() {
@@ -181,8 +181,8 @@ final class Player {
     }
     
     
-  
-
+    
+    
     var previousMD5 = "reset"
     
     //MARK: New and Improved MD5
@@ -196,7 +196,7 @@ final class Player {
         
         return str
     }
-
+    
     //MARK: Update our display
     func updateDisplay(key: String, cache: [String : Any], channelArt: String, _ animated: Bool = true) {
         if let value  = cache[key] as? [String: String],
@@ -208,11 +208,11 @@ final class Player {
         {
             
             previousMD5 = md5
-            nowPlaying.artist = artist
-            nowPlaying.song = song
-            nowPlaying.channel = key
-            nowPlaying.channelArt = channelArt
-            nowPlaying.albumArt = image
+            g.NowPlaying.artist = artist
+            g.NowPlaying.song = song
+            g.NowPlaying.channel = key
+            g.NowPlaying.channelArt = channelArt
+            g.NowPlaying.albumArt = image
             updateNowPlayingX(animated)
         }
     }
@@ -253,14 +253,14 @@ final class Player {
         func demoImage() -> UIImage? {
             
             if var img = UIImage(named: "starplayr_placeholder") {
-                 img = img.withBackground(color: UIColor(displayP3Red: 19 / 255, green: 20 / 255, blue: 36 / 255, alpha: 1.0))
-                 img = self.resizeLargeImage(image: img, targetSize: CGSize(width: 1440, height: 1440))
+                img = img.withBackground(color: UIColor(displayP3Red: 19 / 255, green: 20 / 255, blue: 36 / 255, alpha: 1.0))
+                img = self.resizeLargeImage(image: img, targetSize: CGSize(width: 1440, height: 1440))
                 return img
             } else {
                 return nil
             }
         }
-
+        
         
         func displayArt(image: UIImage?) {
             if var img = image {
@@ -271,35 +271,35 @@ final class Player {
                 img = self.chooseFilterCategories(name: kCICategorySharpen, values: [0.125,0.25], filterKeys: [kCIInputRadiusKey,kCIInputIntensityKey], image: img)
                 img = self.resizeLargeImage(image: img, targetSize: CGSize(width: 1440, height: 1440))
                 img = self.chooseFilterCategories(name: kCICategorySharpen, values: [0.25,0.5], filterKeys: [kCIInputRadiusKey,kCIInputIntensityKey], image: img)
-                nowPlaying.image = img
-                self.setnowPlayingInfo(channel: nowPlaying.channel, song: nowPlaying.song, artist: nowPlaying.artist, imageData:img)
-
+                g.NowPlaying.image = img
+                self.setnowPlayingInfo(channel: g.NowPlaying.channel, song: g.NowPlaying.song, artist: g.NowPlaying.artist, imageData:img)
+                
             } else if let i = demoImage()  {
-                nowPlaying.image = i
-                self.setnowPlayingInfo(channel: nowPlaying.channel, song: nowPlaying.song, artist: nowPlaying.artist, imageData: i)
+                g.NowPlaying.image = i
+                self.setnowPlayingInfo(channel: g.NowPlaying.channel, song: g.NowPlaying.song, artist: g.NowPlaying.artist, imageData: i)
             }
             
             if animated {
                 DispatchQueue.main.async { NotificationCenter.default.post(name: .gotNowPlayingInfoAnimated, object: nil) }
-
+                
             } else {
                 DispatchQueue.main.async { NotificationCenter.default.post(name: .gotNowPlayingInfo, object: nil) }
             }
-       
+            
         }
         
-       
-
+        
+        
         //Demo Mode
         if !g.demomode {
             
             //Get album art
-            if nowPlaying.albumArt.contains(string: "http") {
-                Async.api.Imagineer(endpoint: nowPlaying.albumArt, ImageHandler: { (img) -> Void in
+            if g.NowPlaying.albumArt.contains(string: "http") {
+                Async.api.Imagineer(endpoint: g.NowPlaying.albumArt, ImageHandler: { (img) -> Void in
                     displayArt(image: img)
                 })
             } else {
-                Async.api.Imagineer(endpoint: nowPlaying.channelArt, ImageHandler: { (img) -> Void in
+                Async.api.Imagineer(endpoint: g.NowPlaying.channelArt, ImageHandler: { (img) -> Void in
                     displayArt(image: img)
                 })
             }
@@ -307,10 +307,10 @@ final class Player {
         } else {
             displayArt(image: demoImage()! )
         }
-             
+        
     }
     
-   
+    
     func resizeLargeImage(image: UIImage, targetSize: CGSize) -> UIImage {
         let rect = CGRect(x: 0, y: 0, width: targetSize.width, height: targetSize.height)
         
@@ -327,21 +327,21 @@ final class Player {
     }
     
     
-
+    
     //MARK: Update Artist Song Info
     func updatePDT(completionHandler: @escaping CompletionHandler ) {
         if g.Server.isReady {
-        
+            
             let g = Global.obj
-
+            
             let endpoint = g.insecure + g.local + ":" + String(self.port) + "/pdt"
-        
+            
             Async.api.Get(endpoint: endpoint, DictionaryHandler: { (dict) -> Void in
                 
                 if let p = dict as? [String : Any], !p.isEmpty, let cache = p["data"] as? [String : Any], !cache.isEmpty {
                     self.pdtCache = cache
                     
-                    channelArray = self.getPDTData(importData: channelArray)
+                    g.ChannelArray = self.getPDTData(importData: g.ChannelArray)
                     completionHandler(true)
                     
                 } else {
@@ -363,7 +363,7 @@ final class Player {
             if let p = dict as? [String : Any], !p.isEmpty, let cache = p["data"] as? [String : Any], !cache.isEmpty {
                 self.pdtCache = cache
                 
-                channelArray = self.getPDTData(importData: channelArray)
+                g.ChannelArray = self.getPDTData(importData: g.ChannelArray)
                 completionHandler(true)
                 
             } else {
@@ -375,9 +375,9 @@ final class Player {
     
     func getPDTData(importData: tableData) -> tableData {
         var nowPlayingData = importData
-    
-        for i in 0...(nowPlayingData.count - 1) {
-    
+        
+        for i in 0..<nowPlayingData.count {
+            
             let key = nowPlayingData[i].channel
             
             if let value = pdtCache[key] as? [String: String], let artist = value["artist"] as String?, let song = value["song"]  as String?, let image = value["image"]  as String? {
@@ -397,7 +397,7 @@ final class Player {
                 nowPlayingData[i].albumUrl =  nowPlayingData[i].largeChannelArtUrl
             }
         }
-                
+        
         return nowPlayingData
         
     }
@@ -445,7 +445,7 @@ final class Player {
         return newImage!
     }
     
-
+    
     func autoLaunchServer(completionHandler: CompletionHandler )   {
         print("Restarting Server...")
         
@@ -461,7 +461,7 @@ final class Player {
         do {
             //Find the first Open port
             for i in self.port...64999 {
-                let (isFree, _) = checkTcpPortForListen(port: UInt16(i))
+                let (isFree, _) = Network.ability.checkTcpPortForListen(port: UInt16(i))
                 if isFree {
                     self.port = UInt16(i)
                     break
@@ -505,7 +505,6 @@ final class Player {
         
         commandCenter.accessibilityActivate()
         
-        
         commandCenter.playCommand.addTarget(handler: { (event) in
             self.new()
             return MPRemoteCommandHandlerStatus.success}
@@ -520,35 +519,9 @@ final class Player {
             self.new()
             return MPRemoteCommandHandlerStatus.success}
         )
-
-
-}
-    
-    
-    
-    
-
+    }
 }
 
 
-
-//How to programically change audio but follows the same rules as MPVolumeView which does not cover AirPlay2
-
-/* Any one of these will work. applicationMusicPlayer is preferred
- 
- let strV = String(describing: 0.25 )
- var mpc = MPMusicPlayerController.systemMusicPlayer
- mpc.setValue(strV, forKey: "volume" )
- 
- var mpc2 = MPMusicPlayerController.applicationMusicPlayer
- mpc2.setValue(strV, forKey: "volume" )
- 
- var mpc3 = MPMusicPlayerController.applicationQueuePlayer
- mpc3.setValue(strV, forKey: "volume" )
- 
- var mpc4 = MPMusicPlayerController.iPodMusicPlayer
- mpc4.setValue(strV, forKey: "volume" )
- 
- */
 
 

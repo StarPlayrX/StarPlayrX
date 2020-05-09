@@ -44,7 +44,7 @@ class SiriusViewController: UITableViewController {
             if Player.shared.state == .playing {
                 Player.shared.pause()
                 Player.shared.state = PlayerState.interrupted
-                while (!Networkability.shared.networkIsConnected) { usleep(250000) } //hold
+                while (!Network.ability.networkIsConnected) { usleep(250000) } //hold
                 DispatchQueue.main.async { Player.shared.new(.stream) }
             }
         }
@@ -135,8 +135,8 @@ class SiriusViewController: UITableViewController {
             Player.shared.updatePDT(completionHandler: { (success) -> Void in
                 if success {
                     
-                    if let i = channelArray.firstIndex(where: {$0.channel == self.g.currentChannel}) {
-                        let item = channelArray[i].largeChannelArtUrl
+                    if let i = self.g.ChannelArray.firstIndex(where: {$0.channel == self.g.currentChannel}) {
+                        let item = self.g.ChannelArray[i].largeChannelArtUrl
                         Player.shared.updateDisplay(key: self.g.currentChannel, cache: Player.shared.pdtCache, channelArt: item)
                     }
                     

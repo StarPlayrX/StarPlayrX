@@ -100,7 +100,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     
     
     func checkForAllStar() {
-        let data = channelArray
+        let data = g.ChannelArray
         
         for c in data {
             if c.channel == g.currentChannel {
@@ -265,12 +265,12 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         sp.SPXPresets = [String]()
         
         var index = -1
-        for d in channelArray {
+        for d in g.ChannelArray {
             index = index + 1
             if d.channel == g.currentChannel {
-                channelArray[index].preset = !channelArray[index].preset
+                g.ChannelArray[index].preset = !g.ChannelArray[index].preset
                 
-                if channelArray[index].preset {
+                if g.ChannelArray[index].preset {
                     allStarButton.setImage(UIImage(named: "star_on"), for: .normal)
                     allStarButton.accessibilityLabel = "All Stars Preset On, \(g.currentChannelName)"
                     
@@ -281,7 +281,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                 }
             }
             
-            if channelArray[index].preset {
+            if g.ChannelArray[index].preset {
                 sp.SPXPresets.append(d.channel)
             }
         }
@@ -317,18 +317,18 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     @objc func GotNowPlayingInfo(_ animated: Bool = true) {
         
         func accessibility() {
-            Artist.accessibilityLabel = nowPlaying.artist + ". " + nowPlaying.song + "."
-            ArtistSong.accessibilityLabel = nowPlaying.artist + ". " + nowPlaying.song + "."
+            Artist.accessibilityLabel = g.NowPlaying.artist + ". " + g.NowPlaying.song + "."
+            ArtistSong.accessibilityLabel = g.NowPlaying.artist + ". " + g.NowPlaying.song + "."
             Artist.isHighlighted = true
-            AlbumArt.accessibilityLabel = "Album Art, " + nowPlaying.artist + ". " + nowPlaying.song + "."
+            AlbumArt.accessibilityLabel = "Album Art, " + g.NowPlaying.artist + ". " + g.NowPlaying.song + "."
         }
         
         accessibility()
         
         func staticArtistSong() {
-            self.ArtistSong.text = nowPlaying.artist + " • " + nowPlaying.song + " — " + g.currentChannelName
-            self.Artist.text = nowPlaying.artist
-            self.Song.text = nowPlaying.song
+            self.ArtistSong.text = g.NowPlaying.artist + " • " + g.NowPlaying.song + " — " + g.currentChannelName
+            self.Artist.text = g.NowPlaying.artist
+            self.Song.text = g.NowPlaying.song
         }
         
         if animated {
@@ -336,30 +336,30 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                 UILabel.transition(with: self.ArtistSong,
                                    duration:0.4,
                                    options: .transitionCrossDissolve,
-                                   animations: { self.ArtistSong.text = nowPlaying.artist + " • " + nowPlaying.song + " — " + self.g.currentChannelName  },
+                                   animations: { self.ArtistSong.text = self.g.NowPlaying.artist + " • " + self.g.NowPlaying.song + " — " + self.g.currentChannelName  },
                                    completion: nil)
                 
                 UILabel.transition(with: self.Artist,
                                    duration:0.4,
                                    options: .transitionCrossDissolve,
-                                   animations: { self.Artist.text = nowPlaying.artist },
+                                   animations: { self.Artist.text = self.g.NowPlaying.artist },
                                    completion: nil)
                 
                 UILabel.transition(with: self.Song,
                                    duration:0.4,
                                    options: .transitionCrossDissolve,
-                                   animations: { self.Song.text = nowPlaying.song },
+                                   animations: { self.Song.text = self.g.NowPlaying.song },
                                    completion: nil)
             }
         } else if let _ = Artist.text?.isEmpty {
             UIView.transition(with: self.AlbumArt,
                               duration:0.2,
                               options: .transitionCrossDissolve,
-                              animations: { _ = [self.AlbumArt.image = nowPlaying.image, self.AlbumArt.alpha = 1.0] },
+                              animations: { _ = [self.AlbumArt.image = self.g.NowPlaying.image, self.AlbumArt.alpha = 1.0] },
                               completion: nil)
             staticArtistSong()
         } else {
-            self.AlbumArt.image = nowPlaying.image
+            self.AlbumArt.image = g.NowPlaying.image
             self.AlbumArt.alpha = 1.0
             staticArtistSong()
         }

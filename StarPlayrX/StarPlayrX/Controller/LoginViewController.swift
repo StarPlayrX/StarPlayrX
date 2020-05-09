@@ -65,7 +65,7 @@ class LoginViewController: UIViewController {
     
     func autoLogin() {
         
-        let net = Networkability.shared
+        let net = Network.ability
         
         //MARK: 1 - Logging In
         
@@ -94,8 +94,8 @@ class LoginViewController: UIViewController {
         Player.shared.updatePDT_skipCheck(completionHandler: { (success) -> Void in
             if success {
                 
-                if let i = channelArray.firstIndex(where: {$0.channel == self.g.currentChannel}) {
-                    let item = channelArray[i].largeChannelArtUrl
+                if let i = self.g.ChannelArray.firstIndex(where: {$0.channel == self.g.currentChannel}) {
+                    let item = self.g.ChannelArray[i].largeChannelArtUrl
                     Player.shared.updateDisplay(key: self.g.currentChannel, cache: Player.shared.pdtCache, channelArt: item)
                 }
                 
@@ -262,7 +262,7 @@ class LoginViewController: UIViewController {
                                 if let cd = chData as? [String : Data] {
                                     
                                     if cd.count > 1 {
-                                        channelData = cd
+                                        g.ChannelData = cd
                                     } else {
                                         self.embeddedAlbumArt(filename: "demoart") //load by default
                                         g.demomode = true
@@ -298,11 +298,11 @@ class LoginViewController: UIViewController {
                             
                             if let cdata = chData as? [String : Data] {
                                 if cdata.count > 0 {
-                                    channelData = cdata
+                                    g.ChannelData = cdata
                                     
                                     do {
                                         
-                                        let writeData = try NSKeyedArchiver.archivedData(withRootObject: channelData as Any, requiringSecureCoding: false)
+                                        let writeData = try NSKeyedArchiver.archivedData(withRootObject: g.ChannelData as Any, requiringSecureCoding: false)
                                         UserDefaults.standard.set(writeData, forKey: "channelDataXD")
                                     } catch {
                                         //This is not a fatal error, we can recover from it
@@ -356,7 +356,7 @@ class LoginViewController: UIViewController {
     
     
     func processChannelList()  {
-        channelArray = tableData()
+        g.ChannelArray = tableData()
         
         let g = Global.obj
         
@@ -385,7 +385,7 @@ class LoginViewController: UIViewController {
                 title.append(channel)
                 
                 let item = (searchString: number + name , name: name, channel: number, title: title, detail: detail, image: tinyImageData, channelImage: tinyImageData, albumUrl: "", largeAlbumUrl: "", largeChannelArtUrl: mediumImage, category: category, preset: preset )
-                channelArray.append(item)
+                g.ChannelArray.append(item)
             }
         }
         
@@ -395,14 +395,14 @@ class LoginViewController: UIViewController {
         let x = (UserDefaults.standard.array(forKey: "SPXPresets") ?? ["2","3","4"]) as [String]
         
         ps.SPXPresets = x
-        if !ps.SPXPresets.isEmpty && !channelArray.isEmpty {
+        if !ps.SPXPresets.isEmpty && !g.ChannelArray.isEmpty {
             var c = -1
-            for t in channelArray {
+            for t in g.ChannelArray {
                 c += 1
                 
                 for p in ps.SPXPresets {
                     if p == t.channel {
-                        channelArray[c].preset = true
+                        g.ChannelArray[c].preset = true
                         break
                     }
                 }
@@ -414,12 +414,12 @@ class LoginViewController: UIViewController {
     
     //Adds in Channel Art from Data Dictionary
     func processChannelIcons()  {
-        if !channelArray.isEmpty && !channelData.isEmpty {
-            for i in 0...channelArray.count - 1 {
-                let channel = channelArray[i].channel
-                if let chArt = channelData[channel], let img = UIImage(data: chArt) {
-                    channelArray[i].channelImage = img
-                    channelArray[i].image = img
+        if !g.ChannelArray.isEmpty && !g.ChannelData.isEmpty {
+            for i in 0..<g.ChannelArray.count {
+                let channel = g.ChannelArray[i].channel
+                if let chArt = g.ChannelData[channel], let img = UIImage(data: chArt) {
+                    g.ChannelArray[i].channelImage = img
+                    g.ChannelArray[i].image = img
                 }
             }
         }
@@ -523,7 +523,7 @@ class LoginViewController: UIViewController {
             
             do {
                 if let d = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData( art ) {
-                    channelData = (d as! [String : Data]) //converts Any to [String : Data]
+                    g.ChannelData = (d as! [String : Data]) //converts Any to [String : Data]
                 }
             } catch {
                 //the next step will run even if this fails
@@ -574,7 +574,7 @@ class LoginViewController: UIViewController {
     func simpleChannelArt() {
         let img = UIImage(named: "xplaceholder")!
         
-        for c in channelData {
+        for c in g.ChannelData {
             var image:UIImage
             let w = CGFloat(0)
             
@@ -583,7 +583,7 @@ class LoginViewController: UIViewController {
             //let h = UIImage(data: c.value)!.size.height / 4.25
             image = self.textToImage( drawText: c.key as NSString, inImage: img, atPoint: CGPoint(x: w, y: h) )
             let imageData = image.pngData()
-            channelData[c.key] = imageData
+            g.ChannelData[c.key] = imageData
         }
     }
     

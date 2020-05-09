@@ -31,11 +31,11 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
         
         if let sbtext = searchBar.text {
             if sbtext.count > 0 {
-                filterData = coldFilteredData.filter {$0.searchString.lowercased().contains(sbtext.lowercased())}
-                globalSearchText = sbtext
+                g.FilterData = g.ColdFilteredData.filter {$0.searchString.lowercased().contains(sbtext.lowercased())}
+                g.SearchText = sbtext
             } else {
-                globalSearchText = ""
-                filterData = coldFilteredData
+                g.SearchText = ""
+                g.FilterData = g.ColdFilteredData
             }
         	
             UpdateTableView(scrollPosition: .none)
@@ -62,21 +62,21 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
     }
     
     func updateFilter() {
-        filterData = tableData()
+        g.FilterData = tableData()
         
         if g.categoryTitle == Player.shared.allStars {
-            coldFilteredData = channelArray.filter {$0.preset} as tableData
+            g.ColdFilteredData = g.ChannelArray.filter {$0.preset} as tableData
         } else if g.categoryTitle != Player.shared.everything {
-            coldFilteredData = channelArray.filter {$0.category == g.categoryTitle} as tableData
+            g.ColdFilteredData = g.ChannelArray.filter {$0.category == g.categoryTitle} as tableData
         } else {
-            coldFilteredData = channelArray as tableData
+            g.ColdFilteredData = g.ChannelArray as tableData
         }
         
         //search filter
-        if !globalSearchText.isEmpty {
-            filterData = coldFilteredData.filter {$0.searchString.lowercased().contains(globalSearchText.lowercased())}
+        if !g.SearchText.isEmpty {
+            g.FilterData = g.ColdFilteredData.filter {$0.searchString.lowercased().contains(g.SearchText.lowercased())}
         } else {
-            filterData = coldFilteredData
+            g.FilterData = g.ColdFilteredData
         }
     }
     
@@ -89,9 +89,9 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
         
         if let searchbartext = searchBar.text {
             if searchbartext.count > 0 {
-                globalSearchText = searchbartext
-            } else if globalSearchText.count > 0 {
-                searchBar.text = globalSearchText
+                g.SearchText = searchbartext
+            } else if g.SearchText.count > 0 {
+                searchBar.text = g.SearchText
             }
             
         }
@@ -105,8 +105,8 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
     
     func SelectMyRow(scrollPosition: UITableView.ScrollPosition ) {
         //Locate the channel is playing
-        if !filterData.isEmpty && ( ChannelsTableView.numberOfRows(inSection: 0) == filterData.count ) {
-            let index = filterData.firstIndex(where: {$0.channel == g.currentChannel})
+        if !g.FilterData.isEmpty && ( ChannelsTableView.numberOfRows(inSection: 0) == g.FilterData.count ) {
+            let index = g.FilterData.firstIndex(where: {$0.channel == g.currentChannel})
             
             if let i = index {
                 SPXSelectRow(myTableView: ChannelsTableView, position: i, scrollPosition: scrollPosition)
@@ -212,10 +212,8 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
             if let channel = text.components(separatedBy: " ").first {
                 g.currentChannel = channel
             }
-            
-
-            
-            selectedRow = indexPath
+        
+            g.SelectedRow = indexPath
             
             if let tvi = tableView.indexPathsForVisibleRows, let scroll = tvi.first {
                 
@@ -268,7 +266,7 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return filterData.count
+        return g.FilterData.count
     }
   	
 
@@ -280,16 +278,19 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
         let cell = tableView.dequeueReusableCell(
             withIdentifier: "Cell", for: indexPath)
         
-        if filterData.count > indexPath.row &&
-            filterData[indexPath.row].channel.count > 0 {
+        if g.FilterData.count > indexPath.row &&
+            g.FilterData[indexPath.row].channel.count > 0 {
             
             cell.separatorInset = UIEdgeInsets.zero
             cell.preservesSuperviewLayoutMargins = false
             cell.layoutMargins = UIEdgeInsets.zero
-            cell.textLabel?.text = filterData[indexPath.row].channel
-            cell.textLabel?.attributedText = filterData[indexPath.row].title
-            cell.detailTextLabel?.attributedText = filterData[indexPath.row].detail
-            cell.imageView?.image = filterData[indexPath.row].image
+            
+            let fdr = g.FilterData[indexPath.row] //filter data row reference
+            
+            cell.textLabel?.text = fdr.channel
+            cell.textLabel?.attributedText = fdr.title
+            cell.detailTextLabel?.attributedText = fdr.detail
+            cell.imageView?.image = fdr.image
             cell.detailTextLabel?.numberOfLines = 2
         }
         
