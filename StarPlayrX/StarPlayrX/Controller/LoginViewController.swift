@@ -10,14 +10,14 @@ import UIKit
 import SafariServices
 import AVKit
 
-private let LoginQueue = DispatchQueue(label: "LoginQueue", qos: .userInteractive, attributes: .concurrent)
 
 class LoginViewController: UIViewController {
-
-   
+    
+    let g = Global.obj
+    
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
     override var prefersHomeIndicatorAutoHidden : Bool { return true }
-
+    
     
     @IBAction func starplayrx_dot_com(_ sender: Any) {
         website(url: "https://starplayrx.com")
@@ -42,16 +42,16 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var progressBar: UIProgressView!
     @IBOutlet weak var StatusField: UILabel!
-    
     @IBAction func UserFieldReturnKey(_ sender: Any) {}
-    
     @IBAction func PassFieldReturnKey(_ sender: Any) {}
-    
     override func viewWillAppear(_ animated: Bool) {}
     
     //login button action
     @IBAction func loginButton(_ sender: Any) {
+        g.Username = userField.text ?? ""
+        g.Password = passField.text ?? ""
         autoLogin()
+        prog(0.0, "Logging In")
     }
     
     @objc func pausePlayBack() {
@@ -65,147 +65,458 @@ class LoginViewController: UIViewController {
     
     func autoLogin() {
         
-        DispatchQueue.main.async {
-            self.progressBar?.setProgress(0.0, animated: false)
-            self.StatusField.text = "Logging In"
-            self.progressBar?.setProgress(0.025, animated: true)
-        }
+        let net = Networkability.shared
+        
+        //MARK: 1 - Logging In
         
         self.loginButton.isEnabled = false
         self.loginButton.alpha = 0.5
         self.view?.endEditing(true)
         
-        
         var ping : String? = nil
-        
         let pingUrl = "http://localhost:" + String(Player.shared.port) + "/ping"
         Async.api.Text(endpoint: pingUrl, TextHandler: { (p) -> Void in
+            
             ping = p
             
             //Check if Local Web Server is Up
             if let pg = ping, pg != "pong" {
                 print("Launching the Server.")
-                LaunchServer()
+                net.LaunchServer()
             }
             
-            DispatchQueue.main.async {
-                self.progressBar?.setProgress(0.05, animated: true)
-            }
-            
-            DispatchQueue.main.async {
-                self.loginUpdate()
+            self.loginUpdate()
+        })
+    }
+    
+    
+    func channelGuide() {
+        Player.shared.updatePDT_skipCheck(completionHandler: { (success) -> Void in
+            if success {
+                
+                if let i = channelArray.firstIndex(where: {$0.channel == self.g.currentChannel}) {
+                    let item = channelArray[i].largeChannelArtUrl
+                    Player.shared.updateDisplay(key: self.g.currentChannel, cache: Player.shared.pdtCache, channelArt: item)
+                }
+                
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: .updateChannelsView, object: nil)
+                }
             }
         })
     }
     
-    func loginUpdate() {
+    func prog(_ Float: Float, _ Text: String, animated: Bool = true) {
         DispatchQueue.main.async {
-            self.progressBar?.setProgress(0.1, animated: true)
             
-            if let user = self.userField.text, let pass = self.passField.text {
-                gUsername = user
-                gPassword = pass
-                
-                //login user
-                
-                
-                let endpoint = insecure + local + ":" + String(Player.shared.port)  + "/api/v2/autologin"
-                let method = "login"
-                let request = ["user":user,"pass":pass] as Dictionary
-                
-                
-                Async.api.Post(request: request, endpoint: endpoint, method: method, TupleHandler: { (result) -> Void in
-                    if let data = result?.data?["data"] as! String?,  let message = result?.data?["message"] as! String?, let success = result?.data?["success"] as! Bool?  {
-                       	
-                        DispatchQueue.main.async {
-                            if success {
-                                UserDefaults.standard.set(gUsername, forKey: "user")
-                                UserDefaults.standard.set(gPassword, forKey: "pass")
-                                userid = data
-                                UserDefaults.standard.set(userid, forKey: "userid")
-                                
-                                self.sessionUpdate()
-                                
-                            } else {
-                                if data == "411" {
-                                    self.progressBar?.setProgress(0.0, animated: true)
-                                    self.closeStarPlayr(title: "Local Network Error",
-                                                        message: message, action: "Close StarPlayrX")
-                                } else {
-                                    self.progressBar?.setProgress(0.0, animated: true)
-                                    self.showAlert(title: "Login Error",
-                                                   message: message, action: "OK")
-                                }
-                                self.loginButton.isEnabled = true
-                                self.loginButton.alpha = 1.0
-                            }
-                        }
-                        
-                        
-                    
-                    } else {
-                        print("Error occurred logging in.")
-                    }
-                    
-                })
-                
-                
-                
-            
-            }
+            let bar = self.progressBar?.progress
+
+            let value = (Float < 1 && Float > 0) ? bar! + 0.1 : Float
+            self.StatusField.text = Text
+            self.progressBar?.setProgress(value, animated: true)
         }
     }
-   
+    
+    func loginUpdate() {
+        let endpoint = g.insecure + g.local + ":" + String(Player.shared.port)  + "/api/v2/autologin"
+        let method = "login"
+        let request = ["user":g.Username,"pass":g.Password] as Dictionary
+        
+        Async.api.Post(request: request, endpoint: endpoint, method: method, TupleHandler: { (result) -> Void in
+            if let data = result?.data?["data"] as! String?,  let message = result?.data?["message"] as! String?, let success = result?.data?["success"] as! Bool?  {
+                
+                if success {
+                    
+                    //MARK: 2 - Logging In
+                    self.prog(0.15, "Success")
+                    
+                    UserDefaults.standard.set(self.g.Username, forKey: "user")
+                    UserDefaults.standard.set(self.g.Password, forKey: "pass")
+                    self.g.userid = data
+                    UserDefaults.standard.set(self.g.userid, forKey: "userid")
+                    self.sessionUpdate()
+                    
+                } else {
+                    if data == "411" {
+                        
+                        self.prog(0, "")
+                        self.closeStarPlayr(title: "Local Network Error",
+                                            message: message, action: "Close StarPlayrX")
+                    } else {
+                        self.prog(0, "")
+                        self.showAlert(title: "Login Error",
+                                       message: message, action: "OK")
+                    }
+                    
+                    self.loginButton.isEnabled = true
+                    self.loginButton.alpha = 1.0
+                }
+                
+                
+                
+            } else {
+                print("Error occurred logging in.")
+            }
+            
+        })
+        
+        
+        
+        
+    }
+    
     
     func sessionUpdate() {
-        LoginQueue.async {
-            DispatchQueue.main.async {
-                self.StatusField.text = "Success"
-                self.progressBar?.setProgress(0.2, animated: true)
-            }
-      
-            let endpoint = insecure + local + ":" + String(Player.shared.port) + "/api/v2/session"
-            let method = "cookies"
-            let request = ["channelid":"siriushits1"] as Dictionary
+        let endpoint = g.insecure + Global.obj.local + ":" + String(Player.shared.port) + "/api/v2/session"
+        let method = "cookies"
+        let request = ["channelid":"siriushits1"] as Dictionary
+        
+        Async.api.Post(request: request, endpoint: endpoint, method: method, TupleHandler: { (result) -> Void in
             
-            Async.api.Post(request: request, endpoint: endpoint, method: method, TupleHandler: { (result) -> Void in
-                if let data = result?.data?["data"] as? String {
-                    DispatchQueue.main.async {
-                        print(data)
-                        self.channelUpdate(channelLineUpId:data)
-                    }
-                } else {
-                    self.channelUpdate(channelLineUpId:"350")
-                }
-            })
-        }
+            self.prog(0.3, "Channels")
+
+            if let data = result?.data?["data"] as? String {
+                self.channelUpdate(channelLineUpId:data)
+            } else {
+                self.channelUpdate(channelLineUpId:"350")
+            }
+            
+        })
+        
+        
     }
     
     
     func channelUpdate(channelLineUpId: String) {
-        LoginQueue.async {
-            DispatchQueue.main.async {
-                self.StatusField.text = "Channels"
-                self.progressBar?.setProgress(0.3, animated: true)
-            }
-            
-            let endpoint = insecure + local + ":" + String(Player.shared.port) + "/api/v2/channels"
-            let method = "channels"
-            let request = ["channeltype" : "" ] as Dictionary
-            
-            Async.api.Post(request: request, endpoint: endpoint, method: method, TupleHandler: { ( result ) -> Void in
-                if let data = result?.data?["data"] as? [String : Any] {
-                    channelList = data
-                    self.artworkUpdate(channelLineUpId: channelLineUpId)
-                } else {
-                    //read channellist from disk?
-                    print("Error reading channels.")
-                }
-            })
+        
+        let endpoint = g.insecure + g.local + ":" + String(Player.shared.port) + "/api/v2/channels"
+        let method = "channels"
+        let request = ["channeltype" : "" ] as Dictionary
+        
+        Async.api.Post(request: request, endpoint: endpoint, method: method, TupleHandler: { ( result ) -> Void in
+            if let data = result?.data?["data"] as? [String : Any] {
+                self.g.channelList = data
+                
+                self.prog(0.5, "Artwork")
 
+                self.artworkUpdate(channelLineUpId: channelLineUpId)
+            } else {
+                //read channellist from disk?
+                print("Error reading channels.")
+            }
+        })
+        
+    }
+    
+    
+ 
+    
+    func artworkUpdate(channelLineUpId: String) {
+        
+        let g = Global.obj
+        
+        
+        self.embeddedAlbumArt(filename: "bluenumbers") //load by default
+        
+        g.demomode = false
+        
+        if g.demoname == g.Username {
+            g.demomode = true
+        } else {
+            //large channel art checksum
+            let GetChecksum = UserDefaults.standard.string(forKey: "largeChecksumXD") ?? g.binbytes
+            
+            //get large art checksum
+            
+            
+            let checksumUrl = g.secure + g.domain + ":" + g.secureport + "/large/checksum"
+            
+            g.imagechecksum = ""
+            
+            Async.api.Text(endpoint: checksumUrl, TextHandler: { (sum) -> Void in
+                
+                self.prog(0.6, "Artwork")
+
+                if let check = sum {
+                    g.imagechecksum = String(check)
+                } else {
+                    g.imagechecksum = g.websitedown
+                }
+                
+                art()
+                self.updatingChannels()
+
+            })
+            
+                        
+            func art() {
+                
+                if g.imagechecksum == GetChecksum {
+                    
+                    if g.imagechecksum != g.websitedown || g.imagechecksum != String(g.binbytes) {
+                        //demomode = true
+                        
+                        do {
+                            if let readData = UserDefaults.standard.data(forKey: "channelDataXD") {
+                                let chData = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(readData)
+                                if let cd = chData as? [String : Data] {
+                                    
+                                    if cd.count > 1 {
+                                        channelData = cd
+                                    } else {
+                                        self.embeddedAlbumArt(filename: "demoart") //load by default
+                                        g.demomode = true
+                                    }
+                                }
+                            }
+                        } catch {
+                            self.embeddedAlbumArt(filename: "demoart") //load by default
+                            g.demomode = true
+                            print(error)
+                        }
+                    }
+                } else if g.imagechecksum != g.websitedown && g.imagechecksum != String(g.binbytes) && !g.demomode {
+                    
+                    do {
+                        //If our website is down or the artwork server
+                        
+                        let g = Global.obj
+                        
+                        var dataUrl = g.secure + g.domain
+                        
+                        dataUrl += ":" + String(g.secureport)
+                        dataUrl += "/large"
+                        
+                        var d = Data()
+                        
+                        Async.api.CommanderData(endpoint: dataUrl, method: "large-art", DataHandler: { (data) -> Void in
+                            if let data = data { d = data }
+                        })
+                        
+                        //This error is near fatal, we will use the file on disk instead
+                        if let chData = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(d) {
+                            
+                            if let cdata = chData as? [String : Data] {
+                                if cdata.count > 0 {
+                                    channelData = cdata
+                                    
+                                    do {
+                                        
+                                        let writeData = try NSKeyedArchiver.archivedData(withRootObject: channelData as Any, requiringSecureCoding: false)
+                                        UserDefaults.standard.set(writeData, forKey: "channelDataXD")
+                                    } catch {
+                                        //This is not a fatal error, we can recover from it
+                                        //demomode = true
+                                        print(error)
+                                    }
+                                }
+                            }
+                        }
+                    } catch {
+                        g.demomode = true
+                        print(error)
+                    }
+                }
+                
+                UserDefaults.standard.set(g.imagechecksum, forKey: "largeChecksumXD")
+
+            }
+
+        }
+        
+    }
+    
+    
+    func updatingChannels() {
+        
+        self.prog(0.75, "Guide")
+		channelGuide()
+        processChannelList()
+        self.prog(0.875, "Artwork")
+        self.loadArtwork()
+
+    }
+    
+  
+    func loadArtwork() {
+        
+
+        processChannelIcons()
+    
+        self.prog(1.0, "Complete")
+
+        DispatchQueue.main.async {
+            self.prog(1.0, "Complete")
+            self.loginButton.isEnabled = true
+            self.loginButton.alpha = 1.0
+            self.tabItem(index: 1, enable: true, selectItem: true)
+        }
+
+    }
+    
+    
+    func processChannelList()  {
+        channelArray = tableData()
+        
+        let g = Global.obj
+        
+        let sortedChannelList = Array(g.channelList.keys).sorted {$0.localizedStandardCompare($1) == .orderedAscending}
+        let detail = NSMutableAttributedString(string: "\n" , attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]);
+        let song = NSMutableAttributedString(string: "", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]);
+        detail.append(song)
+        
+        for ch in sortedChannelList {
+            
+            if let blueprint = g.channelList[ch] as? [String : Any],
+                let number = blueprint["channelNumber"] as? String,
+                var name = blueprint["name"] as? String,
+                let mediumImage = blueprint["mediumImage"] as? String,
+                let category = blueprint["category"] as? String,
+                let preset = blueprint["preset"] as? Bool,
+                let tinyImageData = UIImage(named: "xplaceholder") {
+                
+                //We do not allow SiriusXM in channel names, plus it's kind of redundant
+                name = name.replacingOccurrences(of: "SiriusXM", with: "Sirius")
+                name = name.replacingOccurrences(of: "SXM", with: "SPX")
+                
+                let title = NSMutableAttributedString(string: number + " ", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17)])
+                let channel = NSMutableAttributedString(string: name, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17)])
+                
+                title.append(channel)
+                
+                let item = (searchString: number + name , name: name, channel: number, title: title, detail: detail, image: tinyImageData, channelImage: tinyImageData, albumUrl: "", largeAlbumUrl: "", largeChannelArtUrl: mediumImage, category: category, preset: preset )
+                channelArray.append(item)
+            }
+        }
+        
+        let ps = Player.shared
+        
+        //Read in the presets
+        let x = (UserDefaults.standard.array(forKey: "SPXPresets") ?? ["2","3","4"]) as [String]
+        
+        ps.SPXPresets = x
+        if !ps.SPXPresets.isEmpty && !channelArray.isEmpty {
+            var c = -1
+            for t in channelArray {
+                c += 1
+                
+                for p in ps.SPXPresets {
+                    if p == t.channel {
+                        channelArray[c].preset = true
+                        break
+                    }
+                }
+            }
         }
     }
     
+    
+    
+    //Adds in Channel Art from Data Dictionary
+    func processChannelIcons()  {
+        if !channelArray.isEmpty && !channelData.isEmpty {
+            for i in 0...channelArray.count - 1 {
+                let channel = channelArray[i].channel
+                if let chArt = channelData[channel], let img = UIImage(data: chArt) {
+                    channelArray[i].channelImage = img
+                    channelArray[i].image = img
+                }
+            }
+        }
+    }
+
+    
+    //Show Alert
+    func showAlert(title: String, message:String, action:String) {
+        
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: action, style: .default, handler: { action in
+            /*switch action.style{
+             case .default:
+             print("default")
+             case .cancel:
+             print("cancel")
+             case .destructive:
+             print("destructive")
+             @unknown default:
+             print("error.")
+             }*/}))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func closeStarPlayr(title: String, message:String, action:String) {
+        
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: action, style: .default, handler: { action in
+            switch action.style{
+                case .default:
+                    exit(0)
+                case .cancel:
+                    print("cancel")
+                case .destructive:
+                    print("destructive")
+                
+                @unknown default:
+                    print("error.")
+            }}))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    //set tab item
+    func tabItem(index: Int, enable: Bool, selectItem: Bool) {
+        let tabBarArray = self.tabBarController?.tabBar.items
+        
+        if let tabBarItems = tabBarArray, tabBarItems.count > 0 {
+            let tabBarItem = tabBarItems[index]
+            tabBarItem.isEnabled = enable
+        }
+        
+        if selectItem {
+            self.tabBarController?.selectedIndex = index
+        }
+    }
+    
+    //view did load
+    override func viewDidLoad() {
+        
+        super.viewDidLoad()
+        
+        
+        
+        let g = Global.obj
+        
+        tabItem(index: 1, enable: false, selectItem: false)
+        
+        g.Username = UserDefaults.standard.string(forKey: "user") ?? ""
+        g.Password = UserDefaults.standard.string(forKey: "pass") ?? ""
+        userField.text = g.Username
+        passField.text = g.Password
+        
+        //gUserid = UserDefaults.standard.string(forKey: "userid") ?? ""
+        
+        if !g.Username.isEmpty && !g.Password.isEmpty {
+            
+            if UIAccessibility.isVoiceOverRunning {
+                let utterance = AVSpeechUtterance(string: "Star Player X, Logging In")
+                utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
+                utterance.rate = 0.5
+                
+                let synthesizer = AVSpeechSynthesizer()
+                synthesizer.speak(utterance)
+            }
+            
+            prog(0.0, "Logging In")
+
+            autoLogin()
+            
+        }
+        
+        //Pause Gesture
+        let doubleFingerTapToPause = UITapGestureRecognizer(target: self, action: #selector(pausePlayBack) )
+        doubleFingerTapToPause.numberOfTapsRequired = 2
+        view.addGestureRecognizer(doubleFingerTapToPause)
+        
+    }
     
     func embeddedAlbumArt(filename: String) {
         if let art = readLocalDataFile(filename: filename) {
@@ -277,285 +588,6 @@ class LoginViewController: UIViewController {
     }
     
     
-    func artworkUpdate(channelLineUpId: String) {
-        LoginQueue.async {
-            
-            DispatchQueue.main.async {
-                self.StatusField.text = "Artwork"
-                self.progressBar?.setProgress(0.4, animated: true)
-            }
-            
-            self.embeddedAlbumArt(filename: "bluenumbers") //load by default
-            
-            demomode = false
-            
-            if demoname == gUsername {
-                demomode = true
-            } else {
-                //large channel art checksum
-                let GetChecksum = UserDefaults.standard.string(forKey: "largeChecksumXD") ?? binbytes
-
-                //get large art checksum
-                let checksumUrl = secure + domain + ":" + secureport2 + "/large/checksum"
-                
-                var largeChecksum : String? = nil
-                
-
-                Async.api.Text(endpoint: checksumUrl, TextHandler: { (checksum) -> Void in
-                    largeChecksum = checksum
-                })
-                
-                repeat {usleep(25000)}  while largeChecksum == nil
-
-                guard let lgChecksum = largeChecksum else { print("FATAL ERROR, could not get text."); return }
-                
-                UserDefaults.standard.set(lgChecksum, forKey: "largeChecksumXD")
-                
-                if lgChecksum == GetChecksum {
-                    
-                    if String(lgChecksum) != websitedown || String(lgChecksum) != binbytes {
-                        //demomode = true
-                        
-                        do {
-                            if let readData = UserDefaults.standard.data(forKey: "channelDataXD") {
-                                let chData = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(readData)
-                                if let cd = chData as? [String : Data] {
-                                    
-                                    if cd.count > 1 {
-                                        channelData = cd
-                                    } else {
-                                        self.embeddedAlbumArt(filename: "demoart") //load by default
-                                        demomode = true
-                                    }
-                                }
-                            }
-                        } catch {
-                            self.embeddedAlbumArt(filename: "demoart") //load by default
-                            demomode = true
-                            print(error)
-                        }
-                    }
-                } else if String(lgChecksum) != websitedown && String(lgChecksum) != binbytes && !demomode {
-                    
-                    do {
-                        //If our website is down or the artwork server
-                        
-                        var dataUrl = secure + domain
-                        dataUrl = dataUrl +  ":" + String(secureport2)
-                        dataUrl = dataUrl + "/large"
-                                                
-                        var d = Data()
-                        
-                        Async.api.CommanderData(endpoint: dataUrl, method: "large-art", DataHandler: { (data) -> Void in
-                            if let data = data { d = data }
-                        })
-                        
-                        //This error is near fatal, we will use the file on disk instead
-                        if let chData = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(d) {
-                            
-                            if let cdata = chData as? [String : Data] {
-                                if cdata.count > 0 {
-                                    channelData = cdata
-                                    
-                                    do {
-                                        
-                                        let writeData = try NSKeyedArchiver.archivedData(withRootObject: channelData as Any, requiringSecureCoding: false)
-                                        UserDefaults.standard.set(writeData, forKey: "channelDataXD")
-                                    } catch {
-                                        //This is not a fatal error, we can recover from it
-                                        //demomode = true
-                                        print(error)
-                                    }
-                                }
-                            }
-                        }
-                    } catch {
-                        demomode = true
-                        print(error)
-                    }
-                }
-            }
-            
-            DispatchQueue.main.async {
-                self.updatingChannels()
-            }
-        }
-    }
-
-    
-    func updatingChannels() {
-        LoginQueue.async {
-            
-            DispatchQueue.main.async {
-                self.StatusField.text = "Icons"
-                self.progressBar?.setProgress(0.55, animated: true)
-            }
-            
-            processChannelList()
-            
-            DispatchQueue.main.async {
-                self.progressBar?.setProgress(0.7, animated: true)
-            }
-            
-            self.channelGuide()
-        }
-    }
-    
-    func channelGuide() {
-        LoginQueue.async {
-            
-            DispatchQueue.main.async {
-                self.StatusField.text = "Guide"
-                self.progressBar?.setProgress(0.85, animated: true)
-            }
-            
-            /*Player.shared.updatePDT(completionHandler: { (success) -> Void in
-                if success {
-                    //do nothing
-                }
-            })*/
-                        
-            DispatchQueue.main.async {
-                self.progressBar?.setProgress(0.9, animated: true)
-            }
-            
-            self.loadArtwork()
-        }
-        
-    }
-    
-    func loadArtwork() {
-        LoginQueue.async {
-            
-            processChannelIcons()
-            
-            DispatchQueue.main.async {
-                self.progressBar?.setProgress(1.0, animated: false)
-                self.StatusField.text = "Complete"
-                self.loginButton.isEnabled = true
-                self.loginButton.alpha = 1.0
-                self.tabItem(index: 1, enable: true, selectItem: true)
-            }
-        }
-    }
-    
-    
-    //Show Alert
-    func showAlert(title: String, message:String, action:String) {
-        
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: action, style: .default, handler: { action in
-            /*switch action.style{
-                case .default:
-                    print("default")
-                case .cancel:
-                    print("cancel")
-                case .destructive:
-                    print("destructive")
-                @unknown default:
-                    print("error.")
-            }*/}))
-        self.present(alert, animated: true, completion: nil)
-    }
-    
-    func closeStarPlayr(title: String, message:String, action:String) {
-        
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: action, style: .default, handler: { action in
-            switch action.style{
-                case .default:
-                    exit(0)
-                case .cancel:
-                    print("cancel")
-                case .destructive:
-                    print("destructive")
-                
-                @unknown default:
-                    print("error.")
-            }}))
-        self.present(alert, animated: true, completion: nil)
-    }
-    
-    //set tab item
-    func tabItem(index: Int, enable: Bool, selectItem: Bool) {
-        let tabBarArray = self.tabBarController?.tabBar.items
-        
-        if let tabBarItems = tabBarArray, tabBarItems.count > 0 {
-            let tabBarItem = tabBarItems[index]
-            tabBarItem.isEnabled = enable
-        }
-        
-        if selectItem {
-            self.tabBarController?.selectedIndex = index
-        }
-    }
-    
-    //view did load
-    override func viewDidLoad() {
-        
-        super.viewDidLoad()
-        
-	
-        
-       
-  
-        tabItem(index: 1, enable: false, selectItem: false)
-        
-        gUsername = UserDefaults.standard.string(forKey: "user") ?? ""
-        gPassword = UserDefaults.standard.string(forKey: "pass") ?? ""
-        userField.text = gUsername
-        passField.text = gPassword
-        
-        //gUserid = UserDefaults.standard.string(forKey: "userid") ?? ""
-        
-        if !gUsername.isEmpty && !gPassword.isEmpty {
-            
-            LoginQueue.async {
-                if UIAccessibility.isVoiceOverRunning {
-                    let utterance = AVSpeechUtterance(string: "Star Player X, Logging In")
-                    utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
-                    utterance.rate = 0.5
-                    
-                    let synthesizer = AVSpeechSynthesizer()
-                    synthesizer.speak(utterance)
-                }
-            }
-            
-            autoLogin()
-        }
-        
-        //Pause Gesture
-        let doubleFingerTapToPause = UITapGestureRecognizer(target: self, action: #selector(pausePlayBack) )
-        doubleFingerTapToPause.numberOfTapsRequired = 2
-        view.addGestureRecognizer(doubleFingerTapToPause)
-        
-    }
-    
 }
 
 
-extension UIImage {
-    
-    func maskWithColor(color: UIColor) -> UIImage? {
-        let maskImage = cgImage!
-        
-        let width = size.width
-        let height = size.height
-        let bounds = CGRect(x: 0, y: 0, width: width, height: height)
-        
-        let colorSpace = CGColorSpaceCreateDeviceRGB()
-        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
-        let context = CGContext(data: nil, width: Int(width), height: Int(height), bitsPerComponent: 8, bytesPerRow: 0, space: colorSpace, bitmapInfo: bitmapInfo.rawValue)!
-        
-        context.clip(to: bounds, mask: maskImage)
-        context.setFillColor(color.cgColor)
-        context.fill(bounds)
-        
-        if let cgImage = context.makeImage() {
-            let coloredImage = UIImage(cgImage: cgImage)
-            return coloredImage
-        } else {
-            return nil
-        }
-    }
-}

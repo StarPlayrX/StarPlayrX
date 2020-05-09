@@ -13,6 +13,8 @@ import UIKit
 internal class Async {
     static let api = Async()
     
+    let g = Global.obj
+    
     //MARK: Data
     internal func CommanderData(endpoint: String, method: String, DataHandler: @escaping DataHandler )  {
         guard let url = URL(string: endpoint) else { DataHandler(.none); return}
@@ -42,7 +44,7 @@ internal class Async {
         
         var urlReq = URLRequest(url: url)
         urlReq.httpMethod = "GET"
-        urlReq.timeoutInterval = TimeInterval(2)
+        urlReq.timeoutInterval = TimeInterval(10)
         urlReq.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
         
         let task = URLSession.shared.dataTask(with: urlReq ) { ( data, _, _ ) in
@@ -134,23 +136,23 @@ internal class Async {
                     }
                     
                     if !Popular.isEmpty {
-                        PopularCategories = Popular
+                        self.g.PopularCategories = Popular
                     }
                     
                     if !sportsTalk.isEmpty {
-                        SportsCategories = sportsTalk
+                        self.g.SportsCategories = sportsTalk
                     }
                     
                     if !musicArray.isEmpty {
-                        MusicCategories = musicArray
+                        self.g.MusicCategories = musicArray
                     }
                     
                     if !talkArray.isEmpty {
-                        TalkCategories = talkArray
+                        self.g.TalkCategories = talkArray
                     }
                     
                     if !miscArray.isEmpty {
-                        MiscCategories = miscArray
+                        self.g.MiscCategories = miscArray
                     }
                     
                 }

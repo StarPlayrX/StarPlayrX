@@ -18,8 +18,12 @@ import CoreImage
 
 final class Player {
     static let shared = Player()
+    
+    let g = Global.obj
+    
     public let PlayerQueue = DispatchQueue(label: "PlayerQueue", qos: .userInitiated )
     public let PDTqueue = DispatchQueue(label: "PDT", qos: .userInteractive, attributes: .concurrent)
+    
     var mpVolumeView = MPVolumeView()
     var routePicker  = AVRoutePickerView()
     var player = AVQueuePlayer()
@@ -62,52 +66,53 @@ final class Player {
     //MARK: Update the screen
     func syncArt() {
         
-        if let md5 = Player.shared.MD5(String(CACurrentMediaTime().description)) {
+        if let md5 = self.MD5(String(CACurrentMediaTime().description)) {
             self.previousMD5 = md5
         } else {
             let str = "Hello, Last Star Player X."
             self.previousMD5 = self.MD5(String(str)) ?? str
         }
         
-        if Player.shared.player.isReady {
-            if let i = channelArray.firstIndex(where: {$0.channel == currentChannel}) {
+        if g.Server.isReady {
+            if let i = channelArray.firstIndex(where: {$0.channel == g.currentChannel}) {
                 let item = channelArray[i].largeChannelArtUrl
-                self.updateDisplay(key: currentChannel, cache: self.pdtCache, channelArt: item, false)
+                self.updateDisplay(key: g.currentChannel, cache: self.pdtCache, channelArt: item, false)
             }
         }
     }
     
     
     func playX() {
+        let g = Global.obj
+
         NotificationCenter.default.post(name: .didUpdatePlay, object: nil)
         state = .buffering
-		
         
         func stream() {
             if self.player.isDead  {
                 resetPlayer()
             }
             
-            if Player.shared.player.isReady {
+            if g.Server.isReady {
                 
-                if let url = URL(string: insecure + local +
-                    ":" + String(port) + "/playlist/" + currentChannel + m3u8) {
+                if let url = URL(string: g.insecure + g.local +
+                    ":" + String(port) + "/playlist/" + g.currentChannel + g.m3u8) {
                     
                     let asset = AVAsset(url: url)
                     let playItem = AVPlayerItem(asset:asset)
-                    
-                    self.player.insert(playItem, after: nil)
-                    //self.player.automaticallyWaitsToMinimizeStalling = false
-                    self.player.allowsExternalPlayback = false
-                    //self.player.appliesMediaSelectionCriteriaAutomatically = true
-                    self.player.currentItem?.preferredForwardBufferDuration = 0
-                    self.player.currentItem?.automaticallyPreservesTimeOffsetFromLive = true
-                    self.player.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = false
+                    let p = self.player
+                    p.insert(playItem, after: nil)
+                    p.automaticallyWaitsToMinimizeStalling = true
+                    p.allowsExternalPlayback = false
+                    p.appliesMediaSelectionCriteriaAutomatically = true
+                    p.currentItem?.preferredForwardBufferDuration = 0
+                    p.currentItem?.automaticallyPreservesTimeOffsetFromLive = true
+                    p.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = true
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + avSession.outputLatency) {
-                        self.player.playImmediately(atRate: 1.0)
+                        p.playImmediately(atRate: 1.0)
                         self.state = .playing
-                        self.player.currentItem?.preferredForwardBufferDuration = 1
+                        p.currentItem?.preferredForwardBufferDuration = 1
                     }
                 }
             }
@@ -116,7 +121,7 @@ final class Player {
         //MARK: Stop the player, we have an issue - this could show an interruption
         func stop() {
             self.player.pause()
-            Player.shared.state = .paused
+            self.state = .paused
             NotificationCenter.default.post(name: .didUpdatePause, object: nil)
             self.resetPlayer()
             self.player = AVQueuePlayer()
@@ -129,7 +134,7 @@ final class Player {
             })
         }
         
-        player.isReady ? stream() : launchServer()
+        g.Server.isReady ? stream() : launchServer()
                     
     }
     
@@ -169,7 +174,7 @@ final class Player {
     
     func pause() {
         self.player.pause()
-        Player.shared.state = .paused
+        self.state = .paused
         NotificationCenter.default.post(name: .didUpdatePause, object: nil)
         self.resetPlayer()
         self.player = AVQueuePlayer()
@@ -243,6 +248,7 @@ final class Player {
     //MARK: Todd
     func updateNowPlayingX(_ animated: Bool = true) {
         
+        let g = Global.obj
         
         func demoImage() -> UIImage? {
             
@@ -285,7 +291,7 @@ final class Player {
        
 
         //Demo Mode
-        if !demomode {
+        if !g.demomode {
             
             //Get album art
             if nowPlaying.albumArt.contains(string: "http") {
@@ -324,9 +330,11 @@ final class Player {
 
     //MARK: Update Artist Song Info
     func updatePDT(completionHandler: @escaping CompletionHandler ) {
-        if Player.shared.player.isReady {
+        if g.Server.isReady {
         
-            let endpoint = insecure + local + ":" + String(Player.shared.port) + "/pdt"
+            let g = Global.obj
+
+            let endpoint = g.insecure + g.local + ":" + String(self.port) + "/pdt"
         
             Async.api.Get(endpoint: endpoint, DictionaryHandler: { (dict) -> Void in
                 
@@ -343,6 +351,26 @@ final class Player {
         }
     }
     
+    
+    //MARK: Update Artist Song Info
+    func updatePDT_skipCheck(completionHandler: @escaping CompletionHandler ) {
+        let g = Global.obj
+        
+        let endpoint = g.insecure + g.local + ":" + String(self.port) + "/pdt"
+        
+        Async.api.Get(endpoint: endpoint, DictionaryHandler: { (dict) -> Void in
+            
+            if let p = dict as? [String : Any], !p.isEmpty, let cache = p["data"] as? [String : Any], !cache.isEmpty {
+                self.pdtCache = cache
+                
+                channelArray = self.getPDTData(importData: channelArray)
+                completionHandler(true)
+                
+            } else {
+                completionHandler(false)
+            }
+        })
+    }
     
     
     func getPDTData(importData: tableData) -> tableData {
@@ -391,10 +419,10 @@ final class Player {
         nowPlayingInfo[MPMediaItemPropertyMediaType] = 1
         nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = true
         nowPlayingInfo[MPMediaItemPropertyAlbumArtist] = artist
-        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = currentChannelName
+        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = g.currentChannelName
         nowPlayingInfo[MPNowPlayingInfoPropertyDefaultPlaybackRate] = 1.0
         
-        if Player.shared.player.rate == 1 {
+        if self.player.rate == 1 {
             nowPlayingInfoCenter.playbackState = .playing
         } else {
             nowPlayingInfoCenter.playbackState = .paused
@@ -432,15 +460,17 @@ final class Player {
         
         do {
             //Find the first Open port
-            for i in Player.shared.port...64999 {
+            for i in self.port...64999 {
                 let (isFree, _) = checkTcpPortForListen(port: UInt16(i))
                 if isFree {
-                    Player.shared.port = UInt16(i)
+                    self.port = UInt16(i)
                     break
                 }
             }
             
-            let server = HTTPServer.Server(name: localhost, address: local, port: Int(Player.shared.port), routes: routes() )
+            let g = Global.obj
+            
+            let server = HTTPServer.Server(name: g.localhost, address: g.local, port: Int(self.port), routes: routes() )
             try HTTPServer.launch(wait: false, server)
             
             completionHandler(true)
@@ -477,17 +507,17 @@ final class Player {
         
         
         commandCenter.playCommand.addTarget(handler: { (event) in
-            Player.shared.new()
+            self.new()
             return MPRemoteCommandHandlerStatus.success}
         )
         
         commandCenter.pauseCommand.addTarget(handler: { (event) in
-            Player.shared.new()
+            self.new()
             return MPRemoteCommandHandlerStatus.success}
         )
         
         commandCenter.togglePlayPauseCommand.addTarget(handler: { (event) in
-            Player.shared.new()
+            self.new()
             return MPRemoteCommandHandlerStatus.success}
         )
 

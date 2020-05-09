@@ -25,10 +25,8 @@
 		5F5C505B244CC26000A35D76 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5048244CC26000A35D76 /* Player.swift */; };
 		5F5C505C244CC26000A35D76 /* PortFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5049244CC26000A35D76 /* PortFinder.swift */; };
 		5F5C5060244CC26000A35D76 /* ReadDataFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C504D244CC26000A35D76 /* ReadDataFile.swift */; };
-		5F5C5061244CC26000A35D76 /* channelLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C504E244CC26000A35D76 /* channelLoader.swift */; };
 		5F5C5062244CC26000A35D76 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C504F244CC26000A35D76 /* Extensions.swift */; };
 		5F5C5065244CC26000A35D76 /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5052244CC26000A35D76 /* Global.swift */; };
-		5F5C5066244CC26000A35D76 /* LaunchServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5053244CC26000A35D76 /* LaunchServer.swift */; };
 		5F5C506A244CC26000A35D76 /* Networkabilty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5057244CC26000A35D76 /* Networkabilty.swift */; };
 		5F5C510F244CD45400A35D76 /* CameoKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F5C50FF244CD45400A35D76 /* CameoKit.framework */; };
 		5FDAD9BA2464EFBA008E38A8 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDAD9B92464EFBA008E38A8 /* Async.swift */; };
@@ -66,10 +64,8 @@
 		5F5C5048244CC26000A35D76 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		5F5C5049244CC26000A35D76 /* PortFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PortFinder.swift; sourceTree = "<group>"; };
 		5F5C504D244CC26000A35D76 /* ReadDataFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadDataFile.swift; sourceTree = "<group>"; };
-		5F5C504E244CC26000A35D76 /* channelLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = channelLoader.swift; sourceTree = "<group>"; };
 		5F5C504F244CC26000A35D76 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		5F5C5052244CC26000A35D76 /* Global.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
-		5F5C5053244CC26000A35D76 /* LaunchServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LaunchServer.swift; sourceTree = "<group>"; };
 		5F5C5057244CC26000A35D76 /* Networkabilty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Networkabilty.swift; sourceTree = "<group>"; };
 		5F5C5088244CCAB900A35D76 /* StarPlayrX.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StarPlayrX.entitlements; sourceTree = "<group>"; };
 		5F5C50FF244CD45400A35D76 /* CameoKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CameoKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -200,12 +196,10 @@
 		5F5C5046244CC24D00A35D76 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				5F5C5052244CC26000A35D76 /* Global.swift */,
 				5FDAD9B92464EFBA008E38A8 /* Async.swift */,
 				5F381C16245F568E009BA91D /* Draw.swift */,
 				5F5C504F244CC26000A35D76 /* Extensions.swift */,
-				5F5C5052244CC26000A35D76 /* Global.swift */,
-				5F5C504E244CC26000A35D76 /* channelLoader.swift */,
-				5F5C5053244CC26000A35D76 /* LaunchServer.swift */,
 				5F5C5057244CC26000A35D76 /* Networkabilty.swift */,
 				5F5C5048244CC26000A35D76 /* Player.swift */,
 				5F5C5049244CC26000A35D76 /* PortFinder.swift */,
@@ -303,7 +297,6 @@
 				5F5C5062244CC26000A35D76 /* Extensions.swift in Sources */,
 				5F5C505B244CC26000A35D76 /* Player.swift in Sources */,
 				5F5C5028244CBCD500A35D76 /* ChannelsViewController.swift in Sources */,
-				5F5C5061244CC26000A35D76 /* channelLoader.swift in Sources */,
 				5F5C506A244CC26000A35D76 /* Networkabilty.swift in Sources */,
 				5FDAD9BA2464EFBA008E38A8 /* Async.swift in Sources */,
 				5F381C17245F568E009BA91D /* Draw.swift in Sources */,
@@ -311,7 +304,6 @@
 				5F5C5041244CC20800A35D76 /* AP2Volume.m in Sources */,
 				5F5C5025244CBCD500A35D76 /* TabViewController.swift in Sources */,
 				5F5C5009244CBBD300A35D76 /* AppDelegate.swift in Sources */,
-				5F5C5066244CC26000A35D76 /* LaunchServer.swift in Sources */,
 				5F5C500B244CBBD300A35D76 /* SceneDelegate.swift in Sources */,
 				5F5C5026244CBCD500A35D76 /* PlayerViewController.swift in Sources */,
 				5F5C5024244CBCD500A35D76 /* SiriusViewController.swift in Sources */,

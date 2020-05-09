@@ -12,6 +12,7 @@ import AVKit
 class SiriusViewController: UITableViewController {
     var pdtTimer: Timer? = nil
     
+    let g = Global.obj
     
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
     override var prefersHomeIndicatorAutoHidden : Bool { return true }
@@ -19,11 +20,8 @@ class SiriusViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        restartPDT()
-        SPXCache(run: true)
-
-        navBarWidth  = self.navigationController!.navigationBar.frame.width
-        tabBarHeight = self.tabBarController!.tabBar.frame.height
+        g.navBarWidth  = self.navigationController!.navigationBar.frame.width
+        g.tabBarHeight = self.tabBarController!.tabBar.frame.height
         
         self.tableView.rowHeight = 60.0
         tableView.separatorColor = UIColor.black
@@ -34,6 +32,9 @@ class SiriusViewController: UITableViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(handleInterruption(_:)), name: .gotSessionInterruption, object: nil)
 
         NotificationCenter.default.addObserver(self, selector: #selector(networkInterruption(_:)), name: NSNotification.Name.AVPlayerItemFailedToPlayToEndTime, object: nil)
+        
+        restartPDT()
+
     }
     
     @objc func networkInterruption(_ notification: Notification) {
@@ -129,16 +130,14 @@ class SiriusViewController: UITableViewController {
     }
     
     //Read Write Cache for the PDT (Artist / Song / Album Art)
-    @objc func SPXCache(run: Bool = false) {
-      
-        if Player.shared.player.isReady || run  {
+    @objc func SPXCache() {
+        if g.Server.isReady {
             Player.shared.updatePDT(completionHandler: { (success) -> Void in
-                // do nothing
-                if success && Player.shared.state == .playing {
+                if success {
                     
-                    if let i = channelArray.firstIndex(where: {$0.channel == currentChannel}) {
+                    if let i = channelArray.firstIndex(where: {$0.channel == self.g.currentChannel}) {
                         let item = channelArray[i].largeChannelArtUrl
-                        Player.shared.updateDisplay(key: currentChannel, cache: Player.shared.pdtCache, channelArt: item)
+                        Player.shared.updateDisplay(key: self.g.currentChannel, cache: Player.shared.pdtCache, channelArt: item)
                     }
                     
                     DispatchQueue.main.async {
@@ -147,8 +146,6 @@ class SiriusViewController: UITableViewController {
                 }
             })
         }
-       
-        
     }
     
     func restartPDT() {
@@ -159,16 +156,12 @@ class SiriusViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if cell.isSelected {
-            //cell.accessoryType = .disclosureIndicator
-            
             cell.accessoryType = .checkmark
             cell.tintColor = UIColor(displayP3Red: 0 / 255, green: 150 / 255, blue: 255 / 255, alpha: 1.0)
-            
             cell.accessibilityLabel = "Channels"
             cell.accessibilityHint = "Grouped by Category"
             cell.textLabel?.font = UIFont.systemFont(ofSize: 25)
             cell.textLabel?.textColor = UIColor(displayP3Red: 0 / 255, green: 128 / 255, blue: 255 / 255, alpha: 0.875)
-            
             cell.backgroundColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0) //iOS 12
             cell.contentView.backgroundColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0) //iOS 13
             
@@ -178,9 +171,7 @@ class SiriusViewController: UITableViewController {
             cell.accessibilityLabel = .none
             cell.accessibilityHint = .none
             cell.textLabel?.textColor = UIColor.white
-            
             cell.contentView.backgroundColor = UIColor(displayP3Red: 41 / 255, green: 42 / 255, blue: 48 / 255, alpha: 1.0) //iOS 13
-            
         }
     }
     
@@ -196,7 +187,7 @@ class SiriusViewController: UITableViewController {
     
     //Number of Sections
     override func numberOfSections(in tableView: UITableView) -> Int {
-        MiscCategories.isEmpty ? 4 : 5
+        g.MiscCategories.isEmpty ? 4 : 5
     }
     
     
@@ -204,15 +195,15 @@ class SiriusViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         if section == 0 {
-            return PopularCategories.count
+            return g.PopularCategories.count
         } else if section == 1 {
-            return MusicCategories.count
+            return g.MusicCategories.count
         } else if section == 2 {
-            return TalkCategories.count
+            return g.TalkCategories.count
         } else if section == 3  {
-            return SportsCategories.count
-        } else if section == 4 && !MiscCategories.isEmpty {
-            return MiscCategories.count
+            return g.SportsCategories.count
+        } else if section == 4 && !g.MiscCategories.isEmpty {
+            return g.MiscCategories.count
         } else {
             return 0
         }
@@ -234,7 +225,7 @@ class SiriusViewController: UITableViewController {
             return "Talk"
         } else if section == 3 {
             return "Sports"
-        } else if !MiscCategories.isEmpty {
+        } else if !g.MiscCategories.isEmpty {
             return "Misc"
         } else {
             return .none
@@ -264,17 +255,16 @@ class SiriusViewController: UITableViewController {
             withIdentifier: "Cell", for: indexPath)
         
         if indexPath.section == 0 {
-            cell.textLabel?.text = PopularCategories[indexPath.row]
+            cell.textLabel?.text = g.PopularCategories[indexPath.row]
         } else if indexPath.section == 1 {
-            cell.textLabel?.text = MusicCategories[indexPath.row]
-            
+            cell.textLabel?.text = g.MusicCategories[indexPath.row]
         } else if indexPath.section == 2 {
-            cell.textLabel?.text = TalkCategories[indexPath.row]
+            cell.textLabel?.text = g.TalkCategories[indexPath.row]
         } else if indexPath.section == 3 {
-            cell.textLabel?.text = SportsCategories[indexPath.row]
+            cell.textLabel?.text = g.SportsCategories[indexPath.row]
         } else if indexPath.section == 4  {
-            if !MiscCategories.isEmpty {
-                cell.textLabel?.text = MiscCategories[indexPath.row]
+            if !g.MiscCategories.isEmpty {
+                cell.textLabel?.text = g.MiscCategories[indexPath.row]
             } 
         }
         
@@ -303,6 +293,6 @@ class SiriusViewController: UITableViewController {
         currentCell.contentView.backgroundColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0) //iOS 13
         currentCell.textLabel?.textColor = UIColor.lightGray
         
-        categoryTitle = text!
+        g.categoryTitle = text!
     }
 }

@@ -14,15 +14,13 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
     override var prefersHomeIndicatorAutoHidden : Bool { return true }
 
     var ChannelsTimer: Timer? = nil
-
-    @IBOutlet var ChannelsTableView: UITableView!
-    
     var channelScrollPosIndexPath : IndexPath? = nil
-   
+    let g = Global.obj
+    
     private let Interactive = DispatchQueue(label: "Interactive", qos: .userInteractive )
 
+    @IBOutlet var ChannelsTableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
- 	
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder() // hides the keyboard.
@@ -66,10 +64,10 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
     func updateFilter() {
         filterData = tableData()
         
-        if categoryTitle == Player.shared.allStars {
+        if g.categoryTitle == Player.shared.allStars {
             coldFilteredData = channelArray.filter {$0.preset} as tableData
-        } else if categoryTitle != Player.shared.everything {
-            coldFilteredData = channelArray.filter {$0.category == categoryTitle} as tableData
+        } else if g.categoryTitle != Player.shared.everything {
+            coldFilteredData = channelArray.filter {$0.category == g.categoryTitle} as tableData
         } else {
             coldFilteredData = channelArray as tableData
         }
@@ -98,8 +96,8 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
             
         }
     
-        self.title == categoryTitle ? UpdateTableView(scrollPosition: .none) : UpdateTableView(scrollPosition: .middle)
-        self.title = categoryTitle
+        self.title == g.categoryTitle ? UpdateTableView(scrollPosition: .none) : UpdateTableView(scrollPosition: .middle)
+        self.title = g.categoryTitle
         
         NotificationCenter.default.addObserver(self, selector: #selector(UpdateTableView), name: .updateChannelsView, object: nil)
     }
@@ -108,7 +106,7 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
     func SelectMyRow(scrollPosition: UITableView.ScrollPosition ) {
         //Locate the channel is playing
         if !filterData.isEmpty && ( ChannelsTableView.numberOfRows(inSection: 0) == filterData.count ) {
-            let index = filterData.firstIndex(where: {$0.channel == currentChannel})
+            let index = filterData.firstIndex(where: {$0.channel == g.currentChannel})
             
             if let i = index {
                 SPXSelectRow(myTableView: ChannelsTableView, position: i, scrollPosition: scrollPosition)
@@ -166,7 +164,7 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
     
     
     @objc func UpdateTableView(scrollPosition: UITableView.ScrollPosition = .none) {
-        if Player.shared.player.isReady {
+        if g.Server.isReady {
             updateFilter()
             ChannelsTableView.reloadData()
             SelectMyRow(scrollPosition: scrollPosition)
@@ -207,12 +205,12 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
         
         if let text = localCell.textLabel?.text {
 
-            currentChannelName = text
+            g.currentChannelName = text
             
-            let previousChannel = currentChannel
+            let previousChannel = g.currentChannel
             
             if let channel = text.components(separatedBy: " ").first {
-                currentChannel = channel
+                g.currentChannel = channel
             }
             
 
@@ -226,7 +224,7 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
                 }
             }
             
-            lastCategory = categoryTitle
+            g.lastCategory = g.categoryTitle
             UpdateTableView(scrollPosition: .none)
             
             let iPad : Bool
@@ -252,7 +250,7 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
             
             DispatchQueue.main.async {
                 let this = Player.shared
-                let doit = currentChannel != previousChannel || this.player.isDead || this.state != .playing
+                let doit = self.g.currentChannel != previousChannel || this.player.isDead || this.state != .playing
                 doit ? this.new(.stream) : () //playing
                 
                 (doit || !iPad) ? (self.performSegue(withIdentifier: "playerViewSegue", sender: localCell)) : ()

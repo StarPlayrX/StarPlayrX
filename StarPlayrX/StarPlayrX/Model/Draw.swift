@@ -11,6 +11,8 @@ import AVKit
 
 final class Draw {
     
+    let g = Global.obj
+    
     //MARK: Offset Values
     let iPhoneOffset = CGFloat(13) //kicks up some graphics
     let iPhoneXtraPx = CGFloat(18)
@@ -32,8 +34,6 @@ final class Draw {
     var positionBottom : CGFloat = 0
     
     let isPhone		 : Bool
-    //let PosX   	 : CGFloat
-    //let PosY		 : CGFloat
     
     //MARK: CUSTOMIZATIONS
     let labelOffset		: CGFloat
@@ -62,7 +62,7 @@ final class Draw {
             playerView = self.drawPlayerView(mainView: mainView, x: iPhoneWidth / 2, y: (frameY) / 2, width: iPhoneWidth, height: self.iPhoneY, isPhone: self.isPhone)
         } else {
             //Nav Bar width is from a previous view
-            playerView = self.drawPlayerView(mainView: mainView, x: 0, y: 0, width: iPhoneWidth - navBarWidth, height: iPhoneHeight - tabBarHeight, isPhone: self.isPhone)
+            playerView = self.drawPlayerView(mainView: mainView, x: 0, y: 0, width: iPhoneWidth - g.navBarWidth, height: iPhoneHeight - g.tabBarHeight, isPhone: self.isPhone)
         }
         
         return playerView
@@ -130,7 +130,7 @@ final class Draw {
     
     init( frame: CGRect, isPhone: Bool, NavY: CGFloat, TabY: CGFloat) {
         
-        self.isPhone = isPhone;
+        self.isPhone = isPhone
         
         iPhoneHeight = frame.height
         iPhoneWidth  = frame.width
@@ -291,7 +291,7 @@ final class Draw {
                 AlbumArtSizeX = drawView.frame.size.width - (iPadAlbumClearSpace * 1.333)
                 AlbumArtSizeY = drawView.frame.size.height - (iPadAlbumClearSpace * 1.333)
                 centerX = drawView.frame.size.width / 2
-                centerY = (drawView.frame.size.height - tabBarHeight) / 2
+                centerY = (drawView.frame.size.height - g.tabBarHeight) / 2
                 positionBottom = CGFloat( drawView.frame.size.height - 30 )
             
             default:
@@ -307,7 +307,7 @@ final class Draw {
                     AlbumArtSizeX = drawView.frame.size.width - (iPadAlbumClearSpace * 1.333)
                     AlbumArtSizeY = drawView.frame.size.height - (iPadAlbumClearSpace * 1.333)
                     centerX = drawView.frame.size.width / 2
-                    centerY = (drawView.frame.size.height - tabBarHeight) / 2
+                    centerY = (drawView.frame.size.height - g.tabBarHeight) / 2
                     positionBottom = CGFloat( drawView.frame.size.height - 30 )
             }
             

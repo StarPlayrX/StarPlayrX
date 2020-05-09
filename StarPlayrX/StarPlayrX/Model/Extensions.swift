@@ -31,26 +31,21 @@ extension UIImage {
 }
 
 
+extension String {
+    var isReady: Bool {
+        //Can't run this at startup
+        let pingUrl = "http://localhost:" + String(Player.shared.port) + "/ping"
+        return TextSync(endpoint: pingUrl, method: "ping") == "pong" ? true : false
+    }
+}
+
+
 //Some extra variables, so we can check the status of our AVPlayer
 extension AVQueuePlayer {
     
-    var isReady: Bool {
-        var returnValue : Bool? = nil
-        
-        let pingUrl = "http://localhost:" + String(Player.shared.port) + "/ping"
-        Async.api.Text(endpoint: pingUrl, TextHandler: { (ping) -> Void in
-            returnValue = (ping == "pong") ? true : false
-        })
-        
-        repeat {usleep(25000)} while returnValue == nil
-        
-        guard let RV = returnValue else { return false }
-     
-    	return RV
-    }
-    
     var isTwin: Bool {
-        return lastchannel == currentChannel
+        let g = Global.obj
+        return g.lastchannel == g.currentChannel
     }
     
     var isDead: Bool {
@@ -73,4 +68,31 @@ extension Notification.Name {
     static let gotRouteChangeNotification = AVAudioSession.routeChangeNotification
     static let gotVolumeDidChange = NSNotification.Name(rawValue: "AVSystemController_SystemVolumeDidChangeNotification")
     static let willEnterForegroundNotification = UIApplication.willEnterForegroundNotification
+}
+
+
+extension UIImage {
+    
+    func maskWithColor(color: UIColor) -> UIImage? {
+        let maskImage = cgImage!
+        
+        let width = size.width
+        let height = size.height
+        let bounds = CGRect(x: 0, y: 0, width: width, height: height)
+        
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
+        let context = CGContext(data: nil, width: Int(width), height: Int(height), bitsPerComponent: 8, bytesPerRow: 0, space: colorSpace, bitmapInfo: bitmapInfo.rawValue)!
+        
+        context.clip(to: bounds, mask: maskImage)
+        context.setFillColor(color.cgColor)
+        context.fill(bounds)
+        
+        if let cgImage = context.makeImage() {
+            let coloredImage = UIImage(cgImage: cgImage)
+            return coloredImage
+        } else {
+            return nil
+        }
+    }
 }
