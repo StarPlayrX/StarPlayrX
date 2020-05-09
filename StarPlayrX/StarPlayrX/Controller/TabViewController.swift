@@ -8,9 +8,9 @@
 
 import UIKit
 
+
 class TabController: UITabBarController {
     
-   
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
     override var prefersHomeIndicatorAutoHidden : Bool { return true }
 

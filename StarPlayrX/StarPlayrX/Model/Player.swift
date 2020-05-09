@@ -8,13 +8,9 @@
 
 import Foundation
 import CameoKit
-import AVKit
 import MediaPlayer
-import MediaAccessibility
 import PerfectHTTPServer
-import PerfectHTTP
 import CryptoKit
-import CoreImage
 
 final class Player {
     static let shared = Player()
@@ -24,8 +20,6 @@ final class Player {
     public let PlayerQueue = DispatchQueue(label: "PlayerQueue", qos: .userInitiated )
     public let PDTqueue = DispatchQueue(label: "PDT", qos: .userInteractive, attributes: .concurrent)
     
-    var mpVolumeView = MPVolumeView()
-    var routePicker  = AVRoutePickerView()
     var player = AVQueuePlayer()
     var port: UInt16 = 9999
     var everything = "All Channels"

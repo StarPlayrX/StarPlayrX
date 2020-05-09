@@ -8,9 +8,7 @@
 
 import Foundation
 import UIKit
-import AVKit
 import AVFoundation
-import MediaPlayer
 import CameoKit
 
 extension UIImage {

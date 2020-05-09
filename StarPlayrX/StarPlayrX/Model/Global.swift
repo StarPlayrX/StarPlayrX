@@ -58,28 +58,12 @@ internal class Global  {
     
     typealias NowPlayingType = (channel:String,artist:String,song:String,albumArt:String,channelArt:String, image: UIImage?)
     var NowPlaying = (channel:"",artist:"",song:"",albumArt:"",channelArt:"", image: nil ) as NowPlayingType
+   
+
 }
 
-
-
-
+//Leaving as a global type for now
 typealias tableData = [(searchString:String,name:String,channel:String,title:NSMutableAttributedString,detail:NSMutableAttributedString, image:UIImage, channelImage:UIImage, albumUrl:String, largeAlbumUrl: String, largeChannelArtUrl: String, category:String, preset: Bool)]
-
-
-
-
-
-
-
-
-//let gRoot = "https://player.siriusxm.com/rest/v2/experience/modules"
-
-
-
-
-
-
-
 
 //Completion Handlers
 typealias CompletionHandler 	= (_ success:Bool) -> Void
