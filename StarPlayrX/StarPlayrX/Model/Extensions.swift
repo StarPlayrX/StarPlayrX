@@ -33,7 +33,7 @@ extension String {
     var isReady: Bool {
         //Can't run this at startup
         let pingUrl = "http://localhost:" + String(Player.shared.port) + "/ping"
-        return TextSync(endpoint: pingUrl, method: "ping") == "pong" ? true : false
+        return Sync.io.TextSync(endpoint: pingUrl, method: "ping") == "pong" ? true : false
     }
 }
 

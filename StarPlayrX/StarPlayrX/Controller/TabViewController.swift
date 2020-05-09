@@ -17,8 +17,6 @@ class TabController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
  		
-      
-
         let appearance = tabBar.standardAppearance
         appearance.shadowImage = nil
         appearance.shadowColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0)
@@ -30,6 +28,7 @@ class TabController: UITabBarController {
         delegate = self
     }
     
+    //MARK: Determine if we still need this
    // override open var supportedInterfaceOrientations : UIInterfaceOrientationMask {
         /*let deviceType = UIDevice().type
         

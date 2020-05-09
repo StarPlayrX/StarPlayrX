@@ -62,7 +62,7 @@ internal class Global  {
 
 }
 
-//Leaving as a global type for now
+//MARK: TypeAliases
 typealias tableData = [(searchString:String,name:String,channel:String,title:NSMutableAttributedString,detail:NSMutableAttributedString, image:UIImage, channelImage:UIImage, albumUrl:String, largeAlbumUrl: String, largeChannelArtUrl: String, category:String, preset: Bool)]
 
 //Completion Handlers
@@ -75,10 +75,26 @@ typealias TextHandler 			= (_ text:String?) -> Void
 
 typealias PostReturnTuple = (message: String, success: Bool, data: NSDictionary? , response: HTTPURLResponse? )
 
+//MARK: Player State enum
 enum PlayerState {
     case playing
     case paused
     case buffering
     case interrupted
     case stream
+}
+
+//MARK: Speakers enum
+enum Speakers : String {
+    case speaker0 = "speaker0"
+    case speaker1 = "speaker1"
+    case speaker2 = "speaker2"
+    case speaker3 = "speaker3"
+    case speaker4 = "speaker4"
+    case speaker5 = "speaker5"
+    case speaker6 = "speaker6"
+    case speaker7 = "speaker7"
+    case speaker8 = "speaker8"
+    case speaker9 = "speaker9"
+    case speaker10 = "speaker10"
 }

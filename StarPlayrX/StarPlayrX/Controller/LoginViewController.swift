@@ -519,7 +519,7 @@ class LoginViewController: UIViewController {
     }
     
     func embeddedAlbumArt(filename: String) {
-        if let art = readLocalDataFile(filename: filename) {
+        if let art = Sync.io.readLocalDataFile(filename: filename) {
             
             do {
                 if let d = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData( art ) {
@@ -586,8 +586,6 @@ class LoginViewController: UIViewController {
             g.ChannelData[c.key] = imageData
         }
     }
-    
-    
 }
 
 
