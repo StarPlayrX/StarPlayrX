@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import CameoKit
 import UIKit
 
 internal class Global  {
@@ -37,32 +36,34 @@ internal class Global  {
     var lastchannel = ""
     var currentChannelName = ""
     var userid : String? = ""
-    var channelList = Dictionary<String, Any>()
-    var tabBarHeight = CGFloat(65.0)
-    var navBarWidth = CGFloat(375.0)
     
-    var PopularCategories  = Array<String>()
-    var MusicCategories    = Array<String>()
-    var TalkCategories     = Array<String>()
-    var SportsCategories   = Array<String>()
-    var MiscCategories     = Array<String>()
-    
-    var SelectedRow : IndexPath? = nil
-    var SearchText = ""
-    var ChannelData = Dictionary<String, Data>()
+    internal var tabBarHeight = CGFloat(65.0)
+    internal var navBarWidth = CGFloat(375.0)
 
+    internal var PopularCategories  = Array<String>()
+    internal var MusicCategories    = Array<String>()
+    internal var TalkCategories     = Array<String>()
+    internal var SportsCategories   = Array<String>()
+    internal var MiscCategories     = Array<String>()
+    
+    internal var channelList = Dictionary<String, Any>()
+    internal var ChannelData = Dictionary<String, Data>()
     internal var ChannelArray = tableData()
+    internal var FilterData = tableData()
+    internal var ColdFilteredData = tableData()
     
-    var FilterData = tableData()
-    var ColdFilteredData = tableData()
-    
-    typealias NowPlayingType = (channel:String,artist:String,song:String,albumArt:String,channelArt:String, image: UIImage?)
-    var NowPlaying = (channel:"",artist:"",song:"",albumArt:"",channelArt:"", image: nil ) as NowPlayingType
+    internal var NowPlaying = (channel:"",artist:"",song:"",albumArt:"",channelArt:"", image: nil ) as NowPlayingType
+
+    internal var SelectedRow : IndexPath? = nil
+    internal var SearchText = ""
+
    
 
 }
 
 //MARK: TypeAliases
+typealias NowPlayingType = (channel:String,artist:String,song:String,albumArt:String,channelArt:String, image: UIImage?)
+
 typealias tableData = [(searchString:String,name:String,channel:String,title:NSMutableAttributedString,detail:NSMutableAttributedString, image:UIImage, channelImage:UIImage, albumUrl:String, largeAlbumUrl: String, largeChannelArtUrl: String, category:String, preset: Bool)]
 
 //Completion Handlers
@@ -75,7 +76,7 @@ typealias TextHandler 			= (_ text:String?) -> Void
 
 typealias PostReturnTuple = (message: String, success: Bool, data: NSDictionary? , response: HTTPURLResponse? )
 
-//MARK: Player State enum
+//MARK: Eums
 enum PlayerState {
     case playing
     case paused
@@ -84,7 +85,6 @@ enum PlayerState {
     case stream
 }
 
-//MARK: Speakers enum
 enum Speakers : String {
     case speaker0 = "speaker0"
     case speaker1 = "speaker1"

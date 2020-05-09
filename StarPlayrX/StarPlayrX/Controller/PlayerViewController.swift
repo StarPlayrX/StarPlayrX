@@ -21,17 +21,20 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     @IBOutlet weak var mainView: UIView!
     
     //UI Variables
-    var PlayerView      = UIView()
-    var Artist          = UILabel()
-    var Song            = UILabel()
-    var ArtistSong      = UILabel()
-    var VolumeSlider    = UISlider()
+    weak var PlayerView   : UIView!
+    weak var AlbumArt     : UIImageView!
+    weak var Artist       : UILabel?
+    weak var Song         : UILabel?
+    weak var ArtistSong   : UILabel?
+    weak var VolumeSlider : UISlider!
+    weak var PlayerXL     : UIButton!
+    weak var SpeakerView  : UIImageView!
+    weak var playerViewTimerX : Timer!
+
+
     var AirPlayView     = UIView()
     var AirPlayBtn      = AVRoutePickerView()
-    var SpeakerView     = UIImageView()
-    var PlayerXL        = UIButton()
     var allStarButton   = UIButton(type: UIButton.ButtonType.custom)
-    var AlbumArt        = UIImageView()
     
     var currentSpeaker = Speakers.speaker0
     var previousSpeaker = Speakers.speaker3
@@ -40,7 +43,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     let rounder = Float(10000.0)
     var sliderIsMoving = false
     var channelString = "Channels"
-    var playerViewTimerX =  Timer()
     
     //Art Queue
     public let ArtQueue = DispatchQueue(label: "ArtQueue", qos: .background )
@@ -141,38 +143,40 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     
     func drawPlayer(frame: CGRect, isPhone: Bool, NavY: CGFloat, TabY: CGFloat) {
         //Instantiate draw class
-        let draw = Draw(frame: frame, isPhone: isPhone, NavY: NavY, TabY: TabY)
+         var draw = Draw(frame: frame, isPhone: isPhone, NavY: NavY, TabY: TabY)
             
 
         //MARK: 1 - PlayerView must run 1st
     	PlayerView = draw.PlayerView(mainView: mainView)
         
-        let pv = PlayerView //instance
-
-    	AlbumArt = draw.AlbumImageView(playerView: pv)
+        if let pv = PlayerView {
+            AlbumArt = draw.AlbumImageView(playerView: pv)
             
-        if isPhone {
-            let artistSongLabelArray = draw.ArtistSongiPhone(playerView: pv)
-            Artist = artistSongLabelArray[0]
-            Song   = artistSongLabelArray[1]
-        } else {
-            ArtistSong = draw.ArtistSongiPad(playerView: pv)
+            if isPhone {
+                let artistSongLabelArray = draw.ArtistSongiPhone(playerView: pv)
+                Artist = artistSongLabelArray[0]
+                Song   = artistSongLabelArray[1]
+            } else {
+                ArtistSong = draw.ArtistSongiPad(playerView: pv)
+            }
+            
+            VolumeSlider = draw.VolumeSliders(playerView: pv)
+            addSliderAction()
+            
+            PlayerXL = draw.PlayerButton(playerView: pv)
+            PlayerXL.addTarget(self, action: #selector(PlayPause), for: .touchUpInside)
+            
+            SpeakerView = draw.SpeakerImage(playerView: pv)
+            updatePlayPauseIcon(play: true)
+            setAllStarButton()
+            
+            let vp = draw.AirPlay(airplayView: AirPlayView, playerView: pv)
+            
+            AirPlayBtn = vp.picker
+            AirPlayView = vp.view
         }
         
-        VolumeSlider = draw.VolumeSliders(playerView: pv)
-        addSliderAction()
-        
-        PlayerXL = draw.PlayerButton(playerView: pv)
-        PlayerXL.addTarget(self, action: #selector(PlayPause), for: .touchUpInside)
-        
-        SpeakerView = draw.SpeakerImage(playerView: pv)
-        updatePlayPauseIcon(play: true)
-        setAllStarButton()
-        
-        let vp = draw.AirPlay(airplayView: AirPlayView, playerView: pv)
-        
-        AirPlayBtn = vp.picker
-        AirPlayView = vp.view
+
     }
     
     func startupVolume() {
@@ -314,53 +318,58 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     }
     
     @objc func GotNowPlayingInfo(_ animated: Bool = true) {
+        let pdt = g.NowPlaying
         
         func accessibility() {
-            Artist.accessibilityLabel = g.NowPlaying.artist + ". " + g.NowPlaying.song + "."
-            ArtistSong.accessibilityLabel = g.NowPlaying.artist + ". " + g.NowPlaying.song + "."
-            Artist.isHighlighted = true
-            AlbumArt.accessibilityLabel = "Album Art, " + g.NowPlaying.artist + ". " + g.NowPlaying.song + "."
+            Artist?.accessibilityLabel = pdt.artist + ". " + pdt.song + "."
+            ArtistSong?.accessibilityLabel = pdt.artist + ". " + pdt.song + "."
+            Artist?.isHighlighted = true
+            AlbumArt.accessibilityLabel = "Album Art, " + pdt.artist + ". " + pdt.song + "."
         }
         
-        accessibility()
+        func staticArtistSong() -> Array<(lbl: UILabel?, str: String)> {
+            let combo  = pdt.artist + " • " + pdt.song + " — " + g.currentChannelName
+            let artist = pdt.artist
+            let song   = pdt.song
+            
+            let combine = [
+                
+                ( lbl: self.Artist,     str: artist ),
+                ( lbl: self.Song,       str: song ),
+                ( lbl: self.ArtistSong, str: combo ),
+            ]
+            
+            return combine
+        }
         
-        func staticArtistSong() {
-            self.ArtistSong.text = g.NowPlaying.artist + " • " + g.NowPlaying.song + " — " + g.currentChannelName
-            self.Artist.text = g.NowPlaying.artist
-            self.Song.text = g.NowPlaying.song
+        
+        accessibility()
+        let labels = staticArtistSong()
+        
+        func setGraphics(_ duration: Double) {
+            DispatchQueue.main.async {
+                UIView.transition(with: self.AlbumArt,
+                                  duration:duration,
+                                  options: .transitionCrossDissolve,
+                                  animations: { _ = [self.AlbumArt.image = pdt.image, self.AlbumArt.alpha = 1.0] },
+                                  completion: nil)
+                
+                for i in labels {
+                    UILabel.transition(with: i.lbl ?? self.Artist!,
+                                       duration:duration,
+                                       options: .transitionCrossDissolve,
+                                       animations: { i.lbl?.text = i.str},
+                                       completion: nil)
+                }
+            }
         }
         
         if animated {
-            DispatchQueue.main.async {
-                UILabel.transition(with: self.ArtistSong,
-                                   duration:0.4,
-                                   options: .transitionCrossDissolve,
-                                   animations: { self.ArtistSong.text = self.g.NowPlaying.artist + " • " + self.g.NowPlaying.song + " — " + self.g.currentChannelName  },
-                                   completion: nil)
-                
-                UILabel.transition(with: self.Artist,
-                                   duration:0.4,
-                                   options: .transitionCrossDissolve,
-                                   animations: { self.Artist.text = self.g.NowPlaying.artist },
-                                   completion: nil)
-                
-                UILabel.transition(with: self.Song,
-                                   duration:0.4,
-                                   options: .transitionCrossDissolve,
-                                   animations: { self.Song.text = self.g.NowPlaying.song },
-                                   completion: nil)
-            }
-        } else if let _ = Artist.text?.isEmpty {
-            UIView.transition(with: self.AlbumArt,
-                              duration:0.2,
-                              options: .transitionCrossDissolve,
-                              animations: { _ = [self.AlbumArt.image = self.g.NowPlaying.image, self.AlbumArt.alpha = 1.0] },
-                              completion: nil)
-            staticArtistSong()
+            setGraphics(0.4)
+        } else if let _ = Artist?.text?.isEmpty {
+            setGraphics(0.2)
         } else {
-            self.AlbumArt.image = g.NowPlaying.image
-            self.AlbumArt.alpha = 1.0
-            staticArtistSong()
+            setGraphics(0.001)
         }
     }
     
@@ -391,7 +400,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        if let _  = Artist.text?.isEmpty {
+        if let _  = Artist?.text?.isEmpty {
             Player.shared.syncArt()
         }
         
@@ -399,7 +408,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         title = g.currentChannelName
         startup()
         checkForAllStar()
-        setObservers()
         isSliderEnabled()
     }
     
@@ -412,10 +420,11 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                           animations: { _ = [self.AlbumArt.alpha = 0.0] },
                           completion: nil)
         
-        removeObservers()
     }
     
-    
+    deinit {
+        removeObservers()
+    }
     
     //MARK: Speaker Volume with Smooth Frame Animation
     func setSpeakers(value: Float) {

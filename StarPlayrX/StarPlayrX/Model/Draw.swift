@@ -128,6 +128,9 @@ final class Draw {
         return vp
     }
     
+    deinit { }
+    
+    
     init( frame: CGRect, isPhone: Bool, NavY: CGFloat, TabY: CGFloat) {
         
         self.isPhone = isPhone

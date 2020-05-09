@@ -42,6 +42,7 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var progressBar: UIProgressView!
     @IBOutlet weak var StatusField: UILabel!
+    
     @IBAction func UserFieldReturnKey(_ sender: Any) {}
     @IBAction func PassFieldReturnKey(_ sender: Any) {}
     override func viewWillAppear(_ animated: Bool) {}
@@ -106,14 +107,22 @@ class LoginViewController: UIViewController {
         })
     }
     
-    func prog(_ Float: Float, _ Text: String, animated: Bool = true) {
+    func prog(_ Float: Float, _ Text: String, animated: Bool = false) {
         DispatchQueue.main.async {
+            //MARK: Invoke using getFloat(Float)
+            let getFloat = { (_ Float: Float) -> Float in
+                if let bar = self.progressBar?.progress {
+                    return Float < 1 && Float > 0 ? bar + 0.1 : Float
+                } else {
+                    return Float
+                }
+            }
             
-            let bar = self.progressBar?.progress
-
-            let value = (Float < 1 && Float > 0) ? bar! + 0.1 : Float
+            let value = getFloat(Float) //return value
+            
+            
             self.StatusField.text = Text
-            self.progressBar?.setProgress(value, animated: true)
+            self.progressBar?.setProgress( value, animated: true)
         }
     }
     
@@ -531,61 +540,7 @@ class LoginViewController: UIViewController {
             }
         }
     }
-    
-    
-    func textToImage(drawText: NSString, inImage: UIImage, atPoint: CGPoint) -> UIImage{
-        //var inImage = inImage.withBackground(color: UIColor.black, opaque: false)
-        let inImage = inImage.maskWithColor(color:  UIColor.clear )!
-        
-        // Setup the font specific variables
-        let textColor = UIColor(displayP3Red: 0 / 255, green: 128 / 255, blue: 255 / 255, alpha: 0.875)
-        let textFont = UIFont.systemFont(ofSize: 40)
-        
-        // Setup the image context using the passed image
-        let scale = UIScreen.main.scale
-        UIGraphicsBeginImageContextWithOptions(inImage.size, false, scale)
-        
-        // Setup the font attributes that will be later used to dictate how the text should be drawn
-        let textFontAttributes = [
-            NSAttributedString.Key.font: textFont,
-            NSAttributedString.Key.foregroundColor: textColor,
-        ]
-        
-        // Put the image into a rectangle as large as the original image
-        inImage.draw(in: CGRect(x: 0, y: 0, width: inImage.size.width, height: inImage.size.height))
-        
-        // Create a point within the space that is as bit as the image
-        let rect = CGRect(x: atPoint.x, y: atPoint.y, width: inImage.size.width, height: inImage.size.height)
-        
-        // Draw the text into an image
-        drawText.draw(in: rect, withAttributes: textFontAttributes)
-        
-        // Create a new image out of the images we have created
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        
-        // End the context now that we have the image we need
-        UIGraphicsEndImageContext()
-        
-        //Pass the image back up to the caller
-        return newImage!
-    }
-    
-    
-    func simpleChannelArt() {
-        let img = UIImage(named: "xplaceholder")!
-        
-        for c in g.ChannelData {
-            var image:UIImage
-            let w = CGFloat(0)
-            
-            let h = img.size.height / 4.25
-            
-            //let h = UIImage(data: c.value)!.size.height / 4.25
-            image = self.textToImage( drawText: c.key as NSString, inImage: img, atPoint: CGPoint(x: w, y: h) )
-            let imageData = image.pngData()
-            g.ChannelData[c.key] = imageData
-        }
-    }
+
 }
 
 

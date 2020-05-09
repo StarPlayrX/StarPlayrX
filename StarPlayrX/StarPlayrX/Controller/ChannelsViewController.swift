@@ -19,7 +19,7 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
     
     private let Interactive = DispatchQueue(label: "Interactive", qos: .userInteractive )
 
-    @IBOutlet var ChannelsTableView: UITableView!
+    @IBOutlet weak var ChannelsTableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -58,7 +58,17 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
     
     
     override func viewWillDisappear(_ animated: Bool) {
+
+    }
+    
+    deinit {
         NotificationCenter.default.removeObserver(self, name: .updateChannelsView, object: nil)
+
+        g.FilterData = tableData()
+        g.ColdFilteredData = tableData()
+        
+        ChannelsTableView.removeFromSuperview()
+        ChannelsTableView.reloadData()
     }
     
     func updateFilter() {
@@ -99,7 +109,6 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
         self.title == g.categoryTitle ? UpdateTableView(scrollPosition: .none) : UpdateTableView(scrollPosition: .middle)
         self.title = g.categoryTitle
         
-        NotificationCenter.default.addObserver(self, selector: #selector(UpdateTableView), name: .updateChannelsView, object: nil)
     }
         
     
@@ -127,6 +136,8 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
       
+        NotificationCenter.default.addObserver(self, selector: #selector(UpdateTableView), name: .updateChannelsView, object: nil)
+
         ChannelsTableView.delegate = self
         UpdateTableView()
         

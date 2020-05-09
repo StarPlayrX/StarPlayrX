@@ -16,6 +16,7 @@ final class Player {
     static let shared = Player()
     
     let g = Global.obj
+    let pdt = Global.obj.NowPlaying
     
     public let PlayerQueue = DispatchQueue(label: "PlayerQueue", qos: .userInitiated )
     public let PDTqueue = DispatchQueue(label: "PDT", qos: .userInteractive, attributes: .concurrent)
@@ -202,11 +203,8 @@ final class Player {
         {
             
             previousMD5 = md5
-            g.NowPlaying.artist = artist
-            g.NowPlaying.song = song
-            g.NowPlaying.channel = key
-            g.NowPlaying.channelArt = channelArt
-            g.NowPlaying.albumArt = image
+            g.NowPlaying = (channel:key,artist:artist,song:song,albumArt:image,channelArt:channelArt, image: nil ) as NowPlayingType
+
             updateNowPlayingX(animated)
         }
     }
@@ -214,12 +212,14 @@ final class Player {
     public func chooseFilter(fileName:String, values:[Float],filterKeys:[String],image:UIImage) -> UIImage {
         let context = CIContext()
         let filter = CIFilter(name: fileName)
+        
         for i in 0..<filterKeys.count {
             filter?.setValue(values[i], forKey:filterKeys[i])
         }
+        
         filter?.setValue(CIImage(image: image), forKey: kCIInputImageKey)
-        let result = filter?.outputImage
-        if let cgimage = context.createCGImage(result!, from: result!.extent) {
+        
+        if let result = filter?.outputImage, let cgimage = context.createCGImage(result, from: result.extent) {
             return UIImage(cgImage: cgimage)
         }
         
@@ -248,7 +248,7 @@ final class Player {
             
             if var img = UIImage(named: "starplayr_placeholder") {
                 img = img.withBackground(color: UIColor(displayP3Red: 19 / 255, green: 20 / 255, blue: 36 / 255, alpha: 1.0))
-                img = self.resizeLargeImage(image: img, targetSize: CGSize(width: 1440, height: 1440))
+                img = self.resizeImage(image: img, targetSize: CGSize(width: 1440, height: 1440))
                 return img
             } else {
                 return nil
@@ -259,12 +259,21 @@ final class Player {
         func displayArt(image: UIImage?) {
             if var img = image {
                 img = img.withBackground(color: UIColor(displayP3Red: 19 / 255, green: 20 / 255, blue: 36 / 255, alpha: 1.0))
-                img = self.resizeLargeImage(image: img, targetSize: CGSize(width: 720, height: 720))
-                img = self.chooseFilterCategories(name: kCICategorySharpen, values: [0.0625,0.125], filterKeys: [kCIInputRadiusKey,kCIInputIntensityKey], image: img)
-                img = self.resizeLargeImage(image: img, targetSize: CGSize(width: 1080, height: 1080))
-                img = self.chooseFilterCategories(name: kCICategorySharpen, values: [0.125,0.25], filterKeys: [kCIInputRadiusKey,kCIInputIntensityKey], image: img)
-                img = self.resizeLargeImage(image: img, targetSize: CGSize(width: 1440, height: 1440))
-                img = self.chooseFilterCategories(name: kCICategorySharpen, values: [0.25,0.5], filterKeys: [kCIInputRadiusKey,kCIInputIntensityKey], image: img)
+                
+                typealias stepperType = [ (dim: Int, low: Float, high: Float ) ]
+                
+                let stepper = [ (dim: 720,  low: 0.625, high: 0.125 ),
+                                (dim: 1080, low: 0.125, high: 0.25 ),
+                                (dim: 1440, low: 0.25,  high: 0.5 )] as stepperType
+                
+                for x in stepper {
+                    //MARK: Resize image
+                    img = self.resizeImage(image: img, targetSize: CGSize(width: x.dim, height: x.dim))
+                    
+                    //MARK: Sharpen image
+                    img = self.chooseFilterCategories(name: kCICategorySharpen, values: [x.low,x.high], filterKeys: [kCIInputRadiusKey,kCIInputIntensityKey], image: img)
+                }
+            
                 g.NowPlaying.image = img
                 self.setnowPlayingInfo(channel: g.NowPlaying.channel, song: g.NowPlaying.song, artist: g.NowPlaying.artist, imageData:img)
                 
@@ -275,7 +284,6 @@ final class Player {
             
             if animated {
                 DispatchQueue.main.async { NotificationCenter.default.post(name: .gotNowPlayingInfoAnimated, object: nil) }
-                
             } else {
                 DispatchQueue.main.async { NotificationCenter.default.post(name: .gotNowPlayingInfo, object: nil) }
             }
@@ -299,13 +307,15 @@ final class Player {
             }
             
         } else {
-            displayArt(image: demoImage()! )
+            if let image = demoImage() {
+                displayArt(image: image)
+            }
         }
         
     }
     
     
-    func resizeLargeImage(image: UIImage, targetSize: CGSize) -> UIImage {
+    func resizeImage(image: UIImage, targetSize: CGSize) -> UIImage {
         let rect = CGRect(x: 0, y: 0, width: targetSize.width, height: targetSize.height)
         
         UIGraphicsBeginImageContextWithOptions( targetSize, false, 1.0)
@@ -425,20 +435,6 @@ final class Player {
         nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
         
     }
-    
-    
-    func resizeImage(image: UIImage, targetSize: CGSize) -> UIImage {
-        //let size = image.size
-        let rect = CGRect(x: 0, y: 0, width: 80, height: 80)
-        
-        UIGraphicsBeginImageContextWithOptions( targetSize, false, 1.0)
-        image.draw(in: rect)
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        return newImage!
-    }
-    
     
     func autoLaunchServer(completionHandler: CompletionHandler )   {
         print("Restarting Server...")
