@@ -29,9 +29,8 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     weak var VolumeSlider : UISlider!
     weak var PlayerXL     : UIButton!
     weak var SpeakerView  : UIImageView!
-    weak var playerViewTimerX : Timer!
-
-
+    
+    var playerViewTimerX = Timer()
     var AirPlayView     = UIView()
     var AirPlayBtn      = AVRoutePickerView()
     var allStarButton   = UIButton(type: UIButton.ButtonType.custom)
@@ -143,7 +142,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     
     func drawPlayer(frame: CGRect, isPhone: Bool, NavY: CGFloat, TabY: CGFloat) {
         //Instantiate draw class
-         var draw = Draw(frame: frame, isPhone: isPhone, NavY: NavY, TabY: TabY)
+         let draw = Draw(frame: frame, isPhone: isPhone, NavY: NavY, TabY: TabY)
             
 
         //MARK: 1 - PlayerView must run 1st
@@ -180,10 +179,11 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     }
     
     func startupVolume() {
-        let ap2 = AP2Volume.shared()!
-        ap2.hud(false) //Disable HUD on this view
-        systemVolumeUpdater()
-        setSpeakers(value: ap2.getVolume())
+        if let ap2 = AP2Volume.shared() {
+            ap2.hud(false) //Disable HUD on this view
+            systemVolumeUpdater()
+            setSpeakers(value: ap2.getVolume())
+        }
     }
     
     func shutdownVolume() {
@@ -347,21 +347,25 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         let labels = staticArtistSong()
         
         func setGraphics(_ duration: Double) {
-            DispatchQueue.main.async {
-                UIView.transition(with: self.AlbumArt,
-                                  duration:duration,
-                                  options: .transitionCrossDissolve,
-                                  animations: { _ = [self.AlbumArt.image = pdt.image, self.AlbumArt.alpha = 1.0] },
-                                  completion: nil)
-                
-                for i in labels {
-                    UILabel.transition(with: i.lbl ?? self.Artist!,
-                                       duration:duration,
-                                       options: .transitionCrossDissolve,
-                                       animations: { i.lbl?.text = i.str},
-                                       completion: nil)
+            
+            if let artist = self.Artist {
+                DispatchQueue.main.async {
+                    UIView.transition(with: self.AlbumArt,
+                                      duration:duration,
+                                      options: .transitionCrossDissolve,
+                                      animations: { _ = [self.AlbumArt.image = pdt.image, self.AlbumArt.alpha = 1.0] },
+                                      completion: nil)
+                    
+                    for i in labels {
+                        UILabel.transition(with: i.lbl ?? artist,
+                                           duration:duration,
+                                           options: .transitionCrossDissolve,
+                                           animations: { i.lbl?.text = i.str},
+                                           completion: nil)
+                    }
                 }
             }
+          
         }
         
         if animated {

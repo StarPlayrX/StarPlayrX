@@ -201,12 +201,8 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
     
     
     override func tableView(_ tableView : UITableView, didSelectRowAt indexPath: IndexPath) {
-		
-        //if !freshChannels { return }
+        guard let localCell = tableView.cellForRow(at: indexPath) as UITableViewCell? else { return }
         
-       // freshChannels = false
-        
-        let localCell = tableView.cellForRow(at: indexPath)! as UITableViewCell
         localCell.isSelected = true
         localCell.accessoryType = .checkmark
         localCell.tintColor = .systemBlue

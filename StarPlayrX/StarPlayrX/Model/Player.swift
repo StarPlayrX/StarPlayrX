@@ -97,15 +97,15 @@ final class Player {
                     let playItem = AVPlayerItem(asset:asset)
                     let p = self.player
                     p.insert(playItem, after: nil)
+                    p.playImmediately(atRate: 1.0)
                     p.automaticallyWaitsToMinimizeStalling = true
                     p.allowsExternalPlayback = false
                     p.appliesMediaSelectionCriteriaAutomatically = true
-                    p.currentItem?.preferredForwardBufferDuration = 0
                     p.currentItem?.automaticallyPreservesTimeOffsetFromLive = true
                     p.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = true
+                    p.currentItem?.preferredForwardBufferDuration = 0
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + avSession.outputLatency) {
-                        p.playImmediately(atRate: 1.0)
                         self.state = .playing
                         p.currentItem?.preferredForwardBufferDuration = 1
                     }
@@ -134,10 +134,13 @@ final class Player {
     }
     
     func change() {
-        self.player.currentItem?.preferredForwardBufferDuration = 0
+        
+        let p = self.player
+        
+        p.currentItem?.preferredForwardBufferDuration = 0
         
         DispatchQueue.main.asyncAfter(deadline: .now() + avSession.outputLatency) {
-            self.player.currentItem?.preferredForwardBufferDuration = 1
+            p.currentItem?.preferredForwardBufferDuration = 1
         }
     }
     

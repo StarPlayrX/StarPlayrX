@@ -132,7 +132,7 @@ class LoginViewController: UIViewController {
         let request = ["user":g.Username,"pass":g.Password] as Dictionary
         
         Async.api.Post(request: request, endpoint: endpoint, method: method, TupleHandler: { (result) -> Void in
-            if let data = result?.data?["data"] as! String?,  let message = result?.data?["message"] as! String?, let success = result?.data?["success"] as! Bool?  {
+            if let data = result?.data?["data"] as? String,  let message = result?.data?["message"] as? String, let success = result?.data?["success"] as? Bool  {
                 
                 if success {
                     
@@ -531,11 +531,13 @@ class LoginViewController: UIViewController {
         if let art = Sync.io.readLocalDataFile(filename: filename) {
             
             do {
-                if let d = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData( art ) {
-                    g.ChannelData = (d as! [String : Data]) //converts Any to [String : Data]
+                if let d = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData( art ),
+                    let dict = (d as? [String : Data]) /* converts Any to [String : Data] */ {
+                    g.ChannelData = dict
                 }
             } catch {
                 //the next step will run even if this fails
+            	//MARK: To Do - Need to fix this
                 print(error)
             }
         }
