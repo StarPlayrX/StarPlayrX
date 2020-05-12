@@ -46,11 +46,11 @@ internal class Global  {
     internal var SportsCategories   = Array<String>()
     internal var MiscCategories     = Array<String>()
     
-    internal var channelList = Dictionary<String, Any>()
-    internal var ChannelData = Dictionary<String, Data>()
+    internal var ChannelList : Dictionary? = Dictionary<String, Any>()
+    internal var ChannelData : Dictionary? = Dictionary<String, Data>()
     internal var ChannelArray = tableData()
-    internal var FilterData = tableData()
-    internal var ColdFilteredData = tableData()
+    internal var FilterData 		: tableData? = tableData()
+    internal var ColdFilteredData 	: tableData? = tableData()
     
     internal var NowPlaying = (channel:"",artist:"",song:"",albumArt:"",channelArt:"", image: nil ) as NowPlayingType
 

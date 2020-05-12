@@ -13,9 +13,10 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
     override var prefersHomeIndicatorAutoHidden : Bool { return true }
 
-    var ChannelsTimer: Timer? = nil
-    var channelScrollPosIndexPath : IndexPath? = nil
+    //var channelScrollPosIndexPath : IndexPath? = nil
     let g = Global.obj
+    let p = Player.shared
+    
     
     private let Interactive = DispatchQueue(label: "Interactive", qos: .userInteractive )
 
@@ -28,19 +29,17 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
     
     // This method updates filteredData based on the text in the Search Box
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        guard let sbtext = searchBar.text else { return }
         
-        if let sbtext = searchBar.text {
-            if sbtext.count > 0 {
-                g.FilterData = g.ColdFilteredData.filter {$0.searchString.lowercased().contains(sbtext.lowercased())}
-                g.SearchText = sbtext
-            } else {
-                g.SearchText = ""
-                g.FilterData = g.ColdFilteredData
-            }
-        	
-            UpdateTableView(scrollPosition: .none)
-
+        if sbtext.count > 0 {
+            g.FilterData = g.ColdFilteredData?.filter {$0.searchString.lowercased().contains(sbtext.lowercased())}
+            g.SearchText = sbtext
+        } else {
+            g.SearchText = ""
+            g.FilterData = g.ColdFilteredData
         }
+        
+        UpdateTableView(scrollPosition: .none)
         
     }
     
@@ -51,7 +50,7 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
     
     //Read Write Cache for the PDT (Artist / Song / Album Art)
     @objc func SPXCacheChannels() {
-        Player.shared.updatePDT(completionHandler: { (success) -> Void in
+        p.updatePDT(completionHandler: { (success) -> Void in
             self.UpdateTableView(scrollPosition: .none)
         })
     }
@@ -61,22 +60,24 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
 
     }
     
+    
     deinit {
         NotificationCenter.default.removeObserver(self, name: .updateChannelsView, object: nil)
 
-        g.FilterData = tableData()
-        g.ColdFilteredData = tableData()
+        g.FilterData = nil
+        g.ColdFilteredData = nil
         
         ChannelsTableView.removeFromSuperview()
         ChannelsTableView.reloadData()
     }
     
+    
     func updateFilter() {
-        g.FilterData = tableData()
+        g.FilterData = nil
         
-        if g.categoryTitle == Player.shared.allStars {
+        if g.categoryTitle == p.allStars {
             g.ColdFilteredData = g.ChannelArray.filter {$0.preset} as tableData
-        } else if g.categoryTitle != Player.shared.everything {
+        } else if g.categoryTitle != p.everything {
             g.ColdFilteredData = g.ChannelArray.filter {$0.category == g.categoryTitle} as tableData
         } else {
             g.ColdFilteredData = g.ChannelArray as tableData
@@ -84,7 +85,7 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
         
         //search filter
         if !g.SearchText.isEmpty {
-            g.FilterData = g.ColdFilteredData.filter {$0.searchString.lowercased().contains(g.SearchText.lowercased())}
+            g.FilterData = g.ColdFilteredData?.filter {$0.searchString.lowercased().contains(g.SearchText.lowercased())}
         } else {
             g.FilterData = g.ColdFilteredData
         }
@@ -113,9 +114,11 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
         
     
     func SelectMyRow(scrollPosition: UITableView.ScrollPosition ) {
+        guard let filterdata = g.FilterData else { return }
+        
         //Locate the channel is playing
-        if !g.FilterData.isEmpty && ( ChannelsTableView.numberOfRows(inSection: 0) == g.FilterData.count ) {
-            let index = g.FilterData.firstIndex(where: {$0.channel == g.currentChannel})
+        if !filterdata.isEmpty && ( ChannelsTableView.numberOfRows(inSection: 0) == filterdata.count ) {
+            let index = filterdata.firstIndex(where: {$0.channel == g.currentChannel})
             
             if let i = index {
                 SPXSelectRow(myTableView: ChannelsTableView, position: i, scrollPosition: scrollPosition)
@@ -124,6 +127,7 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
             ChannelsTableView.deselectRow(at: index, animated: false)
         }
     }
+    
     
     func SPXSelectRow(myTableView: UITableView, position: Int, scrollPosition: UITableView.ScrollPosition) {
         let sizeTable = myTableView.numberOfRows(inSection: 0)
@@ -152,13 +156,6 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
         searchBar.sizeToFit()
     }
     
-    
-    func ChannelsPDT() {
-        if ChannelsTimer  == nil {
-            ChannelsTimer = Timer.scheduledTimer(timeInterval: 7.5, target: self, selector: #selector(UpdateTableView), userInfo: nil, repeats: true)
-        }
-    }
-    
    
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if cell.isSelected {
@@ -184,12 +181,12 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
    
     
     @objc func pausePlayBack() {
-        Player.shared.pause()
+        p.pause()
     }
     
     
     override func accessibilityPerformMagicTap() -> Bool {
-        Player.shared.magicTapped()
+        p.magicTapped()
         return true
     }
       
@@ -201,71 +198,54 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
     
     
     override func tableView(_ tableView : UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let localCell = tableView.cellForRow(at: indexPath) as UITableViewCell? else { return }
+        guard
+            let cell = tableView.cellForRow(at: indexPath) as UITableViewCell?,
+            let text = cell.textLabel?.text,
+            let channel = text.components(separatedBy: " ").first
+            else { return }
         
-        localCell.isSelected = true
-        localCell.accessoryType = .checkmark
-        localCell.tintColor = .systemBlue
-        localCell.contentView.backgroundColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0) //iOS 13
+        cell.isSelected = true
+        cell.accessoryType = .checkmark
+        cell.tintColor = .systemBlue
+        cell.contentView.backgroundColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0) //iOS 13
 
-        //self.view.endEditing(true)
+        let previousChannel = g.currentChannel
         
-        if let text = localCell.textLabel?.text {
-
-            g.currentChannelName = text
-            
-            let previousChannel = g.currentChannel
-            
-            if let channel = text.components(separatedBy: " ").first {
-                g.currentChannel = channel
-            }
+        g.currentChannelName = text
+        g.currentChannel = channel
+        g.SelectedRow = indexPath
         
-            g.SelectedRow = indexPath
-            
-            if let tvi = tableView.indexPathsForVisibleRows, let scroll = tvi.first {
-                
-                if !scroll.isEmpty {
-                    channelScrollPosIndexPath = tvi.first
-                }
-            }
-            
-            g.lastCategory = g.categoryTitle
-            UpdateTableView(scrollPosition: .none)
-            
-            let iPad : Bool
-            let iPadHeight = self.view.frame.height
-            
-            switch iPadHeight {
-                //iPad Pro 12.9"
-                case 1024.0 :
-                    iPad = true
-                //iPad 11"
-                case 834.0 :
-                    iPad = true
-                //iPad 9"
-                case 810.0 :
-                    iPad = true
-                //iPad 9"
-                case 768.0 :
-                    iPad = true
+        g.lastCategory = g.categoryTitle
+        UpdateTableView(scrollPosition: .none)
+        
+        let iPad : Bool
+        let iPadHeight = self.view.frame.height
+        
+        switch iPadHeight {
+            //iPad Pro 12.9"
+            case 1024.0 :
+                iPad = true
+            //iPad 11"
+            case 834.0 :
+                iPad = true
+            //iPad 9"
+            case 810.0 :
+                iPad = true
+            //iPad 9"
+            case 768.0 :
+                iPad = true
 
-                default :
-                    iPad = false
-            }
-            
-            DispatchQueue.main.async {
-                let this = Player.shared
-                let doit = self.g.currentChannel != previousChannel || this.player.isDead || this.state != .playing
-                doit ? this.new(.stream) : () //playing
-                
-                (doit || !iPad) ? (self.performSegue(withIdentifier: "playerViewSegue", sender: localCell)) : ()
-
-            }
-            
+            default :
+                iPad = false
         }
         
-		return
+        DispatchQueue.main.async {
+            let doit = self.g.currentChannel != previousChannel || self.p.player.isDead || self.p.state != .playing
+            doit ? self.p.new(.stream) : () //playing
+            doit || !iPad ? self.performSegue(withIdentifier: "playerViewSegue", sender: cell) : ()
+        }
     }
+    
     
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -273,26 +253,27 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return g.FilterData.count
+        guard let filterdata = g.FilterData else { return 0 }
+        return filterdata.count
     }
   	
-
     
     //Display the channels view
     override func tableView(_ tableView: UITableView,
         cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
+        guard let filterdata = g.FilterData else { return UITableViewCell() }
+
         let cell = tableView.dequeueReusableCell(
             withIdentifier: "Cell", for: indexPath)
         
-        if g.FilterData.count > indexPath.row &&
-            g.FilterData[indexPath.row].channel.count > 0 {
+        if filterdata.count > indexPath.row &&
+            filterdata[indexPath.row].channel.count > 0 {
             
             cell.separatorInset = UIEdgeInsets.zero
             cell.preservesSuperviewLayoutMargins = false
             cell.layoutMargins = UIEdgeInsets.zero
             
-            let fdr = g.FilterData[indexPath.row] //filter data row reference
+            let fdr = filterdata[indexPath.row] //filter data row reference
             
             cell.textLabel?.text = fdr.channel
             cell.textLabel?.attributedText = fdr.title

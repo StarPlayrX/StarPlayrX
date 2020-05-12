@@ -14,7 +14,8 @@ import AVKit
 class LoginViewController: UIViewController {
     
     let g = Global.obj
-    
+    let p = Player.shared
+
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
     override var prefersHomeIndicatorAutoHidden : Bool { return true }
     
@@ -56,11 +57,11 @@ class LoginViewController: UIViewController {
     }
     
     @objc func pausePlayBack() {
-        Player.shared.pause()
+        p.pause()
     }
     
     override func accessibilityPerformMagicTap() -> Bool {
-        Player.shared.magicTapped()
+        p.magicTapped()
         return true
     }
     
@@ -75,8 +76,8 @@ class LoginViewController: UIViewController {
         self.view?.endEditing(true)
         
         var ping : String? = nil
-        let pingUrl = "http://localhost:" + String(Player.shared.port) + "/ping"
-        Async.api.Text(endpoint: pingUrl, TextHandler: { (p) -> Void in
+        let pingUrl = "http://localhost:" + String(p.port) + "/ping"
+        Async.api.Text(endpoint: pingUrl, TextHandler: { (p) in
             
             ping = p
             
@@ -92,12 +93,13 @@ class LoginViewController: UIViewController {
     
     
     func channelGuide() {
-        Player.shared.updatePDT_skipCheck(completionHandler: { (success) -> Void in
+        //MARK: Skip Check
+        p.updatePDT(true, completionHandler: { (success) in
             if success {
                 
                 if let i = self.g.ChannelArray.firstIndex(where: {$0.channel == self.g.currentChannel}) {
                     let item = self.g.ChannelArray[i].largeChannelArtUrl
-                    Player.shared.updateDisplay(key: self.g.currentChannel, cache: Player.shared.pdtCache, channelArt: item)
+                    self.p.updateDisplay(key: self.g.currentChannel, cache: self.p.pdtCache, channelArt: item)
                 }
                 
                 DispatchQueue.main.async {
@@ -127,11 +129,11 @@ class LoginViewController: UIViewController {
     }
     
     func loginUpdate() {
-        let endpoint = g.insecure + g.local + ":" + String(Player.shared.port)  + "/api/v2/autologin"
+        let endpoint = g.insecure + g.local + ":" + String(p.port)  + "/api/v2/autologin"
         let method = "login"
         let request = ["user":g.Username,"pass":g.Password] as Dictionary
         
-        Async.api.Post(request: request, endpoint: endpoint, method: method, TupleHandler: { (result) -> Void in
+        Async.api.Post(request: request, endpoint: endpoint, method: method, TupleHandler: { (result) in
             if let data = result?.data?["data"] as? String,  let message = result?.data?["message"] as? String, let success = result?.data?["success"] as? Bool  {
                 
                 if success {
@@ -176,7 +178,7 @@ class LoginViewController: UIViewController {
     
     
     func sessionUpdate() {
-        let endpoint = g.insecure + Global.obj.local + ":" + String(Player.shared.port) + "/api/v2/session"
+        let endpoint = g.insecure + Global.obj.local + ":" + String(p.port) + "/api/v2/session"
         let method = "cookies"
         let request = ["channelid":"siriushits1"] as Dictionary
         
@@ -198,13 +200,13 @@ class LoginViewController: UIViewController {
     
     func channelUpdate(channelLineUpId: String) {
         
-        let endpoint = g.insecure + g.local + ":" + String(Player.shared.port) + "/api/v2/channels"
+        let endpoint = g.insecure + g.local + ":" + String(p.port) + "/api/v2/channels"
         let method = "channels"
         let request = ["channeltype" : "" ] as Dictionary
         
         Async.api.Post(request: request, endpoint: endpoint, method: method, TupleHandler: { ( result ) -> Void in
             if let data = result?.data?["data"] as? [String : Any] {
-                self.g.channelList = data
+                self.g.ChannelList = data
                 
                 self.prog(0.5, "Artwork")
 
@@ -217,14 +219,10 @@ class LoginViewController: UIViewController {
         
     }
     
-    
- 
-    
+      
     func artworkUpdate(channelLineUpId: String) {
-        
         let g = Global.obj
-        
-        
+    
         self.embeddedAlbumArt(filename: "bluenumbers") //load by default
         
         g.demomode = false
@@ -241,8 +239,8 @@ class LoginViewController: UIViewController {
             let checksumUrl = g.secure + g.domain + ":" + g.secureport + "/large/checksum"
             
             g.imagechecksum = ""
-            
-            Async.api.Text(endpoint: checksumUrl, TextHandler: { (sum) -> Void in
+     
+            Async.api.Text(endpoint: checksumUrl, TextHandler: { (sum) in
                 
                 self.prog(0.6, "Artwork")
 
@@ -298,7 +296,7 @@ class LoginViewController: UIViewController {
                         
                         var d = Data()
                         
-                        Async.api.CommanderData(endpoint: dataUrl, method: "large-art", DataHandler: { (data) -> Void in
+                        Async.api.CommanderData(endpoint: dataUrl, method: "large-art", DataHandler: { (data) in
                             if let data = data { d = data }
                         })
                         
@@ -365,18 +363,22 @@ class LoginViewController: UIViewController {
     
     
     func processChannelList()  {
+        guard let channelList = g.ChannelList else { return }
+        
+        g.ChannelList = nil
+        
         g.ChannelArray = tableData()
         
         let g = Global.obj
         
-        let sortedChannelList = Array(g.channelList.keys).sorted {$0.localizedStandardCompare($1) == .orderedAscending}
+        let sortedChannelList = Array(channelList.keys).sorted {$0.localizedStandardCompare($1) == .orderedAscending}
         let detail = NSMutableAttributedString(string: "\n" , attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]);
         let song = NSMutableAttributedString(string: "", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]);
         detail.append(song)
         
         for ch in sortedChannelList {
             
-            if let blueprint = g.channelList[ch] as? [String : Any],
+            if let blueprint = channelList[ch] as? [String : Any],
                 let number = blueprint["channelNumber"] as? String,
                 var name = blueprint["name"] as? String,
                 let mediumImage = blueprint["mediumImage"] as? String,
@@ -398,19 +400,18 @@ class LoginViewController: UIViewController {
             }
         }
         
-        let ps = Player.shared
         
         //Read in the presets
         let x = (UserDefaults.standard.array(forKey: "SPXPresets") ?? ["2","3","4"]) as [String]
         
-        ps.SPXPresets = x
-        if !ps.SPXPresets.isEmpty && !g.ChannelArray.isEmpty {
+        p.SPXPresets = x
+        if !p.SPXPresets.isEmpty && !g.ChannelArray.isEmpty {
             var c = -1
-            for t in g.ChannelArray {
+            for b in g.ChannelArray {
                 c += 1
                 
-                for p in ps.SPXPresets {
-                    if p == t.channel {
+                for a in p.SPXPresets {
+                    if a == b.channel {
                         g.ChannelArray[c].preset = true
                         break
                     }
@@ -423,10 +424,10 @@ class LoginViewController: UIViewController {
     
     //Adds in Channel Art from Data Dictionary
     func processChannelIcons()  {
-        if !g.ChannelArray.isEmpty && !g.ChannelData.isEmpty {
+        if !g.ChannelArray.isEmpty && !(g.ChannelData?.isEmpty ?? true) {
             for i in 0..<g.ChannelArray.count {
                 let channel = g.ChannelArray[i].channel
-                if let chArt = g.ChannelData[channel], let img = UIImage(data: chArt) {
+                if let chArt = g.ChannelData?[channel], let img = UIImage(data: chArt) {
                     g.ChannelArray[i].channelImage = img
                     g.ChannelArray[i].image = img
                 }

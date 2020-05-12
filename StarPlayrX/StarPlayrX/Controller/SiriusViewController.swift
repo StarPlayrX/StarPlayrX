@@ -13,6 +13,7 @@ class SiriusViewController: UITableViewController {
     var pdtTimer: Timer? = nil
     
     let g = Global.obj
+    let p = Player.shared
     
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
     override var prefersHomeIndicatorAutoHidden : Bool { return true }
@@ -34,18 +35,20 @@ class SiriusViewController: UITableViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(networkInterruption(_:)), name: NSNotification.Name.AVPlayerItemFailedToPlayToEndTime, object: nil)
         
         restartPDT()
-
+        g.ChannelList = nil
+        g.ChannelData = nil
     }
     
     @objc func networkInterruption(_ notification: Notification) {
         //if let error = notification.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error?
         
         DispatchQueue.global(qos: .default).async {
-            if Player.shared.state == .playing {
-                Player.shared.pause()
-                Player.shared.state = PlayerState.interrupted
+            let sp = self.p
+            if sp.state == .playing {
+                sp.pause()
+                sp.state = PlayerState.interrupted
                 while (!Network.ability.networkIsConnected) { usleep(250000) } //hold
-                DispatchQueue.main.async { Player.shared.new(.stream) }
+                DispatchQueue.main.async { sp.new(.stream) }
             }
         }
         
@@ -64,8 +67,8 @@ class SiriusViewController: UITableViewController {
                 let session = AVAudioSession.sharedInstance()
                 let startHeadPhones = hasHeadphones(in: session.currentRoute)
                 
-                if Player.shared.player.rate == 0 && startHeadPhones {
-                    Player.shared.playX()
+                if p.player.rate == 0 && startHeadPhones {
+                    p.playX()
             }
             
             case .oldDeviceUnavailable: // Old device removed.
@@ -73,8 +76,8 @@ class SiriusViewController: UITableViewController {
                     userInfo[AVAudioSessionRouteChangePreviousRouteKey] as? AVAudioSessionRouteDescription {
                     let stopHeadphones = hasHeadphones(in: previousRoute)
                     
-                    if Player.shared.player.rate == 1 && stopHeadphones {
-                        Player.shared.pause()
+                    if p.player.rate == 1 && stopHeadphones {
+                        p.pause()
                     }
             }
             
@@ -106,38 +109,41 @@ class SiriusViewController: UITableViewController {
                     
                     print("Interruption Ended - playback should resume")
                     
-                    Player.shared.state = PlayerState.paused
-                    Player.shared.new(.stream)
+                    p.state = PlayerState.paused
+                    p.new(.stream)
                     NotificationCenter.default.post(name: .didUpdatePlay, object: nil)
                     
                 } else {
                     print("Interruption Ended - playback should NOT resume")
                     
-                    Player.shared.state = PlayerState.interrupted
+                    p.state = PlayerState.interrupted
                     NotificationCenter.default.post(name: .didUpdatePause, object: nil)
                 }
             }
         }
     }
     
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        
-    }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         KeepTableCellUpToDate()
     }
     
     //Read Write Cache for the PDT (Artist / Song / Album Art)
     @objc func SPXCache() {
-        if g.Server.isReady {
-            Player.shared.updatePDT(completionHandler: { (success) -> Void in
+		
+        let ps = p.self
+        let gs = g.self
+        
+        if gs.Server.isReady {
+            ps.updatePDT(completionHandler: { (success) -> Void in
                 if success {
                     
-                    if let i = self.g.ChannelArray.firstIndex(where: {$0.channel == self.g.currentChannel}) {
-                        let item = self.g.ChannelArray[i].largeChannelArtUrl
-                        Player.shared.updateDisplay(key: self.g.currentChannel, cache: Player.shared.pdtCache, channelArt: item)
+                    if let i = gs.ChannelArray.firstIndex(where: {$0.channel == gs.currentChannel}) {
+                        let item = gs.ChannelArray[i].largeChannelArtUrl
+                        
+
+                        
+                        ps.updateDisplay(key: gs.currentChannel, cache: ps.pdtCache, channelArt: item)
                     }
                     
                     DispatchQueue.main.async {
@@ -152,6 +158,12 @@ class SiriusViewController: UITableViewController {
         DispatchQueue.main.async {
             self.pdtTimer = Timer.scheduledTimer(timeInterval: 20.0, target: self, selector: #selector(self.SPXCache), userInfo: nil, repeats: true)
         }
+    }
+    
+    deinit {
+        print("CatsDeInit")
+        self.pdtTimer?.invalidate()
+        self.pdtTimer = nil
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -211,7 +223,7 @@ class SiriusViewController: UITableViewController {
     
     
     override func accessibilityPerformMagicTap() -> Bool {
-        Player.shared.magicTapped()
+        p.magicTapped()
         return true
     }
     

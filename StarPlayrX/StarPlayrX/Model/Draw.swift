@@ -74,11 +74,11 @@ final class Draw {
         
         let albumArt = self.drawAlbumView(playerView: playerView, x: centerX, y: centerY, width: AlbumArtSizeX, height: AlbumArtSizeX, wire: false)
         albumArt.layer.shadowColor = shadowColor.cgColor
-        albumArt.layer.shadowOpacity = 1.0
+        albumArt.layer.shadowOpacity = 0
         albumArt.layer.shadowOffset = .zero
         albumArt.layer.shadowRadius = fontSize * 2
         albumArt.layer.shadowPath = UIBezierPath(rect: albumArt.bounds).cgPath
-        albumArt.alpha = 0.0
+        albumArt.alpha = 1.0
         
         return albumArt
     }

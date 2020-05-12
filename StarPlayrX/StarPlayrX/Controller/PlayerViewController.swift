@@ -348,32 +348,44 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         
         func setGraphics(_ duration: Double) {
             
-            if let artist = self.Artist {
+            if duration == 0 {
+                self.AlbumArt.image = pdt.image
+                self.AlbumArt.layer.shadowOpacity = 1.0
+                
+                for i in labels {
+                   i.lbl?.text = i.str
+                }
+                
+            } else {
                 DispatchQueue.main.async {
-                    UIView.transition(with: self.AlbumArt,
-                                      duration:duration,
-                                      options: .transitionCrossDissolve,
-                                      animations: { _ = [self.AlbumArt.image = pdt.image, self.AlbumArt.alpha = 1.0] },
-                                      completion: nil)
-                    
-                    for i in labels {
-                        UILabel.transition(with: i.lbl ?? artist,
-                                           duration:duration,
-                                           options: .transitionCrossDissolve,
-                                           animations: { i.lbl?.text = i.str},
-                                           completion: nil)
+                    if let artist = self.Artist {
+                        DispatchQueue.main.async {
+                            UIView.transition(with: self.AlbumArt,
+                                              duration:duration,
+                                              options: .transitionCrossDissolve,
+                                              animations: { _ = [self.AlbumArt.image = pdt.image, self.AlbumArt.layer.shadowOpacity = 1.0] },
+                                              completion: nil)
+                            
+                            for i in labels {
+                                UILabel.transition(with: i.lbl ?? artist,
+                                                   duration:duration,
+                                                   options: .transitionCrossDissolve,
+                                                   animations: { i.lbl?.text = i.str},
+                                                   completion: nil)
+                            }
+                        }
                     }
                 }
             }
-          
+       
         }
         
         if animated {
-            setGraphics(0.4)
+            setGraphics(0.5)
         } else if let _ = Artist?.text?.isEmpty {
-            setGraphics(0.2)
+            setGraphics(0.0)
         } else {
-            setGraphics(0.001)
+            setGraphics(0.25)
         }
     }
     
@@ -421,7 +433,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         UIView.transition(with: self.AlbumArt,
                           duration:0.4,
                           options: .transitionCrossDissolve,
-                          animations: { _ = [self.AlbumArt.alpha = 0.0] },
+                          animations: { _ = [self.AlbumArt.layer.shadowOpacity = 0.0] },
                           completion: nil)
         
     }

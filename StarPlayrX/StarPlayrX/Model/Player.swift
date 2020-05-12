@@ -336,8 +336,8 @@ final class Player {
     
     
     //MARK: Update Artist Song Info
-    func updatePDT(completionHandler: @escaping CompletionHandler ) {
-        if g.Server.isReady {
+    func updatePDT(_ skipCheck: Bool = false, completionHandler: @escaping CompletionHandler ) {
+        if skipCheck || g.Server.isReady {
             
             let g = Global.obj
             
@@ -358,27 +358,7 @@ final class Player {
         }
     }
     
-    
-    //MARK: Update Artist Song Info
-    func updatePDT_skipCheck(completionHandler: @escaping CompletionHandler ) {
-        let g = Global.obj
-        
-        let endpoint = g.insecure + g.local + ":" + String(self.port) + "/pdt"
-        
-        Async.api.Get(endpoint: endpoint, DictionaryHandler: { (dict) -> Void in
-            
-            if let p = dict as? [String : Any], !p.isEmpty, let cache = p["data"] as? [String : Any], !cache.isEmpty {
-                self.pdtCache = cache
-                
-                g.ChannelArray = self.getPDTData(importData: g.ChannelArray)
-                completionHandler(true)
-                
-            } else {
-                completionHandler(false)
-            }
-        })
-    }
-    
+
     
     func getPDTData(importData: tableData) -> tableData {
         var nowPlayingData = importData
