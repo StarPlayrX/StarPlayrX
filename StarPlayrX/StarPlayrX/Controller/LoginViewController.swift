@@ -15,7 +15,7 @@ class LoginViewController: UIViewController {
     
     let g = Global.obj
     let p = Player.shared
-
+    
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
     override var prefersHomeIndicatorAutoHidden : Bool { return true }
     
@@ -77,7 +77,8 @@ class LoginViewController: UIViewController {
         
         var ping : String? = nil
         let pingUrl = "http://localhost:" + String(p.port) + "/ping"
-        Async.api.Text(endpoint: pingUrl, TextHandler: { (p) in
+        
+        Async.api.Text(endpoint: pingUrl, { [weak self] p in
             
             ping = p
             
@@ -87,7 +88,7 @@ class LoginViewController: UIViewController {
                 net.LaunchServer()
             }
             
-            self.loginUpdate()
+            self?.loginUpdate()
         })
     }
     
@@ -185,7 +186,7 @@ class LoginViewController: UIViewController {
         Async.api.Post(request: request, endpoint: endpoint, method: method, TupleHandler: { (result) -> Void in
             
             self.prog(0.3, "Channels")
-
+            
             if let data = result?.data?["data"] as? String {
                 self.channelUpdate(channelLineUpId:data)
             } else {
@@ -209,7 +210,7 @@ class LoginViewController: UIViewController {
                 self.g.ChannelList = data
                 
                 self.prog(0.5, "Artwork")
-
+                
                 self.artworkUpdate(channelLineUpId: channelLineUpId)
             } else {
                 //read channellist from disk?
@@ -219,10 +220,10 @@ class LoginViewController: UIViewController {
         
     }
     
-      
+    
     func artworkUpdate(channelLineUpId: String) {
         let g = Global.obj
-    
+        
         self.embeddedAlbumArt(filename: "bluenumbers") //load by default
         
         g.demomode = false
@@ -239,11 +240,11 @@ class LoginViewController: UIViewController {
             let checksumUrl = g.secure + g.domain + ":" + g.secureport + "/large/checksum"
             
             g.imagechecksum = ""
-     
-            Async.api.Text(endpoint: checksumUrl, TextHandler: { (sum) in
+            
+            Async.api.Text(endpoint: checksumUrl, { sum in
                 
                 self.prog(0.6, "Artwork")
-
+                
                 if let check = sum {
                     g.imagechecksum = String(check)
                 } else {
@@ -252,10 +253,10 @@ class LoginViewController: UIViewController {
                 
                 art()
                 self.updatingChannels()
-
+                
             })
             
-                        
+            
             func art() {
                 
                 if g.imagechecksum == GetChecksum {
@@ -284,51 +285,42 @@ class LoginViewController: UIViewController {
                     }
                 } else if g.imagechecksum != g.websitedown && g.imagechecksum != String(g.binbytes) && !g.demomode {
                     
-                    do {
-                        //If our website is down or the artwork server
+                    //If our website is down or the artwork server
+                    
+                    let g = Global.obj
+                    
+                    var dataUrl = g.secure + g.domain
+                    
+                    dataUrl += ":" + String(g.secureport)
+                    dataUrl += "/large"
+                    
+                    
+                    Async.api.CommanderData(endpoint: dataUrl, method: "large-art") { (data) in
+                        guard let d = data,
+                            let chData = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(d),
+                            let cdata = chData as? [String : Data]
+                            else { return }
                         
-                        let g = Global.obj
-                        
-                        var dataUrl = g.secure + g.domain
-                        
-                        dataUrl += ":" + String(g.secureport)
-                        dataUrl += "/large"
-                        
-                        var d = Data()
-                        
-                        Async.api.CommanderData(endpoint: dataUrl, method: "large-art", DataHandler: { (data) in
-                            if let data = data { d = data }
-                        })
-                        
-                        //This error is near fatal, we will use the file on disk instead
-                        if let chData = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(d) {
+                        if cdata.count > 0 {
+                            g.ChannelData = cdata
                             
-                            if let cdata = chData as? [String : Data] {
-                                if cdata.count > 0 {
-                                    g.ChannelData = cdata
-                                    
-                                    do {
-                                        
-                                        let writeData = try NSKeyedArchiver.archivedData(withRootObject: g.ChannelData as Any, requiringSecureCoding: false)
-                                        UserDefaults.standard.set(writeData, forKey: "channelDataXD")
-                                    } catch {
-                                        //This is not a fatal error, we can recover from it
-                                        //demomode = true
-                                        print(error)
-                                    }
-                                }
+                            do {
+                                
+                                let writeData = try NSKeyedArchiver.archivedData(withRootObject: g.ChannelData as Any, requiringSecureCoding: false)
+                                UserDefaults.standard.set(writeData, forKey: "channelDataXD")
+                            } catch {
+                                //This is not a fatal error, we can recover from it
+                                //demomode = true
+                                print(error)
                             }
                         }
-                    } catch {
-                        g.demomode = true
-                        print(error)
                     }
                 }
                 
                 UserDefaults.standard.set(g.imagechecksum, forKey: "largeChecksumXD")
-
+                
             }
-
+            
         }
         
     }
@@ -337,28 +329,28 @@ class LoginViewController: UIViewController {
     func updatingChannels() {
         
         self.prog(0.75, "Guide")
-		channelGuide()
+        channelGuide()
         processChannelList()
         self.prog(0.875, "Artwork")
         self.loadArtwork()
-
+        
     }
     
-  
+    
     func loadArtwork() {
         
-
+        
         processChannelIcons()
-    
+        
         self.prog(1.0, "Complete")
-
+        
         DispatchQueue.main.async {
             self.prog(1.0, "Complete")
             self.loginButton.isEnabled = true
             self.loginButton.alpha = 1.0
             self.tabItem(index: 1, enable: true, selectItem: true)
         }
-
+        
     }
     
     
@@ -434,7 +426,7 @@ class LoginViewController: UIViewController {
             }
         }
     }
-
+    
     
     //Show Alert
     func showAlert(title: String, message:String, action:String) {
@@ -516,7 +508,7 @@ class LoginViewController: UIViewController {
             }
             
             prog(0.0, "Logging In")
-
+            
             autoLogin()
             
         }
@@ -538,12 +530,12 @@ class LoginViewController: UIViewController {
                 }
             } catch {
                 //the next step will run even if this fails
-            	//MARK: To Do - Need to fix this
+                //MARK: To Do - Need to fix this
                 print(error)
             }
         }
     }
-
+    
 }
 
 

@@ -128,9 +128,10 @@ class SiriusViewController: UITableViewController {
         KeepTableCellUpToDate()
     }
     
-    //Read Write Cache for the PDT (Artist / Song / Album Art)
+ 
+    //MARK: Read Write Cache for the PDT (Artist / Song / Album Art)
     @objc func SPXCache() {
-		
+        
         let ps = p.self
         let gs = g.self
         
@@ -140,9 +141,6 @@ class SiriusViewController: UITableViewController {
                     
                     if let i = gs.ChannelArray.firstIndex(where: {$0.channel == gs.currentChannel}) {
                         let item = gs.ChannelArray[i].largeChannelArtUrl
-                        
-
-                        
                         ps.updateDisplay(key: gs.currentChannel, cache: ps.pdtCache, channelArt: item)
                     }
                     
@@ -155,7 +153,8 @@ class SiriusViewController: UITableViewController {
     }
     
     func restartPDT() {
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
             self.pdtTimer = Timer.scheduledTimer(timeInterval: 20.0, target: self, selector: #selector(self.SPXCache), userInfo: nil, repeats: true)
         }
     }

@@ -52,7 +52,6 @@ final class Draw {
     let iPadAlbumClearSpace: CGFloat
     let iPadTabHeightFactor: CGFloat
     
-    
     //MARK: 1 - Draws PlayerView Rectangle
     func PlayerView(mainView: UIView) -> UIView  {
         

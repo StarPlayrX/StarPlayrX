@@ -105,6 +105,11 @@ final class Player {
                     p.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = true
                     p.currentItem?.preferredForwardBufferDuration = 0
                     
+                    DispatchQueue.main.async { [weak self] in
+                        guard let self = self else { return }
+                        Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(self.SPXCache), userInfo: nil, repeats: false)
+                    }
+                    
                     DispatchQueue.main.asyncAfter(deadline: .now() + avSession.outputLatency) {
                         self.state = .playing
                         p.currentItem?.preferredForwardBufferDuration = 1
@@ -334,6 +339,41 @@ final class Player {
     }
     
     
+    
+    //MARK: Read Write Cache for the PDT (Artist / Song / Album Art)
+    @objc func SPXCache() {
+        
+        let ps = self
+        let gs = g.self
+        
+        
+        //MARK: A - Longer Closure
+        ps.updatePDT(completionHandler: { (success) -> Void in
+            //do something
+        })
+        
+        //MARK: B - Shorter Closure
+        ps.updatePDT() { success in
+            //do something
+        }
+        
+        
+        if gs.Server.isReady {
+            ps.updatePDT(completionHandler: { (success) -> Void in
+                if success {
+                    
+                    if let i = gs.ChannelArray.firstIndex(where: {$0.channel == gs.currentChannel}) {
+                        let item = gs.ChannelArray[i].largeChannelArtUrl
+                        ps.updateDisplay(key: gs.currentChannel, cache: ps.pdtCache, channelArt: item)
+                    }
+                    
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: .updateChannelsView, object: nil)
+                    }
+                }
+            })
+        }
+    }
     
     //MARK: Update Artist Song Info
     func updatePDT(_ skipCheck: Bool = false, completionHandler: @escaping CompletionHandler ) {
