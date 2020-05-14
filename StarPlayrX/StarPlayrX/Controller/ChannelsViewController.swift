@@ -172,11 +172,9 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
     
     
     @objc func UpdateTableView(scrollPosition: UITableView.ScrollPosition = .none) {
-        if g.Server.isReady {
-            updateFilter()
-            ChannelsTableView.reloadData()
-            SelectMyRow(scrollPosition: scrollPosition)
-        }
+        updateFilter()
+        ChannelsTableView.reloadData()
+        SelectMyRow(scrollPosition: scrollPosition)
     }
    
     

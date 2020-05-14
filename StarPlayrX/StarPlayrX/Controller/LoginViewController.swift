@@ -52,8 +52,8 @@ class LoginViewController: UIViewController {
     @IBAction func loginButton(_ sender: Any) {
         g.Username = userField.text ?? ""
         g.Password = passField.text ?? ""
-        autoLogin()
-        prog(0.0, "Logging In")
+        prog(0.0, "Logging In", animated: false)
+        self.autoLogin()
     }
     
     @objc func pausePlayBack() {
@@ -70,7 +70,6 @@ class LoginViewController: UIViewController {
         let net = Network.ability
         
         //MARK: 1 - Logging In
-        
         self.loginButton.isEnabled = false
         self.loginButton.alpha = 0.5
         self.view?.endEditing(true)
@@ -78,7 +77,7 @@ class LoginViewController: UIViewController {
         var ping : String? = nil
         let pingUrl = "http://localhost:" + String(p.port) + "/ping"
         
-        Async.api.Text(endpoint: pingUrl, { [weak self] p in
+        Async.api.Text(endpoint: pingUrl) {  p in
             
             ping = p
             
@@ -88,14 +87,32 @@ class LoginViewController: UIViewController {
                 net.LaunchServer()
             }
             
-            self?.loginUpdate()
-        })
+            self.prog(0.01, "Logging In")
+            
+            if !net.networkIsConnected {
+                
+                self.prog(0.0, "")
+                self.displayError(title: "Network error", message: "Check your internet connection and try again.", action: "OK")
+               
+            } else {
+                self.loginUpdate()
+            }
+        }
+    }
+    
+    
+    func displayError(title: String, message: String, action: String) {
+        DispatchQueue.main.async {
+            self.showAlert(title: title, message: message, action: action)
+            self.loginButton.isEnabled = true
+            self.loginButton.alpha = 1.0
+        }
     }
     
     
     func channelGuide() {
         //MARK: Skip Check
-        p.updatePDT(true, completionHandler: { (success) in
+        p.updatePDT() { success in
             if success {
                 
                 if let i = self.g.ChannelArray.firstIndex(where: {$0.channel == self.g.currentChannel}) {
@@ -107,10 +124,10 @@ class LoginViewController: UIViewController {
                     NotificationCenter.default.post(name: .updateChannelsView, object: nil)
                 }
             }
-        })
+        }
     }
     
-    func prog(_ Float: Float, _ Text: String, animated: Bool = false) {
+    func prog(_ Float: Float, _ Text: String, animated: Bool = true) {
         DispatchQueue.main.async {
             //MARK: Invoke using getFloat(Float)
             let getFloat = { (_ Float: Float) -> Float in
@@ -125,7 +142,7 @@ class LoginViewController: UIViewController {
             
             
             self.StatusField.text = Text
-            self.progressBar?.setProgress( value, animated: true)
+            self.progressBar?.setProgress( value, animated: animated)
         }
     }
     
@@ -134,8 +151,21 @@ class LoginViewController: UIViewController {
         let method = "login"
         let request = ["user":g.Username,"pass":g.Password] as Dictionary
         
-        Async.api.Post(request: request, endpoint: endpoint, method: method, TupleHandler: { (result) in
-            if let data = result?.data?["data"] as? String,  let message = result?.data?["message"] as? String, let success = result?.data?["success"] as? Bool  {
+        
+        func failureMessage() {
+            self.prog(0.0, "")
+            self.displayError(title: "Network error", message: "Check your internet connection and try again.", action: "OK")
+        }
+        
+        
+        Async.api.Post(request: request, endpoint: endpoint, method: method) { result in
+            
+            guard
+                let result = result,
+                let data = result.data?["data"] as? String,
+            	let message = result.data?["message"] as? String,
+                let success = result.data?["success"] as? Bool
+                else { return  }
                 
                 if success {
                     
@@ -163,18 +193,8 @@ class LoginViewController: UIViewController {
                     self.loginButton.isEnabled = true
                     self.loginButton.alpha = 1.0
                 }
-                
-                
-                
-            } else {
-                print("Error occurred logging in.")
-            }
-            
-        })
-        
-        
-        
-        
+           
+        }
     }
     
     
@@ -183,7 +203,7 @@ class LoginViewController: UIViewController {
         let method = "cookies"
         let request = ["channelid":"siriushits1"] as Dictionary
         
-        Async.api.Post(request: request, endpoint: endpoint, method: method, TupleHandler: { (result) -> Void in
+        Async.api.Post(request: request, endpoint: endpoint, method: method) { result in
             
             self.prog(0.3, "Channels")
             
@@ -192,10 +212,7 @@ class LoginViewController: UIViewController {
             } else {
                 self.channelUpdate(channelLineUpId:"350")
             }
-            
-        })
-        
-        
+        }
     }
     
     
@@ -205,19 +222,18 @@ class LoginViewController: UIViewController {
         let method = "channels"
         let request = ["channeltype" : "" ] as Dictionary
         
-        Async.api.Post(request: request, endpoint: endpoint, method: method, TupleHandler: { ( result ) -> Void in
+        Async.api.Post(request: request, endpoint: endpoint, method: method) { result in
             if let data = result?.data?["data"] as? [String : Any] {
                 self.g.ChannelList = data
                 
-                self.prog(0.5, "Artwork")
+                self.prog(0.4, "Channels")
                 
                 self.artworkUpdate(channelLineUpId: channelLineUpId)
             } else {
                 //read channellist from disk?
                 print("Error reading channels.")
             }
-        })
-        
+        }
     }
     
     
@@ -235,13 +251,11 @@ class LoginViewController: UIViewController {
             let GetChecksum = UserDefaults.standard.string(forKey: "largeChecksumXD") ?? g.binbytes
             
             //get large art checksum
-            
-            
             let checksumUrl = g.secure + g.domain + ":" + g.secureport + "/large/checksum"
             
             g.imagechecksum = ""
             
-            Async.api.Text(endpoint: checksumUrl, { sum in
+            Async.api.Text(endpoint: checksumUrl) { sum in
                 
                 self.prog(0.6, "Artwork")
                 
@@ -253,17 +267,13 @@ class LoginViewController: UIViewController {
                 
                 art()
                 self.updatingChannels()
-                
-            })
+            }
             
             
             func art() {
                 
                 if g.imagechecksum == GetChecksum {
-                    
                     if g.imagechecksum != g.websitedown || g.imagechecksum != String(g.binbytes) {
-                        //demomode = true
-                        
                         do {
                             if let readData = UserDefaults.standard.data(forKey: "channelDataXD") {
                                 let chData = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(readData)
@@ -318,30 +328,26 @@ class LoginViewController: UIViewController {
                 }
                 
                 UserDefaults.standard.set(g.imagechecksum, forKey: "largeChecksumXD")
-                
             }
-            
         }
-        
     }
     
     
     func updatingChannels() {
         
-        self.prog(0.75, "Guide")
+        self.prog(0.6, "Artwork")
         channelGuide()
+        self.prog(0.7, "Artwork")
         processChannelList()
-        self.prog(0.875, "Artwork")
+        self.prog(0.8, "Artwork")
         self.loadArtwork()
-        
+        self.prog(0.9, "Artwork")
     }
     
     
     func loadArtwork() {
-        
-        
+    
         processChannelIcons()
-        
         self.prog(1.0, "Complete")
         
         DispatchQueue.main.async {
@@ -358,7 +364,6 @@ class LoginViewController: UIViewController {
         guard let channelList = g.ChannelList else { return }
         
         g.ChannelList = nil
-        
         g.ChannelArray = tableData()
         
         let g = Global.obj
@@ -480,15 +485,9 @@ class LoginViewController: UIViewController {
     
     //view did load
     override func viewDidLoad() {
-        
         super.viewDidLoad()
-        
-        
-        
         let g = Global.obj
-        
         tabItem(index: 1, enable: false, selectItem: false)
-        
         g.Username = UserDefaults.standard.string(forKey: "user") ?? ""
         g.Password = UserDefaults.standard.string(forKey: "pass") ?? ""
         userField.text = g.Username
@@ -507,17 +506,14 @@ class LoginViewController: UIViewController {
                 synthesizer.speak(utterance)
             }
             
-            prog(0.0, "Logging In")
-            
+            prog(0.0, "Logging In", animated: false)
             autoLogin()
-            
         }
         
         //Pause Gesture
         let doubleFingerTapToPause = UITapGestureRecognizer(target: self, action: #selector(pausePlayBack) )
         doubleFingerTapToPause.numberOfTapsRequired = 2
         view.addGestureRecognizer(doubleFingerTapToPause)
-        
     }
     
     func embeddedAlbumArt(filename: String) {
@@ -535,7 +531,4 @@ class LoginViewController: UIViewController {
             }
         }
     }
-    
 }
-
-

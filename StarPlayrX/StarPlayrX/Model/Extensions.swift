@@ -57,13 +57,7 @@ extension UIImage {
 }
 
 
-extension String {
-    var isReady: Bool {
-        //Can't run this at startup
-        let pingUrl = "http://localhost:" + String(Player.shared.port) + "/ping"
-        return Sync.io.TextSync(endpoint: pingUrl, method: "ping") == "pong" ? true : false
-    }
-}
+       
 
 
 //Some extra variables, so we can check the status of our AVPlayer

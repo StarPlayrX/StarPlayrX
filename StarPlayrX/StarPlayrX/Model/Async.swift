@@ -39,7 +39,7 @@ internal class Async {
 
     
 	//MARK: Text
-    internal func Text(endpoint: String, _ TextHandler: @escaping TextHandler)  {
+    internal func Text(endpoint: String, TextHandler: @escaping TextHandler)  {
         guard let url = URL(string: endpoint) else { TextHandler("error"); return}
         
         var urlReq = URLRequest(url: url)

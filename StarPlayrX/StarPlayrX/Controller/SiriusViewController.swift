@@ -131,24 +131,23 @@ class SiriusViewController: UITableViewController {
  
     //MARK: Read Write Cache for the PDT (Artist / Song / Album Art)
     @objc func SPXCache() {
-        
         let ps = p.self
         let gs = g.self
         
-        if gs.Server.isReady {
-            ps.updatePDT(completionHandler: { (success) -> Void in
-                if success {
-                    
-                    if let i = gs.ChannelArray.firstIndex(where: {$0.channel == gs.currentChannel}) {
-                        let item = gs.ChannelArray[i].largeChannelArtUrl
-                        ps.updateDisplay(key: gs.currentChannel, cache: ps.pdtCache, channelArt: item)
-                    }
-                    
-                    DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: .updateChannelsView, object: nil)
-                    }
+        guard ps.player.isBusy else { return }
+        
+        ps.updatePDT() { success in
+            if success {
+                
+                if let i = gs.ChannelArray.firstIndex(where: {$0.channel == gs.currentChannel}) {
+                    let item = gs.ChannelArray[i].largeChannelArtUrl
+                    ps.updateDisplay(key: gs.currentChannel, cache: ps.pdtCache, channelArt: item)
                 }
-            })
+                
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: .updateChannelsView, object: nil)
+                }
+            }
         }
     }
     

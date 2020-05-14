@@ -25,9 +25,8 @@ final class Player {
     var port: UInt16 = 9999
     var everything = "All Channels"
     var allStars = "All Stars"
-    var SPTableDataX = tableData()
     var SPXPresets = [String]()
-    var pdtCache =  [String : Any]()
+    var pdtCache = [String : Any]()
     var localChannelArt = ""
     var localAlbumArt = ""
     var preArtistSong = ""
@@ -68,52 +67,46 @@ final class Player {
             self.previousMD5 = self.MD5(String(str)) ?? str
         }
         
-        if g.Server.isReady {
-            if let i = g.ChannelArray.firstIndex(where: {$0.channel == g.currentChannel}) {
-                let item = g.ChannelArray[i].largeChannelArtUrl
-                self.updateDisplay(key: g.currentChannel, cache: self.pdtCache, channelArt: item, false)
-            }
+        if let i = g.ChannelArray.firstIndex(where: {$0.channel == g.currentChannel}) {
+            let item = g.ChannelArray[i].largeChannelArtUrl
+            self.updateDisplay(key: g.currentChannel, cache: self.pdtCache, channelArt: item, false)
         }
     }
     
     
     func playX() {
-        let g = Global.obj
-        
-        NotificationCenter.default.post(name: .didUpdatePlay, object: nil)
+        resetPlayer()
+
+        let pinpoint = "\(g.insecure)\(g.localhost):\(self.port)/ping"
         state = .buffering
-        
+    
         func stream() {
-            if self.player.isDead  {
-                resetPlayer()
-            }
-            
-            if g.Server.isReady {
+            if let url = URL(string: "\(g.insecure)\(g.localhost):\(port)/playlist/\(g.currentChannel)\(g.m3u8)") {
                 
-                if let url = URL(string: g.insecure + g.local +
-                    ":" + String(port) + "/playlist/" + g.currentChannel + g.m3u8) {
-                    
-                    let asset = AVAsset(url: url)
-                    let playItem = AVPlayerItem(asset:asset)
-                    let p = self.player
-                    p.insert(playItem, after: nil)
-                    p.playImmediately(atRate: 1.0)
-                    p.automaticallyWaitsToMinimizeStalling = true
-                    p.allowsExternalPlayback = false
-                    p.appliesMediaSelectionCriteriaAutomatically = true
-                    p.currentItem?.automaticallyPreservesTimeOffsetFromLive = true
-                    p.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = true
-                    p.currentItem?.preferredForwardBufferDuration = 0
-                    
-                    DispatchQueue.main.async { [weak self] in
-                        guard let self = self else { return }
-                        Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(self.SPXCache), userInfo: nil, repeats: false)
-                    }
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + avSession.outputLatency) {
-                        self.state = .playing
-                        p.currentItem?.preferredForwardBufferDuration = 1
-                    }
+                let asset = AVAsset(url: url)
+                let playItem = AVPlayerItem(asset:asset)
+                print(asset, playItem)
+                let p = self.player
+                p.insert(playItem, after: nil)
+                p.currentItem?.preferredForwardBufferDuration = 0
+                p.currentItem?.automaticallyPreservesTimeOffsetFromLive = true
+                p.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = true
+                p.automaticallyWaitsToMinimizeStalling = true
+                p.allowsExternalPlayback = false
+                p.appliesMediaSelectionCriteriaAutomatically = true
+                
+                
+                p.playImmediately(atRate: 1.0)
+
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(self.SPXCache), userInfo: nil, repeats: false)
+                }
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + (avSession.outputLatency * 1.5)) {
+                    p.currentItem?.preferredForwardBufferDuration = 1
+                    self.state = .playing
+                    NotificationCenter.default.post(name: .didUpdatePlay, object: nil)
                 }
             }
         }
@@ -129,12 +122,17 @@ final class Player {
         
         //MARK: Launch Server and Stream
         func launchServer() {
-            autoLaunchServer(completionHandler: { (success) -> Void in
+            autoLaunchServer(){ success in
                 success ? stream() : stop()
-            })
+            }
         }
         
-        g.Server.isReady ? stream() : launchServer()
+        Async.api.Text(endpoint: pinpoint ) { ping in
+            guard let ping = ping else { launchServer(); return }
+            print(ping)
+            ping == "pong" ? stream() : launchServer()
+        }
+        
         
     }
     
@@ -144,7 +142,7 @@ final class Player {
         
         p.currentItem?.preferredForwardBufferDuration = 0
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + avSession.outputLatency) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + (avSession.outputLatency * 1.5)) {
             p.currentItem?.preferredForwardBufferDuration = 1
         }
     }
@@ -212,7 +210,7 @@ final class Player {
             
             previousMD5 = md5
             g.NowPlaying = (channel:key,artist:artist,song:song,albumArt:image,channelArt:channelArt, image: nil ) as NowPlayingType
-
+            
             updateNowPlayingX(animated)
         }
     }
@@ -281,7 +279,7 @@ final class Player {
                     //MARK: Sharpen image
                     img = self.chooseFilterCategories(name: kCICategorySharpen, values: [x.low,x.high], filterKeys: [kCIInputRadiusKey,kCIInputIntensityKey], image: img)
                 }
-            
+                
                 g.NowPlaying.image = img
                 self.setnowPlayingInfo(channel: g.NowPlaying.channel, song: g.NowPlaying.song, artist: g.NowPlaying.artist, imageData:img)
                 
@@ -347,19 +345,7 @@ final class Player {
         let gs = g.self
         
         
-        //MARK: A - Longer Closure
-        ps.updatePDT(completionHandler: { (success) -> Void in
-            //do something
-        })
-        
-        //MARK: B - Shorter Closure
-        ps.updatePDT() { success in
-            //do something
-        }
-        
-        
-        if gs.Server.isReady {
-            ps.updatePDT(completionHandler: { (success) -> Void in
+            ps.updatePDT() { success in
                 if success {
                     
                     if let i = gs.ChannelArray.firstIndex(where: {$0.channel == gs.currentChannel}) {
@@ -371,34 +357,30 @@ final class Player {
                         NotificationCenter.default.post(name: .updateChannelsView, object: nil)
                     }
                 }
-            })
-        }
+            }
     }
     
     //MARK: Update Artist Song Info
-    func updatePDT(_ skipCheck: Bool = false, completionHandler: @escaping CompletionHandler ) {
-        if skipCheck || g.Server.isReady {
+    func updatePDT(completionHandler: @escaping CompletionHandler ) {
+        let g = Global.obj
+        
+        let endpoint = g.insecure + g.local + ":" + String(self.port) + "/pdt"
+        
+        Async.api.Get(endpoint: endpoint) { dict in
             
-            let g = Global.obj
-            
-            let endpoint = g.insecure + g.local + ":" + String(self.port) + "/pdt"
-            
-            Async.api.Get(endpoint: endpoint, DictionaryHandler: { (dict) -> Void in
+            if let p = dict as? [String : Any], !p.isEmpty, let cache = p["data"] as? [String : Any], !cache.isEmpty {
+                self.pdtCache = cache
                 
-                if let p = dict as? [String : Any], !p.isEmpty, let cache = p["data"] as? [String : Any], !cache.isEmpty {
-                    self.pdtCache = cache
-                    
-                    g.ChannelArray = self.getPDTData(importData: g.ChannelArray)
-                    completionHandler(true)
-                    
-                } else {
-                    completionHandler(false)
-                }
-            })
+                g.ChannelArray = self.getPDTData(importData: g.ChannelArray)
+                completionHandler(true)
+                
+            } else {
+                completionHandler(false)
+            }
         }
     }
     
-
+    
     
     func getPDTData(importData: tableData) -> tableData {
         var nowPlayingData = importData
