@@ -75,9 +75,9 @@ class LoginViewController: UIViewController {
         self.view?.endEditing(true)
         
         var ping : String? = nil
-        let pingUrl = "http://localhost:" + String(p.port) + "/ping"
+        let pingUrl = "\(g.insecure)\(g.localhost):" + String(p.port) + "/ping"
         
-        Async.api.Text(endpoint: pingUrl) {  p in
+        Async.api.Text(endpoint: pingUrl) { p in
             
             ping = p
             

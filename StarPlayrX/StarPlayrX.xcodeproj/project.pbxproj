@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 53;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -27,18 +27,51 @@
 		5F5C5062244CC26000A35D76 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C504F244CC26000A35D76 /* Extensions.swift */; };
 		5F5C5065244CC26000A35D76 /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5052244CC26000A35D76 /* Global.swift */; };
 		5F5C506A244CC26000A35D76 /* Networkabilty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5057244CC26000A35D76 /* Networkabilty.swift */; };
-		5F5C510F244CD45400A35D76 /* CameoKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F5C50FF244CD45400A35D76 /* CameoKit.framework */; };
+		5F6A0D75246CE0D200C88EE3 /* CameoKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6A0D6B246CE0D200C88EE3 /* CameoKit.framework */; };
+		5F6A0D76246CE0D200C88EE3 /* CameoKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6A0D6B246CE0D200C88EE3 /* CameoKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5F6A0D77246CE0D200C88EE3 /* COpenSSL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6A0D6C246CE0D200C88EE3 /* COpenSSL.framework */; };
+		5F6A0D78246CE0D200C88EE3 /* COpenSSL.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6A0D6C246CE0D200C88EE3 /* COpenSSL.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5F6A0D79246CE0D200C88EE3 /* PerfectCHTTPParser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6A0D6D246CE0D200C88EE3 /* PerfectCHTTPParser.framework */; };
+		5F6A0D7A246CE0D200C88EE3 /* PerfectCHTTPParser.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6A0D6D246CE0D200C88EE3 /* PerfectCHTTPParser.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5F6A0D7B246CE0D200C88EE3 /* PerfectCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6A0D6E246CE0D200C88EE3 /* PerfectCrypto.framework */; };
+		5F6A0D7C246CE0D300C88EE3 /* PerfectCrypto.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6A0D6E246CE0D200C88EE3 /* PerfectCrypto.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5F6A0D7D246CE0D300C88EE3 /* PerfectCZlib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6A0D6F246CE0D200C88EE3 /* PerfectCZlib.framework */; };
+		5F6A0D7E246CE0D300C88EE3 /* PerfectCZlib.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6A0D6F246CE0D200C88EE3 /* PerfectCZlib.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5F6A0D7F246CE0D300C88EE3 /* PerfectHTTP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6A0D70246CE0D200C88EE3 /* PerfectHTTP.framework */; };
+		5F6A0D80246CE0D300C88EE3 /* PerfectHTTP.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6A0D70246CE0D200C88EE3 /* PerfectHTTP.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5F6A0D81246CE0D300C88EE3 /* PerfectHTTPServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6A0D71246CE0D200C88EE3 /* PerfectHTTPServer.framework */; };
+		5F6A0D82246CE0D300C88EE3 /* PerfectHTTPServer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6A0D71246CE0D200C88EE3 /* PerfectHTTPServer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5F6A0D83246CE0D300C88EE3 /* PerfectLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6A0D72246CE0D200C88EE3 /* PerfectLib.framework */; };
+		5F6A0D84246CE0D300C88EE3 /* PerfectLib.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6A0D72246CE0D200C88EE3 /* PerfectLib.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5F6A0D85246CE0D300C88EE3 /* PerfectNet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6A0D73246CE0D200C88EE3 /* PerfectNet.framework */; };
+		5F6A0D86246CE0D300C88EE3 /* PerfectNet.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6A0D73246CE0D200C88EE3 /* PerfectNet.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5F6A0D87246CE0D300C88EE3 /* PerfectThread.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6A0D74246CE0D200C88EE3 /* PerfectThread.framework */; };
+		5F6A0D88246CE0D300C88EE3 /* PerfectThread.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6A0D74246CE0D200C88EE3 /* PerfectThread.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5FDAD9BA2464EFBA008E38A8 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDAD9B92464EFBA008E38A8 /* Async.swift */; };
-		5FFF9D9C244D22B000D795DA /* COpenSSL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FFF9D93244D22B000D795DA /* COpenSSL.framework */; };
-		5FFF9D9E244D22B000D795DA /* PerfectCHTTPParser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FFF9D94244D22B000D795DA /* PerfectCHTTPParser.framework */; };
-		5FFF9DA0244D22B000D795DA /* PerfectCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FFF9D95244D22B000D795DA /* PerfectCrypto.framework */; };
-		5FFF9DA2244D22B000D795DA /* PerfectCZlib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FFF9D96244D22B000D795DA /* PerfectCZlib.framework */; };
-		5FFF9DA4244D22B000D795DA /* PerfectHTTP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FFF9D97244D22B000D795DA /* PerfectHTTP.framework */; };
-		5FFF9DA6244D22B000D795DA /* PerfectHTTPServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FFF9D98244D22B000D795DA /* PerfectHTTPServer.framework */; };
-		5FFF9DA8244D22B000D795DA /* PerfectLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FFF9D99244D22B000D795DA /* PerfectLib.framework */; };
-		5FFF9DAA244D22B000D795DA /* PerfectNet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FFF9D9A244D22B000D795DA /* PerfectNet.framework */; };
-		5FFF9DAC244D22B000D795DA /* PerfectThread.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FFF9D9B244D22B000D795DA /* PerfectThread.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		5F6A0D89246CE0D300C88EE3 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				5F6A0D84246CE0D300C88EE3 /* PerfectLib.framework in Embed Frameworks */,
+				5F6A0D76246CE0D200C88EE3 /* CameoKit.framework in Embed Frameworks */,
+				5F6A0D88246CE0D300C88EE3 /* PerfectThread.framework in Embed Frameworks */,
+				5F6A0D7C246CE0D300C88EE3 /* PerfectCrypto.framework in Embed Frameworks */,
+				5F6A0D80246CE0D300C88EE3 /* PerfectHTTP.framework in Embed Frameworks */,
+				5F6A0D86246CE0D300C88EE3 /* PerfectNet.framework in Embed Frameworks */,
+				5F6A0D7E246CE0D300C88EE3 /* PerfectCZlib.framework in Embed Frameworks */,
+				5F6A0D82246CE0D300C88EE3 /* PerfectHTTPServer.framework in Embed Frameworks */,
+				5F6A0D78246CE0D200C88EE3 /* COpenSSL.framework in Embed Frameworks */,
+				5F6A0D7A246CE0D200C88EE3 /* PerfectCHTTPParser.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		5F381C16245F568E009BA91D /* Draw.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Draw.swift; sourceTree = "<group>"; };
@@ -66,17 +99,17 @@
 		5F5C5052244CC26000A35D76 /* Global.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		5F5C5057244CC26000A35D76 /* Networkabilty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Networkabilty.swift; sourceTree = "<group>"; };
 		5F5C5088244CCAB900A35D76 /* StarPlayrX.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StarPlayrX.entitlements; sourceTree = "<group>"; };
-		5F5C50FF244CD45400A35D76 /* CameoKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CameoKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F6A0D6B246CE0D200C88EE3 /* CameoKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CameoKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F6A0D6C246CE0D200C88EE3 /* COpenSSL.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = COpenSSL.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F6A0D6D246CE0D200C88EE3 /* PerfectCHTTPParser.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PerfectCHTTPParser.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F6A0D6E246CE0D200C88EE3 /* PerfectCrypto.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PerfectCrypto.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F6A0D6F246CE0D200C88EE3 /* PerfectCZlib.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PerfectCZlib.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F6A0D70246CE0D200C88EE3 /* PerfectHTTP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PerfectHTTP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F6A0D71246CE0D200C88EE3 /* PerfectHTTPServer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PerfectHTTPServer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F6A0D72246CE0D200C88EE3 /* PerfectLib.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PerfectLib.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F6A0D73246CE0D200C88EE3 /* PerfectNet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PerfectNet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F6A0D74246CE0D200C88EE3 /* PerfectThread.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PerfectThread.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FDAD9B92464EFBA008E38A8 /* Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Async.swift; path = StarPlayrX/Model/Async.swift; sourceTree = SOURCE_ROOT; };
-		5FFF9D93244D22B000D795DA /* COpenSSL.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = COpenSSL.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		5FFF9D94244D22B000D795DA /* PerfectCHTTPParser.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PerfectCHTTPParser.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		5FFF9D95244D22B000D795DA /* PerfectCrypto.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PerfectCrypto.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		5FFF9D96244D22B000D795DA /* PerfectCZlib.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PerfectCZlib.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		5FFF9D97244D22B000D795DA /* PerfectHTTP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PerfectHTTP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		5FFF9D98244D22B000D795DA /* PerfectHTTPServer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PerfectHTTPServer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		5FFF9D99244D22B000D795DA /* PerfectLib.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PerfectLib.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		5FFF9D9A244D22B000D795DA /* PerfectNet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PerfectNet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		5FFF9D9B244D22B000D795DA /* PerfectThread.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PerfectThread.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,16 +117,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5FFF9DA8244D22B000D795DA /* PerfectLib.framework in Frameworks */,
-				5F5C510F244CD45400A35D76 /* CameoKit.framework in Frameworks */,
-				5FFF9DAC244D22B000D795DA /* PerfectThread.framework in Frameworks */,
-				5FFF9DA0244D22B000D795DA /* PerfectCrypto.framework in Frameworks */,
-				5FFF9DA4244D22B000D795DA /* PerfectHTTP.framework in Frameworks */,
-				5FFF9DAA244D22B000D795DA /* PerfectNet.framework in Frameworks */,
-				5FFF9DA2244D22B000D795DA /* PerfectCZlib.framework in Frameworks */,
-				5FFF9DA6244D22B000D795DA /* PerfectHTTPServer.framework in Frameworks */,
-				5FFF9D9C244D22B000D795DA /* COpenSSL.framework in Frameworks */,
-				5FFF9D9E244D22B000D795DA /* PerfectCHTTPParser.framework in Frameworks */,
+				5F6A0D83246CE0D300C88EE3 /* PerfectLib.framework in Frameworks */,
+				5F6A0D75246CE0D200C88EE3 /* CameoKit.framework in Frameworks */,
+				5F6A0D87246CE0D300C88EE3 /* PerfectThread.framework in Frameworks */,
+				5F6A0D7B246CE0D200C88EE3 /* PerfectCrypto.framework in Frameworks */,
+				5F6A0D7F246CE0D300C88EE3 /* PerfectHTTP.framework in Frameworks */,
+				5F6A0D85246CE0D300C88EE3 /* PerfectNet.framework in Frameworks */,
+				5F6A0D7D246CE0D300C88EE3 /* PerfectCZlib.framework in Frameworks */,
+				5F6A0D81246CE0D300C88EE3 /* PerfectHTTPServer.framework in Frameworks */,
+				5F6A0D77246CE0D200C88EE3 /* COpenSSL.framework in Frameworks */,
+				5F6A0D79246CE0D200C88EE3 /* PerfectCHTTPParser.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,16 +169,16 @@
 		5F5C502A244CBE9F00A35D76 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				5FFF9D93244D22B000D795DA /* COpenSSL.framework */,
-				5FFF9D94244D22B000D795DA /* PerfectCHTTPParser.framework */,
-				5FFF9D95244D22B000D795DA /* PerfectCrypto.framework */,
-				5FFF9D96244D22B000D795DA /* PerfectCZlib.framework */,
-				5FFF9D97244D22B000D795DA /* PerfectHTTP.framework */,
-				5FFF9D98244D22B000D795DA /* PerfectHTTPServer.framework */,
-				5FFF9D99244D22B000D795DA /* PerfectLib.framework */,
-				5FFF9D9A244D22B000D795DA /* PerfectNet.framework */,
-				5FFF9D9B244D22B000D795DA /* PerfectThread.framework */,
-				5F5C50FF244CD45400A35D76 /* CameoKit.framework */,
+				5F6A0D6B246CE0D200C88EE3 /* CameoKit.framework */,
+				5F6A0D6C246CE0D200C88EE3 /* COpenSSL.framework */,
+				5F6A0D6D246CE0D200C88EE3 /* PerfectCHTTPParser.framework */,
+				5F6A0D6E246CE0D200C88EE3 /* PerfectCrypto.framework */,
+				5F6A0D6F246CE0D200C88EE3 /* PerfectCZlib.framework */,
+				5F6A0D70246CE0D200C88EE3 /* PerfectHTTP.framework */,
+				5F6A0D71246CE0D200C88EE3 /* PerfectHTTPServer.framework */,
+				5F6A0D72246CE0D200C88EE3 /* PerfectLib.framework */,
+				5F6A0D73246CE0D200C88EE3 /* PerfectNet.framework */,
+				5F6A0D74246CE0D200C88EE3 /* PerfectThread.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -224,6 +257,7 @@
 				5F5C5001244CBBD300A35D76 /* Sources */,
 				5F5C5002244CBBD300A35D76 /* Frameworks */,
 				5F5C5003244CBBD300A35D76 /* Resources */,
+				5F6A0D89246CE0D300C88EE3 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -253,7 +287,7 @@
 				};
 			};
 			buildConfigurationList = 5F5C5000244CBBD300A35D76 /* Build configuration list for PBXProject "StarPlayrX" */;
-			compatibilityVersion = "Xcode 9.3";
+			compatibilityVersion = "Xcode 11.4";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
