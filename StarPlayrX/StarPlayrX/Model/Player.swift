@@ -371,6 +371,7 @@ final class Player {
             if let p = dict as? [String : Any], !p.isEmpty, let cache = p["data"] as? [String : Any], !cache.isEmpty {
                 self.pdtCache = cache
                 
+            
                 g.ChannelArray = self.getPDTData(importData: g.ChannelArray)
                 completionHandler(true)
                 

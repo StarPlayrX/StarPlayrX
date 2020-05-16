@@ -51,7 +51,10 @@ public class Network {
                 }
             }
             
-            let server = HTTPServer.Server(name: Global.obj.localhost, address: Global.obj.local, port: Int(Player.shared.port), routes: routes() )
+            let server = HTTPServer.Server(name: Global.obj.localhost,
+                                           address: Global.obj.local,
+                                           port: Int(Player.shared.port),
+                                           routes: routes() )
             try HTTPServer.launch(wait: false, server)
             
         } catch {

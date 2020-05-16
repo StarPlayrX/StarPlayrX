@@ -18,7 +18,7 @@ internal class Global  {
     let domain = "starplayrx.com"
     let secureport = "8180"
     let binbytes = "3369117"
-    let demoname = "StarPlayrX"
+    let demoname = "StarPlayrXdemo"
     let websitedown = "403"
     let secure = "https://"
     let insecure = "http://"
@@ -26,7 +26,7 @@ internal class Global  {
     let Server = "boss"
     
     //MARK: Variables
-    var demomode = true
+    var demomode = false
     var imagechecksum = ""
     var Username = ""
     var Password = ""
