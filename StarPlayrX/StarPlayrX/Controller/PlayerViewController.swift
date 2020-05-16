@@ -31,9 +31,9 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     weak var SpeakerView  : UIImageView!
     
     var playerViewTimerX = Timer()
-    var AirPlayView     = UIView()
-    var AirPlayBtn      = AVRoutePickerView()
-    var allStarButton   = UIButton(type: UIButton.ButtonType.custom)
+    var AirPlayView      = UIView()
+    var AirPlayBtn       = AVRoutePickerView()
+    var allStarButton    = UIButton(type: UIButton.ButtonType.custom)
     
     var currentSpeaker = Speakers.speaker0
     var previousSpeaker = Speakers.speaker3
@@ -89,13 +89,13 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     func routePickerViewWillBeginPresentingRoutes(_ routePickerView: AVRoutePickerView) {
         systemVolumeUpdater()
         startVolumeTimer()
-        PulsarAnimation()
+        PulsarAnimation(tune: true)
     }
     
     func routePickerViewDidEndPresentingRoutes(_ routePickerView: AVRoutePickerView) {
         invalidateTimer()
         systemVolumeUpdater()
-        PulsarAnimation()
+        PulsarAnimation(tune: true)
     }
     
     
@@ -259,7 +259,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         let barButton = UIBarButtonItem(customView: allStarButton)
         
         self.navigationItem.rightBarButtonItem = barButton
-        self.navigationItem.rightBarButtonItem?.tintColor = .white
+        self.navigationItem.rightBarButtonItem?.tintColor = .systemBlue
     }
     
     

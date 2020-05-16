@@ -42,12 +42,12 @@ public class Network {
     
     func LaunchServer() {
         do {
+            
             //Find the first Open port
-            for i in Player.shared.port...64999 {
-                let (isFree, _) = checkTcpPortForListen(port: UInt16(i))
-                if isFree {
+            for i in Player.shared.port..<65000 {
+                if open(port: UInt16(i)) {
                     Player.shared.port = UInt16(i)
-                    break;
+                    break
                 }
             }
             
@@ -63,20 +63,16 @@ public class Network {
     }
     
     //MARK: Port Finder - This is some deep sh*t
-    func checkTcpPortForListen(port: in_port_t) -> (Bool, descr: String) {
+    func open(port: in_port_t) -> (Bool) {
         
         func release(socket: Int32) {
             Darwin.shutdown(socket, SHUT_RDWR)
             close(socket)
         }
         
-        func descriptionOfLastError() -> String {
-            return String.init(cString: (UnsafePointer(strerror(errno))))
-        }
-        
         let socketFileDescriptor = socket(AF_INET, SOCK_STREAM, 0)
         if socketFileDescriptor == -1 {
-            return (false, "SocketCreationFailed, \(descriptionOfLastError())")
+            return false
         }
         
         var addr = sockaddr_in()
@@ -90,17 +86,17 @@ public class Network {
         memcpy(&bind_addr, &addr, Int(sizeOfSockkAddr))
         
         if Darwin.bind(socketFileDescriptor, &bind_addr, socklen_t(sizeOfSockkAddr)) == -1 {
-            let details = descriptionOfLastError()
             release(socket: socketFileDescriptor)
-            return (false, "\(port), BindFailed, \(details)")
+            return false
         }
+        
         if listen(socketFileDescriptor, SOMAXCONN ) == -1 {
-            let details = descriptionOfLastError()
             release(socket: socketFileDescriptor)
-            return (false, "\(port), ListenFailed, \(details)")
+            return false
         }
+        
         release(socket: socketFileDescriptor)
-        return (true, "\(port) is free for use")
+        return true
     }
 
 }

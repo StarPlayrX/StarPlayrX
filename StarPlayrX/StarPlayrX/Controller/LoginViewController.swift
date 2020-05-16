@@ -515,8 +515,8 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
 
         tabItem(index: 1, enable: false, selectItem: false)
-        g.Username = UserDefaults.standard.string(forKey: "user") ?? "StarPlayr"
-        g.Password = UserDefaults.standard.string(forKey: "pass") ?? "Red$sun21"
+        g.Username = UserDefaults.standard.string(forKey: "user") ?? ""
+        g.Password = UserDefaults.standard.string(forKey: "pass") ?? ""
         userField.text = g.Username
         passField.text = g.Password
         

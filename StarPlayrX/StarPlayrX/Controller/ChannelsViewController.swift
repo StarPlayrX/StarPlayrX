@@ -17,6 +17,65 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
     let g = Global.obj
     let p = Player.shared
     
+    var allStarButton   = UIButton(type: UIButton.ButtonType.custom)
+
+    func checkForAllStar() {
+        let data = g.ChannelArray
+        
+        for c in data {
+            if c.channel == g.currentChannel {
+                
+                if c.preset {
+                    allStarButton.setImage(UIImage(named: "star_on"), for: .normal)
+                } else {
+                    allStarButton.setImage(UIImage(named: "star_off"), for: .normal)
+                }
+                break
+            }
+        }
+    }
+    
+    @objc func AllStarX() {
+        let sp = Player.shared
+        sp.SPXPresets = [String]()
+        
+        var index = -1
+        for d in g.ChannelArray {
+            index = index + 1
+            if d.channel == g.currentChannel {
+                g.ChannelArray[index].preset = !g.ChannelArray[index].preset
+                
+                if g.ChannelArray[index].preset {
+                    allStarButton.setImage(UIImage(named: "star_on"), for: .normal)
+                    allStarButton.accessibilityLabel = "All Stars Preset On, \(g.currentChannelName)"
+                    
+                } else {
+                    allStarButton.setImage(UIImage(named: "star_off"), for: .normal)
+                    allStarButton.accessibilityLabel = "All Stars Preset Off, \(g.currentChannelName)"
+                    
+                }
+            }
+            
+            if g.ChannelArray[index].preset {
+                sp.SPXPresets.append(d.channel)
+            }
+        }
+        
+        if !sp.SPXPresets.isEmpty {
+            UserDefaults.standard.set(sp.SPXPresets, forKey: "SPXPresets")
+        }
+    }
+    
+    func setAllStarButton() {
+        allStarButton.setImage(UIImage(named: "star_on"), for: .normal)
+        allStarButton.accessibilityLabel = "All Stars Preset"
+        allStarButton.addTarget(self, action:#selector(AllStarX), for: .touchUpInside)
+        allStarButton.frame = CGRect(x: 0, y: 0, width: 35, height: 35)
+        let barButton = UIBarButtonItem(customView: allStarButton)
+        
+        self.navigationItem.rightBarButtonItem = barButton
+        self.navigationItem.rightBarButtonItem?.tintColor = .systemBlue
+    }
     
     private let Interactive = DispatchQueue(label: "Interactive", qos: .userInteractive )
 
@@ -110,6 +169,8 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
         self.title == g.categoryTitle ? UpdateTableView(scrollPosition: .none) : UpdateTableView(scrollPosition: .middle)
         self.title = g.categoryTitle
         
+        checkForAllStar()
+        
     }
         
     
@@ -154,6 +215,8 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
         ChannelsTableView.estimatedRowHeight = 80
 
         searchBar.sizeToFit()
+        
+        setAllStarButton()
     }
     
    

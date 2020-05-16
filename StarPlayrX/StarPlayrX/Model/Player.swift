@@ -85,27 +85,27 @@ final class Player {
                 
                 let asset = AVAsset(url: url)
                 let playItem = AVPlayerItem(asset:asset)
-                print(asset, playItem)
+
                 let p = self.player
                 p.insert(playItem, after: nil)
                 p.currentItem?.preferredForwardBufferDuration = 0
                 p.currentItem?.automaticallyPreservesTimeOffsetFromLive = true
                 p.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = true
                 p.automaticallyWaitsToMinimizeStalling = true
-                p.allowsExternalPlayback = false
                 p.appliesMediaSelectionCriteriaAutomatically = true
+                p.allowsExternalPlayback = false
                 
                 
                 p.playImmediately(atRate: 1.0)
 
-                DispatchQueue.main.async { [weak self] in
+               DispatchQueue.main.asyncAfter(deadline: .now() + (avSession.outputLatency * 0.8))  { [weak self] in
                     guard let self = self else { return }
-                    Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(self.SPXCache), userInfo: nil, repeats: false)
+                    self.SPXCache()
                 }
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + (avSession.outputLatency * 1.5)) {
-                    p.currentItem?.preferredForwardBufferDuration = 1
-                    self.state = .playing
+                DispatchQueue.main.asyncAfter(deadline: .now() + avSession.outputLatency * 2.0) { [weak self] in
+                    self?.player.currentItem?.preferredForwardBufferDuration = 1
+                    self?.state = .playing
                     NotificationCenter.default.post(name: .didUpdatePlay, object: nil)
                 }
             }
@@ -127,12 +127,10 @@ final class Player {
             }
         }
         
-        Async.api.Text(endpoint: pinpoint ) { ping in
-            guard let ping = ping else { launchServer(); return }
-            print(ping)
+        Async.api.Text(endpoint: pinpoint ) { pong in
+            guard let ping = pong else { launchServer(); return }
             ping == "pong" ? stream() : launchServer()
         }
-        
         
     }
     
@@ -141,9 +139,14 @@ final class Player {
         let p = self.player
         
         p.currentItem?.preferredForwardBufferDuration = 0
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + (avSession.outputLatency * 1.5)) {
-            p.currentItem?.preferredForwardBufferDuration = 1
+        p.currentItem?.automaticallyPreservesTimeOffsetFromLive = true
+        p.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = true
+        p.automaticallyWaitsToMinimizeStalling = true
+        p.appliesMediaSelectionCriteriaAutomatically = true
+        p.allowsExternalPlayback = false
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + avSession.outputLatency * 2.0) { [weak self] in
+            self?.player.currentItem?.preferredForwardBufferDuration = 1
         }
     }
     
@@ -456,9 +459,8 @@ final class Player {
         
         do {
             //Find the first Open port
-            for i in self.port...64999 {
-                let (isFree, _) = Network.ability.checkTcpPortForListen(port: UInt16(i))
-                if isFree {
+            for i in self.port..<65000 {
+                if Network.ability.open(port: UInt16(i)) {
                     self.port = UInt16(i)
                     break
                 }
