@@ -50,6 +50,7 @@ class LoginViewController: UIViewController {
     
     //login button action
     @IBAction func loginButton(_ sender: Any) {
+       
         g.Username = userField.text ?? ""
         g.Password = passField.text ?? ""
         prog(0.0, "Start", animated: false)
@@ -514,8 +515,8 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
 
         tabItem(index: 1, enable: false, selectItem: false)
-        g.Username = UserDefaults.standard.string(forKey: "user") ?? ""
-        g.Password = UserDefaults.standard.string(forKey: "pass") ?? ""
+        g.Username = UserDefaults.standard.string(forKey: "user") ?? "StarPlayr"
+        g.Password = UserDefaults.standard.string(forKey: "pass") ?? "Red$sun21"
         userField.text = g.Username
         passField.text = g.Password
         
