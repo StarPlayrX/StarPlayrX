@@ -51,7 +51,6 @@ class SiriusViewController: UITableViewController {
                 DispatchQueue.main.async { sp.new(.stream) }
             }
         }
-        
     }
     
     @objc func handleRouteChange(_ notification: Notification) {
@@ -134,16 +133,16 @@ class SiriusViewController: UITableViewController {
         let ps = p.self
         let gs = g.self
         
-        guard ps.player.isBusy else { return }
-        
         ps.updatePDT() { success in
             if success {
                 
-                if let i = gs.ChannelArray.firstIndex(where: {$0.channel == gs.currentChannel}) {
-                    let item = gs.ChannelArray[i].largeChannelArtUrl
-                    ps.updateDisplay(key: gs.currentChannel, cache: ps.pdtCache, channelArt: item)
+                if ps.player.isBusy {
+                    if let i = gs.ChannelArray.firstIndex(where: {$0.channel == gs.currentChannel}) {
+                        let item = gs.ChannelArray[i].largeChannelArtUrl
+                        ps.updateDisplay(key: gs.currentChannel, cache: ps.pdtCache, channelArt: item)
+                    }
                 }
-                
+               
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(name: .updateChannelsView, object: nil)
                 }
