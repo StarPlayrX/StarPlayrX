@@ -114,13 +114,15 @@ class LoginViewController: UIViewController {
         let method = "login"
         let request = ["user":g.Username,"pass":g.Password] as Dictionary
         
+        if g.Username == g.demoname {
+            g.demomode = true
+        }
         
         func failureMessage() {
             self.prog(0.0, "")
             self.displayError(title: "Network error", message: "Check your internet connection and try again.", action: "OK")
         }
-        
-        
+
         Async.api.Post(request: request, endpoint: endpoint, method: method) { result in
             
             guard
@@ -236,6 +238,16 @@ class LoginViewController: UIViewController {
                 self.processing()
             }
             
+            
+            func runBlue(_ str: Int) {
+                print("BLUE: \(str)")
+                self.embeddedAlbumArt(filename: "bluenumbers")
+                UserDefaults.standard.set("-2", forKey: "largeChecksumXD")
+                
+                nextStep()
+            }
+            
+            
             func runFailure(_ str: Int) {
                 print("FAILURE: \(str)")
                 self.embeddedAlbumArt(filename: "demoart")
@@ -244,6 +256,9 @@ class LoginViewController: UIViewController {
                 nextStep()
             }
             
+            if g.demomode {
+                runBlue(0)
+            }
             
             //MARK: A really had example of if usage
             if g.imagechecksum == GetChecksum {
@@ -287,7 +302,6 @@ class LoginViewController: UIViewController {
                     }
                 }
             }
-            
         }
     }
     

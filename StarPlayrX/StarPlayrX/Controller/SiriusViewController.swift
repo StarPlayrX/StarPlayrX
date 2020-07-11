@@ -17,9 +17,31 @@ class SiriusViewController: UITableViewController {
     
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
     override var prefersHomeIndicatorAutoHidden : Bool { return true }
+	
+    
+    func checkServer() {
+        let pinpoint = "\(g.insecure)\(g.localhost):\(p.port)/ping"
+        Async.api.Text(endpoint: pinpoint ) { pong in
+            guard let ping = pong else { self.launchServer(); return }
+            ping == "pong" ? ()/* Do Nothing */ : self.launchServer()
+        }
+    }
+    
+    func launchServer() {
+        p.autoLaunchServer(){ success in
+            //Do nothing
+        }
+    }
+    
+    @objc func AppEnteredForeground(_ notification: Notification) {
+     	checkServer()
+    }
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+         NotificationCenter.default.addObserver(self, selector: #selector(AppEnteredForeground(_:)), name: Notification.Name.willEnterForegroundNotification, object: nil)
         
         g.navBarWidth  = self.navigationController!.navigationBar.frame.width
         g.tabBarHeight = self.tabBarController!.tabBar.frame.height
@@ -135,7 +157,7 @@ class SiriusViewController: UITableViewController {
         
         ps.updatePDT() { success in
             if success {
-                
+                //print("PDT! :)")
                 if ps.player.isBusy {
                     if let i = gs.ChannelArray.firstIndex(where: {$0.channel == gs.currentChannel}) {
                         let item = gs.ChannelArray[i].largeChannelArtUrl
@@ -146,6 +168,8 @@ class SiriusViewController: UITableViewController {
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(name: .updateChannelsView, object: nil)
                 }
+            } else {
+                self.checkServer()
             }
         }
     }

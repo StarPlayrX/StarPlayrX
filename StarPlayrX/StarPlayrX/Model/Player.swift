@@ -95,7 +95,6 @@ final class Player {
                 p.appliesMediaSelectionCriteriaAutomatically = true
                 p.allowsExternalPlayback = false
                 
-                
                 p.playImmediately(atRate: 1.0)
 
                DispatchQueue.main.asyncAfter(deadline: .now() + (avSession.outputLatency * 0.8))  { [weak self] in
@@ -445,7 +444,7 @@ final class Player {
         
     }
     
-    func autoLaunchServer(completionHandler: CompletionHandler )   {
+    public func autoLaunchServer(completionHandler: CompletionHandler )   {
         print("Restarting Server...")
         
         if UIAccessibility.isVoiceOverRunning {

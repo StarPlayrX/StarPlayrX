@@ -10,6 +10,7 @@ import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
+	
 
     var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent // .default

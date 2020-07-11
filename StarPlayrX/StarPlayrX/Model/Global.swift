@@ -18,7 +18,7 @@ internal class Global  {
     let domain = "starplayrx.com"
     let secureport = "8180"
     let binbytes = "3369117"
-    let demoname = "StarPlayrXdemo"
+    let demoname = "StarPlayr"
     let websitedown = "403"
     let secure = "https://"
     let insecure = "http://"
