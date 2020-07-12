@@ -207,7 +207,7 @@ class LoginViewController: UIViewController {
     //MARK 4 - Artwork
     func art(channelLineUpId: String) {
         
-        self.embeddedAlbumArt(filename: "bluenumbers") //load by default
+       // self.embeddedAlbumArt(filename: "bluenumbers") //load by default
         
         //large channel art checksum
         let GetChecksum = UserDefaults.standard.string(forKey: "largeChecksumXD") ?? "0"
@@ -235,30 +235,30 @@ class LoginViewController: UIViewController {
             
             func nextStep() {
                 self.prog(0.6, "Processing")
-                self.processing()
+                
+                if g.demomode {
+                    if self.g.demomode {
+                        runBlue(0)
+                    }
+                } else {
+                    self.processing()
+                }
             }
             
             
             func runBlue(_ str: Int) {
-                print("BLUE: \(str)")
+                //print("BLUE: \(str)")
                 self.embeddedAlbumArt(filename: "bluenumbers")
                 UserDefaults.standard.set("-2", forKey: "largeChecksumXD")
-                
-                nextStep()
             }
-            
             
             func runFailure(_ str: Int) {
-                print("FAILURE: \(str)")
+                //print("FAILURE: \(str)")
                 self.embeddedAlbumArt(filename: "demoart")
                 UserDefaults.standard.set("-1", forKey: "largeChecksumXD")
-
-                nextStep()
             }
             
-            if g.demomode {
-                runBlue(0)
-            }
+          
             
             //MARK: A really had example of if usage
             if g.imagechecksum == GetChecksum {
@@ -282,6 +282,8 @@ class LoginViewController: UIViewController {
 
                 let dataUrl = "\(g.secure)\(g.domain):\(g.secureport)/large"
                 
+               
+                
                 Async.api.CommanderData(endpoint: dataUrl, method: "large-art") { (data) in
                     guard let d = data,
                         let chData = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(d),
@@ -295,6 +297,9 @@ class LoginViewController: UIViewController {
                         let writeData = try NSKeyedArchiver.archivedData(withRootObject: self.g.ChannelData as Any, requiringSecureCoding: false)
                         UserDefaults.standard.set(writeData, forKey: "channelDataXD")
                         UserDefaults.standard.set(self.g.imagechecksum, forKey: "largeChecksumXD")
+                        
+                       
+                        
                         nextStep()
                     } catch {
                         runFailure(4)
@@ -345,6 +350,13 @@ class LoginViewController: UIViewController {
             
             let value = getFloat(Float) //return value
             
+            if Float == 0.0 && Text == "" || Float == 1.0 && Text == "Complete" {
+                self.loginButton.isEnabled = true
+                self.loginButton.alpha = 1.0
+            } else {
+                self.loginButton.isEnabled = false
+                self.loginButton.alpha = 0.5
+            }
             
             self.StatusField.text = Text
             self.progressBar?.setProgress( value, animated: animated)
@@ -384,7 +396,7 @@ class LoginViewController: UIViewController {
     
     
     func processing()  {
-        
+        	
         func runFailure() {
             self.prog(0.0, "")
             self.displayError(title: "Channel List Error", message: "Check your internet connection and try again.", action: "OK")
@@ -393,6 +405,7 @@ class LoginViewController: UIViewController {
         guard let channelList = g.ChannelList else { runFailure(); return }
         
         g.ChannelList = nil
+        
         g.ChannelArray = tableData()
                 
         let sortedChannelList = Array(channelList.keys).sorted {$0.localizedStandardCompare($1) == .orderedAscending}
@@ -564,6 +577,9 @@ class LoginViewController: UIViewController {
                 if let d = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData( art ),
                     let dict = (d as? [String : Data]) /* converts Any to [String : Data] */ {
                     g.ChannelData = dict
+                    
+                    self.prog(0.6, "Processing")
+                    self.processing()
                 }
             } catch {
                 //the next step will run even if this fails

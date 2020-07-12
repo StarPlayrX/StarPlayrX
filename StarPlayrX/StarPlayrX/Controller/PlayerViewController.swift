@@ -151,6 +151,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         if let pv = PlayerView {
             AlbumArt = draw.AlbumImageView(playerView: pv)
             
+            print("isPhone", isPhone)
             if isPhone {
                 let artistSongLabelArray = draw.ArtistSongiPhone(playerView: pv)
                 Artist = artistSongLabelArray[0]
@@ -162,6 +163,8 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
             VolumeSlider = draw.VolumeSliders(playerView: pv)
             addSliderAction()
             
+      
+            
             PlayerXL = draw.PlayerButton(playerView: pv)
             PlayerXL.addTarget(self, action: #selector(PlayPause), for: .touchUpInside)
             
@@ -169,21 +172,28 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
             updatePlayPauseIcon(play: true)
             setAllStarButton()
             
-            let vp = draw.AirPlay(airplayView: AirPlayView, playerView: pv)
+            //#if !targetEnvironment(simulator)
+            	let vp = draw.AirPlay(airplayView: AirPlayView, playerView: pv)
             
-            AirPlayBtn = vp.picker
-            AirPlayView = vp.view
+            	AirPlayBtn = vp.picker
+            	AirPlayView = vp.view
+            //#endif
         }
-        
-
     }
     
     func startupVolume() {
-        if let ap2 = AP2Volume.shared() {
-            ap2.hud(false) //Disable HUD on this view
-            systemVolumeUpdater()
-            setSpeakers(value: ap2.getVolume())
-        }
+        
+        #if targetEnvironment(simulator)
+        	let value = Player.shared.player.volume
+        	VolumeSlider.setValue(value, animated: true)
+        	self.setSpeakers(value: value)
+        #else
+        	if let ap2 = AP2Volume.shared() {
+               ap2.hud(false) //Disable HUD on this view
+         	   systemVolumeUpdater()
+         	   setSpeakers(value: ap2.getVolume())
+        	}
+        #endif
     }
     
     func shutdownVolume() {
@@ -311,6 +321,12 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         setObservers()
         doubleTap()
         AirPlayBtn.delegate = self
+        
+        #if targetEnvironment(simulator)
+        	let value = Player.shared.player.volume
+        	VolumeSlider.setValue(value, animated: true)
+        	self.setSpeakers(value: value)
+        #endif
     }
     
     @objc func GotNowPlayingInfoAnimated() {
@@ -346,6 +362,26 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         accessibility()
         let labels = staticArtistSong()
         
+        self.AlbumArt.layer.shadowOpacity = 1.0
+        
+        func runner(_ artist: UILabel, duration: Double) {
+            DispatchQueue.main.async {
+                UIView.transition(with: self.AlbumArt,
+                                  duration:duration,
+                                  options: .transitionCrossDissolve,
+                                  animations: { _ = [self.AlbumArt.image = pdt.image, self.AlbumArt.layer.shadowOpacity = 1.0] },
+                                  completion: nil)
+                
+                for i in labels {
+                    UILabel.transition(with: i.lbl ?? artist,
+                                       duration: duration,
+                                       options: .transitionCrossDissolve,
+                                       animations: { i.lbl?.text = i.str},
+                                       completion: nil)
+                }
+            }
+        }
+        
         func setGraphics(_ duration: Double) {
             
             if duration == 0 {
@@ -358,22 +394,10 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                 
             } else {
                 DispatchQueue.main.async {
-                    if let artist = self.Artist {
-                        DispatchQueue.main.async {
-                            UIView.transition(with: self.AlbumArt,
-                                              duration:duration,
-                                              options: .transitionCrossDissolve,
-                                              animations: { _ = [self.AlbumArt.image = pdt.image, self.AlbumArt.layer.shadowOpacity = 1.0] },
-                                              completion: nil)
-                            
-                            for i in labels {
-                                UILabel.transition(with: i.lbl ?? artist,
-                                                   duration:duration,
-                                                   options: .transitionCrossDissolve,
-                                                   animations: { i.lbl?.text = i.str},
-                                                   completion: nil)
-                            }
-                        }
+                    if let artistSong = self.ArtistSong {
+                		runner(artistSong, duration: duration)
+                    } else if let artist = self.Artist {
+                        runner(artist, duration: duration)
                     }
                 }
             }
@@ -445,7 +469,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     //MARK: Speaker Volume with Smooth Frame Animation
     func setSpeakers(value: Float) {
         self.previousSpeaker = self.currentSpeaker
-        
         switch (value) {
             case 0 :
                 self.currentSpeaker = .speaker0
@@ -474,7 +497,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                 self.currentSpeaker = .speaker0
         }
         
-        if self.previousSpeaker != self.currentSpeaker {
+        if self.previousSpeaker != self.currentSpeaker || value == 0.0 {
             let speakerName = self.currentSpeaker.rawValue
             
             UIView.transition(with: self.SpeakerView,
@@ -482,8 +505,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                               options: .transitionCrossDissolve,
                               animations: { self.SpeakerView.image = UIImage(named: speakerName) },
                               completion: nil)
-            
-            
+        
             self.previousSpeaker = self.currentSpeaker
         }
     }
@@ -500,9 +522,15 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                 case .moved:
                     DispatchQueue.main.async {
                         let value = slider.value
-                        AP2Volume.shared().setVolume(value)
                         self.setSpeakers(value: value)
-                }
+
+                        #if targetEnvironment(simulator)
+                        	Player.shared.player.volume = value
+                        #else
+                        	// your real device code
+                        	AP2Volume.shared().setVolume(value)
+                        #endif
+                	}
                 case .ended:
                     setVolumeObserver()
                 default:
