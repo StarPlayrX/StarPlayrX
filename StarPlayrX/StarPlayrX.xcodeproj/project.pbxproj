@@ -128,7 +128,7 @@
 				5F5C5046244CC24D00A35D76 /* Model */,
 				5FFF9DAF244D398700D795DA /* View */,
 				5F5C5033244CC14E00A35D76 /* Controller */,
-				5F5C503A244CC1B400A35D76 /* AP2Volume */,
+				5F5C503A244CC1B400A35D76 /* GTSoda */,
 				5F5C5035244CC1A100A35D76 /* Data */,
 				5F5C5013244CBBD300A35D76 /* Assets.xcassets */,
 				5F5C5018244CBBD300A35D76 /* Info.plist */,
@@ -184,7 +184,7 @@
 			path = Data;
 			sourceTree = "<group>";
 		};
-		5F5C503A244CC1B400A35D76 /* AP2Volume */ = {
+		5F5C503A244CC1B400A35D76 /* GTSoda */ = {
 			isa = PBXGroup;
 			children = (
 				5F60E37E24BBFBD10045A0A8 /* GTSodaPop.h */,
@@ -193,7 +193,7 @@
 				5F60E37B24BBF1090045A0A8 /* GTCola.m */,
 				5F5C503E244CC20700A35D76 /* StarPlayrX-Bridging-Header.h */,
 			);
-			path = AP2Volume;
+			path = GTSoda;
 			sourceTree = "<group>";
 		};
 		5F5C5046244CC24D00A35D76 /* Model */ = {
@@ -473,7 +473,7 @@
 				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.toddbruss.StarPlayr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "StarPlayrX/AP2Volume/StarPlayrX-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "StarPlayrX/GTSoda/StarPlayrX-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -499,7 +499,7 @@
 				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.toddbruss.StarPlayr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "StarPlayrX/AP2Volume/StarPlayrX-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "StarPlayrX/GTSoda/StarPlayrX-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

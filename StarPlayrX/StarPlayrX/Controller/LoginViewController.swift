@@ -237,7 +237,7 @@ class LoginViewController: UIViewController {
                 self.embeddedAlbumArt(filename: "bluenumbers", process: true)
                 UserDefaults.standard.removeObject(forKey: "channelDataXD")
                 UserDefaults.standard.removeObject(forKey: "largeChecksumXD")
-                UserDefaults.standard.synchronize()
+                //UserDefaults.standard.synchronize()
 
             }
             
@@ -246,7 +246,7 @@ class LoginViewController: UIViewController {
                 self.embeddedAlbumArt(filename: "demoart", process: true)
                 UserDefaults.standard.removeObject(forKey: "channelDataXD")
                 UserDefaults.standard.removeObject(forKey: "largeChecksumXD")
-                UserDefaults.standard.synchronize()
+                //UserDefaults.standard.synchronize()
             }
             
             if g.demomode {

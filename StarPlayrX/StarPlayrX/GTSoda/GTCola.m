@@ -1,6 +1,6 @@
 //
 //  GTCola.m
-//  StarPlayrX
+//  StarPlayrX / GoodTime Cola
 //
 //  Created by Todd Bruss on 11/1/19
 //  Copyright © 2019-2020 StarPlayrX. All rights reserved.
@@ -215,37 +215,37 @@ NSString* const GTSodaPopKeyB =  @"sha256toddbosstokenrobkeyfinder";
 
 #pragma mark - AES256
 
-- (NSString*)decryptA:(NSString*)encryptedBase64String
+- (NSString*)decryptA:(NSString*)base64String
 {
 #if !(TARGET_IPHONE_SIMULATOR)
-    return [GTSodaPop decryptedStringForBase64String:encryptedBase64String key: [self decryptB:@"qWQK/9kkCLDKycK6licB7SDCVei6ubr8pi3h6nVUnIg="]]; //@"toddkeytoken256shartbfinderboss"; //Origin GTSodaPopKeyA
+    return [GTSodaPop decryptedString:base64String key: [self decryptB:@"qWQK/9kkCLDKycK6licB7SDCVei6ubr8pi3h6nVUnIg="]]; //@"toddkeytoken256shartbfinderboss"; //Origin GTSodaPopKeyA
 #else
     return nil;
 #endif
 }
 
-- (NSString*)encryptA:(NSString*)encryptedBase64String
+- (NSString*)encryptA:(NSString*)base64String
 {
 #if !(TARGET_IPHONE_SIMULATOR)
-    return [GTSodaPop encryptedBase64StringForString:encryptedBase64String key: [self decryptB:@"qWQK/9kkCLDKycK6licB7SDCVei6ubr8pi3h6nVUnIg="]]; //@"toddkeytoken256shartbfinderboss"; //Origin GTSodaPopKeyA
+    return [GTSodaPop encryptedString:base64String key: [self decryptB:@"qWQK/9kkCLDKycK6licB7SDCVei6ubr8pi3h6nVUnIg="]]; //@"toddkeytoken256shartbfinderboss"; //Origin GTSodaPopKeyA
 #else
     return nil;
 #endif
 }
 
-- (NSString*)decryptB:(NSString*)encryptedBase64String
+- (NSString*)decryptB:(NSString*)base64String
 {
 #if !(TARGET_IPHONE_SIMULATOR)
-    return [GTSodaPop decryptedStringForBase64String:encryptedBase64String key:GTSodaPopKeyB]; //@"sha256toddbosstokenrobkeyfinder"; //Secondary GTSodaPopKeyB
+    return [GTSodaPop decryptedString:base64String key:GTSodaPopKeyB]; //@"sha256toddbosstokenrobkeyfinder"; //Secondary GTSodaPopKeyB
 #else
     return nil;
 #endif
 }
 
-- (NSString*)encryptB:(NSString*)encryptedBase64String
+- (NSString*)encryptB:(NSString*)base64String
 {
 #if !(TARGET_IPHONE_SIMULATOR)
-    return [GTSodaPop encryptedBase64StringForString:encryptedBase64String key:GTSodaPopKeyB]; //@"sha256toddbosstokenrobkeyfinder"; //Secondary GTSodaPopKeyB
+    return [GTSodaPop encryptedString:base64String key:GTSodaPopKeyB]; //@"sha256toddbosstokenrobkeyfinder"; //Secondary GTSodaPopKeyB
 #else
     return nil;
 #endif

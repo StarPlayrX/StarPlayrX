@@ -1,3 +1,11 @@
+//  GTCola.m
+//  StarPlayrX | GoodTime Cola | Encrypt | Decrypt Library
+//
+//  Created by Yusuke Sugamiya
+//  Modifications by Todd Bruss
+//  Copyright © 2015 Yusuke Sugamiya. All rights reserved.
+//  Modifications Copyright © 2020 Todd Bruss. All rights reserved.
+
 #import "GTSodaPop.h"
 #import <CommonCrypto/CommonCryptor.h>
 
@@ -7,10 +15,9 @@
 
 @implementation GTSodaPop
 
-
 #pragma mark - Public Class Method
 
-+ (NSString*)encryptedBase64StringForString:(NSString*)string key:(NSString*)key
++ (NSString*)encryptedString:(NSString*)string key:(NSString*)key
 {
     if (string.length == 0 || key.length == 0) {
         return nil;
@@ -30,7 +37,7 @@
     }
 }
 
-+ (NSString*)decryptedStringForBase64String:(NSString*)base64String key:(NSString*)key
++ (NSString*)decryptedString:(NSString*)base64String key:(NSString*)key
 {
     if (base64String.length == 0 || key.length == 0) {
         return nil;
@@ -186,3 +193,15 @@
 }
 
 @end
+
+/*
+LICENSE
+
+Copyright (c) 2015 Yusuke Sugamiya
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
