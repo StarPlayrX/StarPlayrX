@@ -151,7 +151,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         if let pv = PlayerView {
             AlbumArt = draw.AlbumImageView(playerView: pv)
             
-            print("isPhone", isPhone)
+            //print("isPhone", isPhone)
             if isPhone {
                 let artistSongLabelArray = draw.ArtistSongiPhone(playerView: pv)
                 Artist = artistSongLabelArray[0]
@@ -162,8 +162,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
             
             VolumeSlider = draw.VolumeSliders(playerView: pv)
             addSliderAction()
-            
-      
             
             PlayerXL = draw.PlayerButton(playerView: pv)
             PlayerXL.addTarget(self, action: #selector(PlayPause), for: .touchUpInside)
@@ -188,16 +186,16 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         	VolumeSlider.setValue(value, animated: true)
         	self.setSpeakers(value: value)
         #else
-        	if let ap2 = AP2Volume.shared() {
+        	if let ap2 = GTCola.shared() {
                ap2.hud(false) //Disable HUD on this view
          	   systemVolumeUpdater()
-         	   setSpeakers(value: ap2.getVolume())
+         	   setSpeakers(value: ap2.getSoda())
         	}
         #endif
     }
     
     func shutdownVolume() {
-        AP2Volume.shared().hud(true) //Enable HUD on this view
+        GTCola.shared().hud(true) //Enable HUD on this view
     }
     
     @objc func OnDidUpdatePlay(){
@@ -364,7 +362,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         
         self.AlbumArt.layer.shadowOpacity = 1.0
         
-        func runner(_ artist: UILabel, duration: Double) {
+        func presentArtistSongAlbumArt(_ artist: UILabel, duration: Double) {
             DispatchQueue.main.async {
                 UIView.transition(with: self.AlbumArt,
                                   duration:duration,
@@ -394,10 +392,12 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                 
             } else {
                 DispatchQueue.main.async {
+                    //iPad
                     if let artistSong = self.ArtistSong {
-                		runner(artistSong, duration: duration)
+                		presentArtistSongAlbumArt(artistSong, duration: duration)
+                    //iPhone
                     } else if let artist = self.Artist {
-                        runner(artist, duration: duration)
+                        presentArtistSongAlbumArt(artist, duration: duration)
                     }
                 }
             }
@@ -444,7 +444,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
             Player.shared.syncArt()
         }
         
-        VolumeSlider.setValue(AP2Volume.shared().getVolume(), animated: false)
+        VolumeSlider.setValue(GTCola.shared().getSoda(), animated: false)
         title = g.currentChannelName
         startup()
         checkForAllStar()
@@ -528,7 +528,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                         	Player.shared.player.volume = value
                         #else
                         	// your real device code
-                        	AP2Volume.shared().setVolume(value)
+                        	GTCola.shared().setSoda(value)
                         #endif
                 	}
                 case .ended:
@@ -557,7 +557,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         if let volume = notification.userInfo?["AVSystemController_AudioVolumeNotificationParameter"] as? Float {
             
             if Player.shared.avSession.currentRoute.outputs.first?.portType == .airPlay {
-                let vol = AP2Volume.shared()?.getVolume()
+                let vol = GTCola.shared()?.getSoda()
                 if vol == volume {
                     return
                 }
@@ -607,9 +607,9 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     func airplayRunner() {
         if tabBarController?.tabBar.selectedItem?.title == channelString && title == g.currentChannelName {
             if Player.shared.avSession.currentRoute.outputs.first?.portType == .airPlay {
-                AP2Volume.shared().setVolumeBy(0.0)
+                GTCola.shared().setSodaBy(0.0)
             } else {
-                if let vol = AP2Volume.shared()?.getVolume() {
+                if let vol = GTCola.shared()?.getSoda() {
                     DispatchQueue.main.async {
                         self.VolumeSlider.setValue(vol, animated: true)
                     }

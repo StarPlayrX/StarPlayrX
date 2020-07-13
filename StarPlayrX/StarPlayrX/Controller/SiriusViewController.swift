@@ -119,7 +119,7 @@ class SiriusViewController: UITableViewController {
                 return
         }
         if type == .began {
-            print("Interruption began, take appropriate actions")
+           // print("Interruption began, take appropriate actions")
             NotificationCenter.default.post(name: .didUpdatePause, object: nil)
         }
         else if type == .ended {
@@ -128,14 +128,14 @@ class SiriusViewController: UITableViewController {
                 if options.contains(.shouldResume) {
                     // Interruption Ended - playback should resume
                     
-                    print("Interruption Ended - playback should resume")
+                    //print("Interruption Ended - playback should resume")
                     
                     p.state = PlayerState.paused
                     p.new(.stream)
                     NotificationCenter.default.post(name: .didUpdatePlay, object: nil)
                     
                 } else {
-                    print("Interruption Ended - playback should NOT resume")
+                    //print("Interruption Ended - playback should NOT resume")
                     
                     p.state = PlayerState.interrupted
                     NotificationCenter.default.post(name: .didUpdatePause, object: nil)
@@ -182,7 +182,7 @@ class SiriusViewController: UITableViewController {
     }
     
     deinit {
-        print("CatsDeInit")
+        //print("CatsDeInit")
         self.pdtTimer?.invalidate()
         self.pdtTimer = nil
     }

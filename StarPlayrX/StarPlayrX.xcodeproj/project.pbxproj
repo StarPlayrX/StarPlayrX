@@ -19,7 +19,6 @@
 		5F5C5027244CBCD500A35D76 /* SplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5021244CBCD500A35D76 /* SplitViewController.swift */; };
 		5F5C5028244CBCD500A35D76 /* ChannelsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5022244CBCD500A35D76 /* ChannelsViewController.swift */; };
 		5F5C5029244CBCD500A35D76 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5023244CBCD500A35D76 /* LoginViewController.swift */; };
-		5F5C5041244CC20800A35D76 /* AP2Volume.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5040244CC20800A35D76 /* AP2Volume.m */; };
 		5F5C5044244CC22A00A35D76 /* bluenumbers.dms in Resources */ = {isa = PBXBuildFile; fileRef = 5F5C5042244CC22A00A35D76 /* bluenumbers.dms */; };
 		5F5C5045244CC22A00A35D76 /* demoart.dms in Resources */ = {isa = PBXBuildFile; fileRef = 5F5C5043244CC22A00A35D76 /* demoart.dms */; };
 		5F5C505B244CC26000A35D76 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5048244CC26000A35D76 /* Player.swift */; };
@@ -27,6 +26,8 @@
 		5F5C5062244CC26000A35D76 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C504F244CC26000A35D76 /* Extensions.swift */; };
 		5F5C5065244CC26000A35D76 /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5052244CC26000A35D76 /* Global.swift */; };
 		5F5C506A244CC26000A35D76 /* Networkabilty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5057244CC26000A35D76 /* Networkabilty.swift */; };
+		5F60E37D24BBF1090045A0A8 /* GTCola.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F60E37B24BBF1090045A0A8 /* GTCola.m */; };
+		5F60E38024BBFBD10045A0A8 /* GTSodaPop.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F60E37F24BBFBD10045A0A8 /* GTSodaPop.m */; };
 		5FD58414247057FD00002002 /* CameoKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FD58413247057FD00002002 /* CameoKit.framework */; };
 		5FD584312470585800002002 /* COpenSSL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FD584162470582C00002002 /* COpenSSL.framework */; };
 		5FD584332470585800002002 /* PerfectCHTTPParser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FD584172470582C00002002 /* PerfectCHTTPParser.framework */; };
@@ -56,8 +57,6 @@
 		5F5C5022244CBCD500A35D76 /* ChannelsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelsViewController.swift; sourceTree = "<group>"; };
 		5F5C5023244CBCD500A35D76 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		5F5C503E244CC20700A35D76 /* StarPlayrX-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "StarPlayrX-Bridging-Header.h"; sourceTree = "<group>"; };
-		5F5C503F244CC20700A35D76 /* AP2Volume.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AP2Volume.h; sourceTree = "<group>"; };
-		5F5C5040244CC20800A35D76 /* AP2Volume.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AP2Volume.m; sourceTree = "<group>"; };
 		5F5C5042244CC22A00A35D76 /* bluenumbers.dms */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = bluenumbers.dms; sourceTree = "<group>"; };
 		5F5C5043244CC22A00A35D76 /* demoart.dms */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = demoart.dms; sourceTree = "<group>"; };
 		5F5C5048244CC26000A35D76 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
@@ -66,6 +65,10 @@
 		5F5C5052244CC26000A35D76 /* Global.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		5F5C5057244CC26000A35D76 /* Networkabilty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Networkabilty.swift; sourceTree = "<group>"; };
 		5F5C5088244CCAB900A35D76 /* StarPlayrX.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StarPlayrX.entitlements; sourceTree = "<group>"; };
+		5F60E37B24BBF1090045A0A8 /* GTCola.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTCola.m; sourceTree = "<group>"; };
+		5F60E37C24BBF1090045A0A8 /* GTCola.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTCola.h; sourceTree = "<group>"; };
+		5F60E37E24BBFBD10045A0A8 /* GTSodaPop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTSodaPop.h; sourceTree = "<group>"; };
+		5F60E37F24BBFBD10045A0A8 /* GTSodaPop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTSodaPop.m; sourceTree = "<group>"; };
 		5FD58413247057FD00002002 /* CameoKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CameoKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FD584162470582C00002002 /* COpenSSL.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = COpenSSL.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FD584172470582C00002002 /* PerfectCHTTPParser.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PerfectCHTTPParser.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -184,8 +187,10 @@
 		5F5C503A244CC1B400A35D76 /* AP2Volume */ = {
 			isa = PBXGroup;
 			children = (
-				5F5C503F244CC20700A35D76 /* AP2Volume.h */,
-				5F5C5040244CC20800A35D76 /* AP2Volume.m */,
+				5F60E37E24BBFBD10045A0A8 /* GTSodaPop.h */,
+				5F60E37F24BBFBD10045A0A8 /* GTSodaPop.m */,
+				5F60E37C24BBF1090045A0A8 /* GTCola.h */,
+				5F60E37B24BBF1090045A0A8 /* GTCola.m */,
 				5F5C503E244CC20700A35D76 /* StarPlayrX-Bridging-Header.h */,
 			);
 			path = AP2Volume;
@@ -291,13 +296,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				5F5C5062244CC26000A35D76 /* Extensions.swift in Sources */,
+				5F60E37D24BBF1090045A0A8 /* GTCola.m in Sources */,
 				5F5C505B244CC26000A35D76 /* Player.swift in Sources */,
 				5F5C5028244CBCD500A35D76 /* ChannelsViewController.swift in Sources */,
 				5F5C506A244CC26000A35D76 /* Networkabilty.swift in Sources */,
 				5FDAD9BA2464EFBA008E38A8 /* Async.swift in Sources */,
 				5F381C17245F568E009BA91D /* Draw.swift in Sources */,
+				5F60E38024BBFBD10045A0A8 /* GTSodaPop.m in Sources */,
 				5F5C5060244CC26000A35D76 /* Sync.swift in Sources */,
-				5F5C5041244CC20800A35D76 /* AP2Volume.m in Sources */,
 				5F5C5025244CBCD500A35D76 /* TabViewController.swift in Sources */,
 				5F5C5009244CBBD300A35D76 /* AppDelegate.swift in Sources */,
 				5F5C500B244CBBD300A35D76 /* SceneDelegate.swift in Sources */,

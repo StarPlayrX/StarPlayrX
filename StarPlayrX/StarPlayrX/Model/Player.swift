@@ -445,7 +445,7 @@ final class Player {
     }
     
     public func autoLaunchServer(completionHandler: CompletionHandler )   {
-        print("Restarting Server...")
+        //print("Restarting Server...")
         
         if UIAccessibility.isVoiceOverRunning {
             let utterance = AVSpeechUtterance(string: "Buffering")

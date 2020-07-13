@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="pjj-Pg-t8m">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="pjj-Pg-t8m">
     <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -65,9 +65,6 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" keyboardAppearance="alert" returnKeyType="next" secureTextEntry="YES" textContentType="password"/>
-                                        <connections>
-                                            <action selector="PassFieldReturnKey:" destination="9pv-A4-QxB" eventType="editingDidEnd" id="S4g-PN-qrK"/>
-                                        </connections>
                                     </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="2iW-65-HBl">
                                         <rect key="frame" x="0.0" y="35" width="366" height="34"/>
@@ -77,9 +74,6 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" keyboardAppearance="alert" textContentType="username"/>
-                                        <connections>
-                                            <action selector="UserFieldReturnKey:" destination="9pv-A4-QxB" eventType="primaryActionTriggered" id="v6l-jg-2ZD"/>
-                                        </connections>
                                     </textField>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -188,8 +182,7 @@
                         <color key="badgeColor" name="systemBlueColor" catalog="System" colorSpace="catalog"/>
                     </tabBarItem>
                     <connections>
-                        <outlet property="ProgressBar" destination="tsR-hK-woN" id="u9Y-zQ-0Pq"/>
-                        <outlet property="StatusField" destination="dZs-bB-A2a" id="kWv-Ep-6Bh"/>
+                        <outlet property="StatusField" destination="dZs-bB-A2a" id="ddN-Lg-Ext"/>
                         <outlet property="loginButton" destination="erh-Ga-kQF" id="Pbt-Wz-Ptx"/>
                         <outlet property="passField" destination="7iX-5e-R6C" id="EHl-PC-sQG"/>
                         <outlet property="progressBar" destination="xlc-aG-8L5" id="sNM-o1-cqi"/>
