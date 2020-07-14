@@ -26,8 +26,7 @@
 		5F5C5062244CC26000A35D76 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C504F244CC26000A35D76 /* Extensions.swift */; };
 		5F5C5065244CC26000A35D76 /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5052244CC26000A35D76 /* Global.swift */; };
 		5F5C506A244CC26000A35D76 /* Networkabilty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5057244CC26000A35D76 /* Networkabilty.swift */; };
-		5F60E37D24BBF1090045A0A8 /* GTCola.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F60E37B24BBF1090045A0A8 /* GTCola.m */; };
-		5F60E38024BBFBD10045A0A8 /* GTSodaPop.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F60E37F24BBFBD10045A0A8 /* GTSodaPop.m */; };
+		5F60E3D124BD27620045A0A8 /* GTCola.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F60E3D024BD27620045A0A8 /* GTCola.framework */; };
 		5FD58414247057FD00002002 /* CameoKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FD58413247057FD00002002 /* CameoKit.framework */; };
 		5FD584312470585800002002 /* COpenSSL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FD584162470582C00002002 /* COpenSSL.framework */; };
 		5FD584332470585800002002 /* PerfectCHTTPParser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FD584172470582C00002002 /* PerfectCHTTPParser.framework */; };
@@ -56,7 +55,6 @@
 		5F5C5021244CBCD500A35D76 /* SplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplitViewController.swift; sourceTree = "<group>"; };
 		5F5C5022244CBCD500A35D76 /* ChannelsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelsViewController.swift; sourceTree = "<group>"; };
 		5F5C5023244CBCD500A35D76 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
-		5F5C503E244CC20700A35D76 /* StarPlayrX-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "StarPlayrX-Bridging-Header.h"; sourceTree = "<group>"; };
 		5F5C5042244CC22A00A35D76 /* bluenumbers.dms */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = bluenumbers.dms; sourceTree = "<group>"; };
 		5F5C5043244CC22A00A35D76 /* demoart.dms */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = demoart.dms; sourceTree = "<group>"; };
 		5F5C5048244CC26000A35D76 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
@@ -65,10 +63,8 @@
 		5F5C5052244CC26000A35D76 /* Global.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		5F5C5057244CC26000A35D76 /* Networkabilty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Networkabilty.swift; sourceTree = "<group>"; };
 		5F5C5088244CCAB900A35D76 /* StarPlayrX.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StarPlayrX.entitlements; sourceTree = "<group>"; };
-		5F60E37B24BBF1090045A0A8 /* GTCola.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTCola.m; sourceTree = "<group>"; };
-		5F60E37C24BBF1090045A0A8 /* GTCola.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTCola.h; sourceTree = "<group>"; };
-		5F60E37E24BBFBD10045A0A8 /* GTSodaPop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTSodaPop.h; sourceTree = "<group>"; };
-		5F60E37F24BBFBD10045A0A8 /* GTSodaPop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTSodaPop.m; sourceTree = "<group>"; };
+		5F60E3B124BD24E40045A0A8 /* GTColaFlavor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = GTColaFlavor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F60E3D024BD27620045A0A8 /* GTCola.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = GTCola.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FD58413247057FD00002002 /* CameoKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CameoKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FD584162470582C00002002 /* COpenSSL.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = COpenSSL.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FD584172470582C00002002 /* PerfectCHTTPParser.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PerfectCHTTPParser.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -96,6 +92,7 @@
 				5FD584372470585800002002 /* PerfectCZlib.framework in Frameworks */,
 				5FD5843B2470585800002002 /* PerfectHTTPServer.framework in Frameworks */,
 				5FD584312470585800002002 /* COpenSSL.framework in Frameworks */,
+				5F60E3D124BD27620045A0A8 /* GTCola.framework in Frameworks */,
 				5FD584332470585800002002 /* PerfectCHTTPParser.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -128,7 +125,6 @@
 				5F5C5046244CC24D00A35D76 /* Model */,
 				5FFF9DAF244D398700D795DA /* View */,
 				5F5C5033244CC14E00A35D76 /* Controller */,
-				5F5C503A244CC1B400A35D76 /* GTSoda */,
 				5F5C5035244CC1A100A35D76 /* Data */,
 				5F5C5013244CBBD300A35D76 /* Assets.xcassets */,
 				5F5C5018244CBBD300A35D76 /* Info.plist */,
@@ -139,6 +135,7 @@
 		5F5C502A244CBE9F00A35D76 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5F60E3D024BD27620045A0A8 /* GTCola.framework */,
 				5FD584162470582C00002002 /* COpenSSL.framework */,
 				5FD584172470582C00002002 /* PerfectCHTTPParser.framework */,
 				5FD584182470582C00002002 /* PerfectCrypto.framework */,
@@ -149,6 +146,7 @@
 				5FD5841D2470582C00002002 /* PerfectNet.framework */,
 				5FD5841E2470582C00002002 /* PerfectThread.framework */,
 				5FD58413247057FD00002002 /* CameoKit.framework */,
+				5F60E3B124BD24E40045A0A8 /* GTColaFlavor.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -182,18 +180,6 @@
 				5F5C5043244CC22A00A35D76 /* demoart.dms */,
 			);
 			path = Data;
-			sourceTree = "<group>";
-		};
-		5F5C503A244CC1B400A35D76 /* GTSoda */ = {
-			isa = PBXGroup;
-			children = (
-				5F60E37E24BBFBD10045A0A8 /* GTSodaPop.h */,
-				5F60E37F24BBFBD10045A0A8 /* GTSodaPop.m */,
-				5F60E37C24BBF1090045A0A8 /* GTCola.h */,
-				5F60E37B24BBF1090045A0A8 /* GTCola.m */,
-				5F5C503E244CC20700A35D76 /* StarPlayrX-Bridging-Header.h */,
-			);
-			path = GTSoda;
 			sourceTree = "<group>";
 		};
 		5F5C5046244CC24D00A35D76 /* Model */ = {
@@ -296,13 +282,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				5F5C5062244CC26000A35D76 /* Extensions.swift in Sources */,
-				5F60E37D24BBF1090045A0A8 /* GTCola.m in Sources */,
 				5F5C505B244CC26000A35D76 /* Player.swift in Sources */,
 				5F5C5028244CBCD500A35D76 /* ChannelsViewController.swift in Sources */,
 				5F5C506A244CC26000A35D76 /* Networkabilty.swift in Sources */,
 				5FDAD9BA2464EFBA008E38A8 /* Async.swift in Sources */,
 				5F381C17245F568E009BA91D /* Draw.swift in Sources */,
-				5F60E38024BBFBD10045A0A8 /* GTSodaPop.m in Sources */,
 				5F5C5060244CC26000A35D76 /* Sync.swift in Sources */,
 				5F5C5025244CBCD500A35D76 /* TabViewController.swift in Sources */,
 				5F5C5009244CBBD300A35D76 /* AppDelegate.swift in Sources */,
@@ -473,7 +457,7 @@
 				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.toddbruss.StarPlayr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "StarPlayrX/GTSoda/StarPlayrX-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -499,7 +483,7 @@
 				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.toddbruss.StarPlayr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "StarPlayrX/GTSoda/StarPlayrX-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

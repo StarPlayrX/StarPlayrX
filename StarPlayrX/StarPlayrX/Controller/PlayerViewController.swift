@@ -9,6 +9,7 @@
 
 import UIKit
 import AVKit
+import GTCola
 
 //UIGestureRecognizerDelegate
 class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
