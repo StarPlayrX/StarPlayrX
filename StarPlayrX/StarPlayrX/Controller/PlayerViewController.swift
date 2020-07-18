@@ -9,7 +9,10 @@
 
 import UIKit
 import AVKit
+
+#if !targetEnvironment(simulator)
 import GTCola
+#endif
 
 //UIGestureRecognizerDelegate
 class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
@@ -182,21 +185,30 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     
     func startupVolume() {
         
-        #if targetEnvironment(simulator)
-        	let value = Player.shared.player.volume
-        	VolumeSlider.setValue(value, animated: true)
-        	self.setSpeakers(value: value)
-        #else
-        	if let ap2 = GTCola.shared() {
-               ap2.hud(false) //Disable HUD on this view
-         	   systemVolumeUpdater()
-         	   setSpeakers(value: ap2.getSoda())
-        	}
-        #endif
+        func runsimulation() {
+            let value = Player.shared.player.volume
+            VolumeSlider.setValue(value, animated: true)
+            self.setSpeakers(value: value)
+        }
+    #if targetEnvironment(simulator)
+        runsimulation()
+    #else
+        if let ap2 = GTCola.shared(), !g.demomode {
+            ap2.hud(false) //Disable HUD on this view
+            systemVolumeUpdater()
+            setSpeakers(value: ap2.getSoda())
+        } else {
+            runsimulation()
+        }
+    #endif
     }
     
     func shutdownVolume() {
-        GTCola.shared().hud(true) //Enable HUD on this view
+            #if !targetEnvironment(simulator)
+            if !g.demomode {
+                GTCola.shared().hud(true) //Enable HUD on this view
+            }
+            #endif
     }
     
     @objc func OnDidUpdatePlay(){
@@ -445,7 +457,12 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
             Player.shared.syncArt()
         }
         
-        VolumeSlider.setValue(GTCola.shared().getSoda(), animated: false)
+        #if !targetEnvironment(simulator)
+        	if !g.demomode {
+        	    VolumeSlider.setValue(GTCola.shared().getSoda(), animated: false)
+        	}
+        #endif
+        
         title = g.currentChannelName
         startup()
         checkForAllStar()
@@ -529,7 +546,11 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                         	Player.shared.player.volume = value
                         #else
                         	// your real device code
-                        	GTCola.shared().setSoda(value)
+                        if !self.g.demomode {
+                            GTCola.shared().setSoda(value)
+                        } else {
+                            Player.shared.player.volume = value
+                        }
                         #endif
                 	}
                 case .ended:
@@ -558,27 +579,44 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         if let volume = notification.userInfo?["AVSystemController_AudioVolumeNotificationParameter"] as? Float {
             
             if Player.shared.avSession.currentRoute.outputs.first?.portType == .airPlay {
-                let vol = GTCola.shared()?.getSoda()
-                if vol == volume {
-                    return
-                }
-            }
-            
-            let slider = VolumeSlider.value
-            
-            let roundedSlider = round(rounder * slider) / rounder
-            let roundedVolume = round(rounder * volume) / rounder
-            
-            if roundedSlider != roundedVolume {
                 
-                DispatchQueue.main.async {
-                    self.VolumeSlider.setValue(volume, animated: true)
+                #if !targetEnvironment(simulator)
+                if !g.demomode {
+                    let vol = GTCola.shared()?.getSoda()
+                    if vol == volume {
+                        return
+                    }
+                }
+                #endif
+                
+            }
+            
+            
+            #if !targetEnvironment(simulator)
+            if !g.demomode {
+                let slider = VolumeSlider.value
+                
+                let roundedSlider = round(rounder * slider) / rounder
+                let roundedVolume = round(rounder * volume) / rounder
+                
+                if roundedSlider != roundedVolume {
+                    
+                    DispatchQueue.main.async {
+                        self.VolumeSlider.setValue(volume, animated: true)
+                    }
                 }
             }
+            #endif
+            
+         
             
         } else {
             //This creates a one time loop back if volume comes back nil
-            systemVolumeUpdater()
+            #if !targetEnvironment(simulator)
+            if !g.demomode {
+                systemVolumeUpdater()
+            }
+            #endif
         }
     }
     
@@ -602,19 +640,37 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         } else {
             VolumeSlider.isEnabled = true
         }
+        
+        #if !targetEnvironment(simulator)
+        if g.demomode {
+            if Player.shared.avSession.currentRoute.outputs.first?.portType == .airPlay  {
+                VolumeSlider.isEnabled = false
+            } else {
+                VolumeSlider.isEnabled = true
+            }
+        }
+        #endif
     }
     
     
     func airplayRunner() {
         if tabBarController?.tabBar.selectedItem?.title == channelString && title == g.currentChannelName {
             if Player.shared.avSession.currentRoute.outputs.first?.portType == .airPlay {
-                GTCola.shared().setSodaBy(0.0)
+                
+                #if !targetEnvironment(simulator)
+                if !g.demomode {
+                    GTCola.shared().setSodaBy(0.0)
+                }
+                #endif
+                
             } else {
-                if let vol = GTCola.shared()?.getSoda() {
+                #if !targetEnvironment(simulator)
+                if let vol = GTCola.shared()?.getSoda(), !g.demomode {
                     DispatchQueue.main.async {
                         self.VolumeSlider.setValue(vol, animated: true)
                     }
                 }
+                #endif
             }
             
             isSliderEnabled()

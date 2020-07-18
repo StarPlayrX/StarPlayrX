@@ -119,12 +119,12 @@ internal class Async {
                             switch localCats[i] {
                                 case "Rock","Pop","Sports","Hip-Hop/R&B":
                                     ()
-                                case "Dance/Electronic","Latino","Country","Jazz","Punk","Oldies","Family","Christian","Classical","Metal","Alternative","Artists":
+                                case "Dance/Electronic","Country","Jazz","Punk","Oldies","Family","Christian","Classical","Metal","Alternative","Artists":
                                     //add to musicArray
                                     musicArray.append(localCats[i])
-                                case "Canadian","More":
+                                case "Canada Talk","Canada Music","More", "Latin Music", "Latin Talk":
                                     miscArray.append(localCats[i])
-                                case "Comedy","Entertainment","Howard Stern","News/Public Radio","Politics/Issues","Religion":
+                                case "Comedy","Entertainment","Howard Stern","News/Public Radio","Politics/Issues", "Religion":
                                     talkArray.append(localCats[i])
                                 case "MLB","NBA","NFL","NHL","Play-by-Play":
                                     sportsTalk.append(localCats[i])

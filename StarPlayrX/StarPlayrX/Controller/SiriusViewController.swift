@@ -259,7 +259,7 @@ class SiriusViewController: UITableViewController {
         } else if section == 3 {
             return "Sports"
         } else if !g.MiscCategories.isEmpty {
-            return "Misc"
+            return "More"
         } else {
             return .none
         }
