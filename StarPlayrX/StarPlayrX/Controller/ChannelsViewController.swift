@@ -339,7 +339,13 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
             cell.textLabel?.text = fdr.channel
             cell.textLabel?.attributedText = fdr.title
             cell.detailTextLabel?.attributedText = fdr.detail
-            cell.imageView?.image = fdr.image
+            if !g.demomode {
+                let img = fdr.image.addImagePadding(x: 0, y: 20)
+                  cell.imageView?.image = img
+            } else {
+                cell.imageView?.image = fdr.image
+            }
+          
             cell.detailTextLabel?.numberOfLines = 2
         }
         

@@ -302,15 +302,15 @@ final class Player {
         
         //Demo Mode
         if !g.demomode {
-            
             //Get album art
             if g.NowPlaying.albumArt.contains(string: "http") {
                 Async.api.Imagineer(endpoint: g.NowPlaying.albumArt, ImageHandler: { (img) -> Void in
                     displayArt(image: img)
                 })
             } else {
+                //Fix image sizing
                 Async.api.Imagineer(endpoint: g.NowPlaying.channelArt, ImageHandler: { (img) -> Void in
-                    displayArt(image: img)
+                    displayArt(image: img?.addImagePadding(x: 20, y: 200))
                 })
             }
             
@@ -398,14 +398,16 @@ final class Player {
                 let setSong = NSMutableAttributedString(string: song, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]);
                 
                 setArtist.append(setSong)
-                
                 nowPlayingData[i].detail = setArtist
                 nowPlayingData[i].largeAlbumUrl = image
                 nowPlayingData[i].searchString = nowPlayingData[i].title.string
                 nowPlayingData[i].searchString = nowPlayingData[i].searchString + " " + artist
                 nowPlayingData[i].searchString = nowPlayingData[i].searchString + " " + song
                 nowPlayingData[i].searchString = nowPlayingData[i].searchString.replacingOccurrences(of: "'", with: "")
+                
                 nowPlayingData[i].image = nowPlayingData[i].channelImage
+
+                
                 nowPlayingData[i].albumUrl =  nowPlayingData[i].largeChannelArtUrl
             }
         }
