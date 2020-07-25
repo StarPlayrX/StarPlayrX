@@ -107,7 +107,7 @@ internal class Async {
                     }
                     
                     let Popular: Array<String> = [Player.shared.allStars,Player.shared.everything]
-                    var sportsTalk : Array<String> = ["Sports"]
+                    var sportsTalk : Array<String> = ["Sports Talk"]
                     var musicArray : Array<String> = ["Pop","Rock","Hip-Hop/R&B"]
                     var talkArray = Array<String>()
                     var miscArray = Array<String>()
@@ -117,7 +117,7 @@ internal class Async {
                         for i in 0..<localCats.count {
                             
                             switch localCats[i] {
-                                case "Rock","Pop","Sports","Hip-Hop/R&B":
+                                case "Rock","Pop","Sports Talk","Hip-Hop/R&B":
                                     ()
                                 case "Dance/Electronic","Country","Jazz","Punk","Oldies","Family","Christian","Classical","Metal","Alternative","Artists":
                                     //add to musicArray
