@@ -108,11 +108,13 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         
         for c in data {
             if c.channel == g.currentChannel {
-                
                 if c.preset {
                     allStarButton.setImage(UIImage(named: "star_on"), for: .normal)
+                           allStarButton.accessibilityLabel = "Preset On, Channel \(g.currentChannelName)"
                 } else {
                     allStarButton.setImage(UIImage(named: "star_off"), for: .normal)
+                    allStarButton.accessibilityLabel = "Preset Off."
+
                 }
                 break
             }
@@ -273,14 +275,16 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     }
     
     func setAllStarButton() {
-        allStarButton.setImage(UIImage(named: "star_on"), for: .normal)
-        allStarButton.accessibilityLabel = "All Stars Preset"
+        allStarButton.setImage(UIImage(named: "star_off"), for: .normal)
+        allStarButton.accessibilityLabel = "Star"
         allStarButton.addTarget(self, action:#selector(AllStarX), for: .touchUpInside)
         allStarButton.frame = CGRect(x: 0, y: 0, width: 35, height: 35)
         let barButton = UIBarButtonItem(customView: allStarButton)
         
         self.navigationItem.rightBarButtonItem = barButton
         self.navigationItem.rightBarButtonItem?.tintColor = .systemBlue
+        
+        checkForAllStar()
     }
     
     
@@ -296,11 +300,11 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                 
                 if g.ChannelArray[index].preset {
                     allStarButton.setImage(UIImage(named: "star_on"), for: .normal)
-                    allStarButton.accessibilityLabel = "All Stars Preset On, \(g.currentChannelName)"
+                    allStarButton.accessibilityLabel = "Preset On, Channel \(g.currentChannelName)"
                     
                 } else {
                     allStarButton.setImage(UIImage(named: "star_off"), for: .normal)
-                    allStarButton.accessibilityLabel = "All Stars Preset Off, \(g.currentChannelName)"
+                    allStarButton.accessibilityLabel = "Preset Off."
                     
                 }
             }

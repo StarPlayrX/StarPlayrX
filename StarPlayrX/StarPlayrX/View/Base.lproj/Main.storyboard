@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="pjj-Pg-t8m">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="pjj-Pg-t8m">
     <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -121,15 +121,15 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0RZ-Xg-HxG">
-                                <rect key="frame" x="146.66666666666666" y="448" width="120.99999999999997" height="30"/>
-                                <state key="normal" title="Try SiriusXM Free">
+                                <rect key="frame" x="102.66666666666669" y="454" width="209" height="30"/>
+                                <state key="normal" title="Sign up for a free 3 month trial">
                                     <color key="titleColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
                                     <action selector="Trial:" destination="9pv-A4-QxB" eventType="touchUpInside" id="lV5-e0-awG"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Requires a streaming SXM account." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vzy-5m-lYo">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Requires a streaming Sat Radio account" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vzy-5m-lYo">
                                 <rect key="frame" x="24" y="423" width="366" height="20"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -153,7 +153,7 @@
                             <constraint firstItem="meb-HX-sqc" firstAttribute="centerX" secondItem="tsR-hK-woN" secondAttribute="centerX" id="88u-uA-hMK"/>
                             <constraint firstItem="h7w-zh-enx" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Kba-hP-d4k" secondAttribute="trailing" id="Bsi-pm-EZ1"/>
                             <constraint firstItem="xlc-aG-8L5" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Kba-hP-d4k" secondAttribute="trailing" id="CIb-mC-ipm"/>
-                            <constraint firstItem="0RZ-Xg-HxG" firstAttribute="top" secondItem="Vzy-5m-lYo" secondAttribute="bottom" constant="5" id="Dyl-6g-fjB"/>
+                            <constraint firstItem="0RZ-Xg-HxG" firstAttribute="top" secondItem="Vzy-5m-lYo" secondAttribute="bottom" constant="11" id="Dyl-6g-fjB"/>
                             <constraint firstItem="yyM-xm-Ah0" firstAttribute="leading" secondItem="meb-HX-sqc" secondAttribute="leading" id="FYA-gH-j0g"/>
                             <constraint firstItem="yyM-xm-Ah0" firstAttribute="trailing" secondItem="meb-HX-sqc" secondAttribute="trailing" id="HAl-wX-pQZ"/>
                             <constraint firstItem="meb-HX-sqc" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Kba-hP-d4k" secondAttribute="trailing" id="JBu-gj-l5F"/>

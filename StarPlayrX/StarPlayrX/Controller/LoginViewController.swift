@@ -391,9 +391,13 @@ class LoginViewController: UIViewController {
                 let tinyImageData = UIImage(named: "xplaceholder") {
                 
                 //We do not allow SiriusXM in channel names, plus it's kind of redundant
-                name = name.replacingOccurrences(of: "SiriusXM", with: "Sirius")
-                name = name.replacingOccurrences(of: "SXM", with: "SPX")
-                
+            	name = name.replacingOccurrences(of: "SiriusXM ", with: "")
+                name = name.replacingOccurrences(of: "Sirius ", with: "")
+                name = name.replacingOccurrences(of: "Sirius XM ", with: "")
+                name = name.replacingOccurrences(of: "SXM ", with: "")
+                name = name.replacingOccurrences(of: "SPX ", with: "")
+
+                	
                 let title = NSMutableAttributedString(string: number + " ", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17)])
                 let channel = NSMutableAttributedString(string: name, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17)])
                 
@@ -517,12 +521,16 @@ class LoginViewController: UIViewController {
             if !self.g.Username.isEmpty && !self.g.Password.isEmpty {
                 
                 if UIAccessibility.isVoiceOverRunning {
-                    let utterance = AVSpeechUtterance(string: "Star Player X, Logging In")
-                    utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
-                    utterance.rate = 0.5
-                    
-                    let synthesizer = AVSpeechSynthesizer()
-                    synthesizer.speak(utterance)
+                    DispatchQueue.main.asyncAfter( deadline: .now() + 1.5 ) { [weak self] in
+                        guard let self = self else { return }
+                        
+                        let utterance = AVSpeechUtterance(string: "Logging In.")
+                        utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
+                        utterance.rate = 0.5
+                        
+                        let synthesizer = AVSpeechSynthesizer()
+                        synthesizer.speak(utterance)
+                    }
                 }
                 
                 self.prog(0.0, "Start", animated: false)
