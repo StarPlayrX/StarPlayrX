@@ -521,8 +521,7 @@ class LoginViewController: UIViewController {
             if !self.g.Username.isEmpty && !self.g.Password.isEmpty {
                 
                 if UIAccessibility.isVoiceOverRunning {
-                    DispatchQueue.main.asyncAfter( deadline: .now() + 1.5 ) { [weak self] in
-                        guard let self = self else { return }
+                    DispatchQueue.main.asyncAfter( deadline: .now() + 1.5 ) { 
                         
                         let utterance = AVSpeechUtterance(string: "Logging In.")
                         utterance.voice = AVSpeechSynthesisVoice(language: "en-US")

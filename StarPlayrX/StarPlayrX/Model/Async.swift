@@ -126,7 +126,7 @@ internal class Async {
                                     miscArray.append(localCats[i])
                                 case "Comedy","Entertainment","Howard Stern","News/Public Radio","Politics/Issues", "Religion":
                                     talkArray.append(localCats[i])
-                                case "Sports Talk","MLB","NBA","NFL","NHL","Play-by-Play":
+                                case "MLB","NBA","NFL","NHL","Play-by-Play":
                                     sportsTalk.append(localCats[i])
                                 default:
                                     //default to music as a catch all
