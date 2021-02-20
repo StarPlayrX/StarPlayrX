@@ -14,7 +14,7 @@ class SplitViewController: UISplitViewController, UISplitViewControllerDelegate 
     
     override func viewDidLoad() {
         self.delegate = self
-        self.preferredDisplayMode = .allVisible
+        self.preferredDisplayMode = UISplitViewController.DisplayMode.oneBesideSecondary
         
         if let appearance = navigationController?.navigationBar.standardAppearance {
             appearance.shadowImage = .none

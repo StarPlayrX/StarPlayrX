@@ -187,6 +187,7 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
             
             if let i = index {
                 SPXSelectRow(myTableView: ChannelsTableView, position: i, scrollPosition: scrollPosition)
+                setAllStarButton()
             }
         } else if let index = ChannelsTableView.indexPathForSelectedRow {
             ChannelsTableView.deselectRow(at: index, animated: false)

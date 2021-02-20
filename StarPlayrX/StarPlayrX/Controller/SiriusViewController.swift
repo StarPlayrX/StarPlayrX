@@ -119,7 +119,6 @@ class SiriusViewController: UITableViewController {
                 return
         }
         if type == .began {
-           // print("Interruption began, take appropriate actions")
             NotificationCenter.default.post(name: .didUpdatePause, object: nil)
         }
         else if type == .ended {
@@ -127,15 +126,12 @@ class SiriusViewController: UITableViewController {
                 let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
                 if options.contains(.shouldResume) {
                     // Interruption Ended - playback should resume
-                    
-                    //print("Interruption Ended - playback should resume")
-                    
                     p.state = PlayerState.paused
                     p.new(.stream)
                     NotificationCenter.default.post(name: .didUpdatePlay, object: nil)
                     
                 } else {
-                    //print("Interruption Ended - playback should NOT resume")
+                    // Interruption Ended - playback should NOT resume
                     
                     p.state = PlayerState.interrupted
                     NotificationCenter.default.post(name: .didUpdatePause, object: nil)
@@ -157,7 +153,6 @@ class SiriusViewController: UITableViewController {
         
         ps.updatePDT() { success in
             if success {
-                //print("PDT! :)")
                 if ps.player.isBusy {
                     if let i = gs.ChannelArray.firstIndex(where: {$0.channel == gs.currentChannel}) {
                         let item = gs.ChannelArray[i].largeChannelArtUrl

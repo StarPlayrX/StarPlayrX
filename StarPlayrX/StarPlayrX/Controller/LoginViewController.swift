@@ -412,7 +412,7 @@ class LoginViewController: UIViewController {
         
         
         //Read in the presets
-        let x = (UserDefaults.standard.array(forKey: "SPXPresets") ?? ["2","3","4"]) as [String]
+        let x = (UserDefaults.standard.array(forKey: "SPXPresets") ?? ["2","3","4"]) as! [String]
         
         p.SPXPresets = x
         if !p.SPXPresets.isEmpty && !g.ChannelArray.isEmpty {

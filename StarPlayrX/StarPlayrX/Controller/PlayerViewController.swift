@@ -11,7 +11,7 @@ import UIKit
 import AVKit
 
 #if !targetEnvironment(simulator)
-import GTCola
+//import GTCola
 #endif
 
 //UIGestureRecognizerDelegate
@@ -157,7 +157,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         if let pv = PlayerView {
             AlbumArt = draw.AlbumImageView(playerView: pv)
             
-            //print("isPhone", isPhone)
             if isPhone {
                 let artistSongLabelArray = draw.ArtistSongiPhone(playerView: pv)
                 Artist = artistSongLabelArray[0]
@@ -342,6 +341,8 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         	VolumeSlider.setValue(value, animated: true)
         	self.setSpeakers(value: value)
         #endif
+        
+        restartPDT()
     }
     
     @objc func GotNowPlayingInfoAnimated() {
@@ -471,6 +472,34 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         startup()
         checkForAllStar()
         isSliderEnabled()
+        
+    }
+    
+    //MARK: Read Write Cache for the PDT (Artist / Song / Album Art)
+    @objc func SPXCache() {
+        let ps = Player.shared.self
+        let gs = g.self
+        
+        ps.updatePDT() { success in
+
+            if success {
+                if let i = gs.ChannelArray.firstIndex(where: {$0.channel == gs.currentChannel}) {
+                    let item = gs.ChannelArray[i].largeChannelArtUrl
+                    ps.updateDisplay(key: gs.currentChannel, cache: ps.pdtCache, channelArt: item)
+                }
+               
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: .updateChannelsView, object: nil)
+                }
+            }
+        }
+    }
+    
+    func restartPDT() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(self.SPXCache), userInfo: nil, repeats: false)
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
