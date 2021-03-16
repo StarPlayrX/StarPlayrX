@@ -32,39 +32,6 @@ NSString* const GTSodaPopKeyB =  @"sha256toddbosstokenrobkeyfinder";
 {
 #if !(TARGET_IPHONE_SIMULATOR)
     
-    //NSLog(@"%@", [self encryptA:@"changeActiveCategoryVolumeBy:"]);
-    //NSLog(@"%@", [self decryptA:@"klvTLatdHExt92+kNS0j+KEtElsTKPb5QsAHFs0vntk="]);
-    
-    //NSLog(@"%@", [self encryptA:@"setVolumeTo:forCategory:"]);
-    //NSLog(@"%@", [self decryptA:@"dq8IvcW0Ub96ojUtvDRj44xPuQlvgZq7yzyeFhY0Byk="]);
-    
-    //NSLog(@"%@", [self encryptA:@"setVolumeTo:forCategory:"]);
-    //NSLog(@"%@", [self decryptA:@"dq8IvcW0Ub96ojUtvDRj44xPuQlvgZq7yzyeFhY0Byk="]);
-    
-    //NSLog(@"%@", [self encryptA:@"volumeCategoryForAudioCategory:"]);
-    //NSLog(@"%@", [self decryptA:@"MszEgIXJCchjl1CcOuee72/CThJy5Xyx4NenJLQ7tNg="]);
-
-    //NSLog(@"%@", [self encryptA:@"getVolume:forCategory:"]);
-    //NSLog(@"%@", [self decryptA:@"aZlhI8HP9dowKurAHWWlE6fKUWv+txbYcdyIB3kU0mU="]);
-    
-    //NSLog(@"%@", [self encryptA:@"volumeCategoryForAudioCategory:"]);
-    //NSLog(@"%@", [self decryptA:@"MszEgIXJCchjl1CcOuee72/CThJy5Xyx4NenJLQ7tNg="]);
-
-    //NSLog(@"%@", [self encryptA:@"sharedAVSystemController"]);
-    //NSLog(@"%@", [self decryptA:@"8qcsySlzQykLFgCXOZiyC6O6mDxH3gHBLzgqfF1d9U4="]);
-    
-    //NSLog(@"%@", [self encryptA:@"AVSystemController"]);
-    //NSLog(@"%@", [self decryptA:@"tiqLIGMhoFRSfhmFK+8LOdE3MRU1YyYpIo2pl9vmiCc="]);
-    
-    // NSLog(@"%@", [self encryptB:@"toddkeytoken256shartbfinderboss"]);
-    // NSLog(@"%@", [self decryptB:@"hY9JjKtaDiMXH0RW7utbfQ=="]);
-    
-    // NSLog(@"%@", [self encryptA:@"setSystemVolumeHUDEnabled:forAudioCategory:"]);
-    // NSLog(@"%@", [self decryptA:@"on45XNEN+B7/xH8zAa5EiJDcjYzuFoWsw69/Fcl6CmF3FLcFtTQFqTzt/oURAYKz"]);
-	
-    // NSLog(@"%@", [self encryptA:@"Audio/Video"]);
-    // NSLog(@"%@", [self decryptA:@"hY9JjKtaDiMXH0RW7utbfQ=="]);
-    
     NSString *selectorString = [self decryptA:@"on45XNEN+B7/xH8zAa5EiJDcjYzuFoWsw69/Fcl6CmF3FLcFtTQFqTzt/oURAYKz"];
     
     SEL selector = NSSelectorFromString(selectorString);

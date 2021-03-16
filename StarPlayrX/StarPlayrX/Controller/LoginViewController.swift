@@ -13,6 +13,8 @@ import AVKit
 
 class LoginViewController: UIViewController {
     
+    
+    
     let g = Global.obj
     let p = Player.shared
     
@@ -509,7 +511,16 @@ class LoginViewController: UIViewController {
     //view did load
     override func viewDidLoad() {
         super.viewDidLoad()
-		
+        
+        #if targetEnvironment(macCatalyst)
+        // macOS
+        print("MAC!")
+        #else
+        // iOS
+        print("iOS!")
+
+        #endif
+        
             self.tabItem(index: 1, enable: false, selectItem: false)
             self.g.Username = UserDefaults.standard.string(forKey: "user") ?? ""
             self.g.Password = UserDefaults.standard.string(forKey: "pass") ?? ""

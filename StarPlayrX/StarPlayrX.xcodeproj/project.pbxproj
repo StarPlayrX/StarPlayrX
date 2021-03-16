@@ -80,6 +80,7 @@
 		6F72C69725E0C7B600B2374C /* GTSodaPop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTSodaPop.h; sourceTree = "<group>"; };
 		6F72C69825E0C7B600B2374C /* GTCola.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTCola.m; sourceTree = "<group>"; };
 		6F72C69925E0C7B600B2374C /* GTCola.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTCola.h; sourceTree = "<group>"; };
+		6F72C75C25E1DA6D00B2374C /* GTCola.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = GTCola.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +150,7 @@
 				5FD5841D2470582C00002002 /* PerfectNet.framework */,
 				5FD5841E2470582C00002002 /* PerfectThread.framework */,
 				5FD58413247057FD00002002 /* CameoKit.framework */,
+				6F72C75C25E1DA6D00B2374C /* GTCola.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -466,7 +468,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = StarPlayrX/StarPlayrX.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = 469UCUB275;
 				HEADER_SEARCH_PATHS = " /Users/m1/Documents/GitHub/CameoKit/.build/checkouts/**";
 				INFOPLIST_FILE = StarPlayrX/Info.plist;
@@ -494,7 +496,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = StarPlayrX/StarPlayrX.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = 469UCUB275;
 				HEADER_SEARCH_PATHS = " /Users/m1/Documents/GitHub/CameoKit/.build/checkouts/**";
 				INFOPLIST_FILE = StarPlayrX/Info.plist;
