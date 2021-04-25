@@ -146,8 +146,32 @@ final class Draw {
         frameY = iPhoneHeight - isIphoneX
         self.iPhoneY = frameY - NavY - TabY
         
+        print("H:", iPhoneHeight, "W:", iPhoneWidth)
+        
         //Drawing code constants
         switch iPhoneHeight {
+            
+            //iPhone 12 Pro Max
+            case 926.0 :
+                labelOffset = 200
+                labelOffset2 = 100
+                labelHeight = 90
+                fontSize = 18
+                iPadAlbumClearSpace = 0
+                iPadTabHeightFactor = 0
+                playPauseY = 80
+                playPauseScale = 2
+    
+            //iPhone 12 Pro
+            case 844.0:
+                labelOffset = 175
+                labelOffset2 = 85
+                labelHeight = 90
+                fontSize = 18
+                iPadAlbumClearSpace = 0
+                iPadTabHeightFactor = 0
+                playPauseY = 67
+                playPauseScale = 2
             
             //iPhone 11 Pro Max
             case 896.0 :
@@ -192,6 +216,7 @@ final class Draw {
                 iPadTabHeightFactor = 0
                 playPauseY = 60
                 playPauseScale = 1.7
+                
             //iPhone SE 1st Gen
             case 568.0 :
                 labelOffset = 47
@@ -202,6 +227,7 @@ final class Draw {
                 iPadTabHeightFactor = 0
                 playPauseY = 50
                 playPauseScale = 1.334
+                
             //iPad Pro 12.9"
             case 1024.0 :
                 labelOffset = 45
@@ -212,6 +238,7 @@ final class Draw {
                 iPadTabHeightFactor = 1.9
                 playPauseY = 60
                 playPauseScale = 1.7
+                
             //iPad 11"
             case 834.0 :
                 labelOffset = 34
@@ -222,27 +249,40 @@ final class Draw {
                 iPadTabHeightFactor = 2.2
                 playPauseY = 60
                 playPauseScale = 1.7
-            //iPad 9"
+                
+            //iPad Air
             case 810.0 :
-                labelOffset = 0
+                labelOffset = 45
                 labelOffset2 = 140
                 labelHeight = 30
                 fontSize = 16
                 iPadAlbumClearSpace = 150
                 iPadTabHeightFactor = 1.7
                 playPauseY = 60
-                playPauseScale = 1.7
+                playPauseScale = 1.5
             
-            //iPad 9"
+            //iPad Air 4th Gen
+            case 820.0 :
+                labelOffset = 27
+                labelOffset2 = 140
+                labelHeight = 30
+                fontSize = 16
+                iPadAlbumClearSpace = 150
+                iPadTabHeightFactor = 1.7
+                playPauseY = 55
+                playPauseScale = 1.5
+            
+            //iPad
             case 768.0 :
-                labelOffset = 0
+                labelOffset = 36
                 labelOffset2 = 140
                 labelHeight = 30
                 fontSize = 16
                 iPadAlbumClearSpace = 140
                 iPadTabHeightFactor = 1.425
-                playPauseY = 60
-                playPauseScale = 1.7
+                playPauseY = 50
+                playPauseScale = 1.5
+                
             //Default is iPhone SE 2 / 7 / 8
             default :
                 labelOffset = 100
@@ -272,13 +312,22 @@ final class Draw {
         //MARK: Common constants - for iPhone and iPad
         switch (iPhoneHeight, isPhone) {
             
+            //MARK: iPhone 12 Pro and 12 Pro Max
+            case  (844.0,true), (926.0,true) :
+                AlbumArtSizeX = drawView.frame.size.width
+                AlbumArtSizeY = drawView.frame.size.height
+                centerX = drawView.frame.size.width / 2
+                centerY = drawView.frame.size.height / 2 - iPhoneOffset
+                positionBottom = CGFloat( drawView.frame.size.height - 50 )
+        
+            
             //MARK: iPhone X and higher
             case (812.0,true), (896.0,true) :
                 AlbumArtSizeX = drawView.frame.size.width
                 AlbumArtSizeY = drawView.frame.size.height
                 centerX = drawView.frame.size.width / 2
                 centerY = drawView.frame.size.height / 2 - iPhoneOffset
-                positionBottom = CGFloat( drawView.frame.size.height - 30 )
+                positionBottom = CGFloat( drawView.frame.size.height - 25 )
             
             //MARK: Regular iPhones (SE1 / 8 / 8 Plus)
             case (568.0,true), (667.0,true), (736.0,true) :
@@ -289,12 +338,21 @@ final class Draw {
                 positionBottom = CGFloat( drawView.frame.size.height - 25 )
             
             //MARK: iPad
-            case (768.0,false), (810.0,false), (834.0,false), (1024.0,false) :
+            case (768.0,false), (834.0,false), (1024.0,false) :
                 AlbumArtSizeX = drawView.frame.size.width - (iPadAlbumClearSpace * 1.333)
                 AlbumArtSizeY = drawView.frame.size.height - (iPadAlbumClearSpace * 1.333)
                 centerX = drawView.frame.size.width / 2
                 centerY = (drawView.frame.size.height - g.tabBarHeight) / 2
                 positionBottom = CGFloat( drawView.frame.size.height - 30 )
+                
+            //iPad Air
+            case (810.0,false), (820.0,false) :
+                AlbumArtSizeX = drawView.frame.size.width - (iPadAlbumClearSpace * 1.5)
+                AlbumArtSizeY = drawView.frame.size.height - (iPadAlbumClearSpace * 1.5)
+                centerX = drawView.frame.size.width / 2
+                centerY = (drawView.frame.size.height - g.tabBarHeight) / 2
+                positionBottom = CGFloat( drawView.frame.size.height - 30 )
+        
             
             default:
                 //defaults to Regular
@@ -438,7 +496,7 @@ final class Draw {
         }
         
         let apButton = setupAirPlayButton()
-        
+        apButton.accessibilityLabel = "Air Play and Speakers"
         return (view:airplayView, picker: apButton)
     }
 }
