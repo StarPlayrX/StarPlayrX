@@ -146,7 +146,7 @@ final class Draw {
         frameY = iPhoneHeight - isIphoneX
         self.iPhoneY = frameY - NavY - TabY
         
-        print("H:", iPhoneHeight, "W:", iPhoneWidth)
+        //print("H:", iPhoneHeight, "W:", iPhoneWidth)
         
         //Drawing code constants
         switch iPhoneHeight {

@@ -110,11 +110,8 @@ class LoginViewController: UIViewController {
         let method = "login"
         let request = ["user":g.Username,"pass":g.Password] as Dictionary
         
-        if g.Username == g.demoname {
-            g.demomode = true
-        } else {
-            g.demomode = false
-        }
+        //Turns on Demo Mode
+        g.demomode = g.Username.contains(string: g.demoname)
         
         func failureMessage() {
             self.displayError(title: "Network error", message: "Check your internet connection and try again.", action: "OK")
@@ -513,11 +510,14 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         
         #if targetEnvironment(macCatalyst)
+        
         // macOS
-        print("MAC!")
+        //print("MAC!")
+        
         #else
+        
         // iOS
-        print("iOS!")
+        //print("iOS!")
 
         #endif
         
