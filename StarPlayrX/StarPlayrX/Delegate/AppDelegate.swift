@@ -11,7 +11,6 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 	
-
     var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent // .default
     }
@@ -53,7 +52,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         Player.shared.setupRemoteTransportControls(application: application)
         application.beginReceivingRemoteControlEvents()
-        
+        print("HELLO")
+
         return true
     }
 

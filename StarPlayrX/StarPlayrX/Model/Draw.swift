@@ -229,7 +229,7 @@ final class Draw {
                 playPauseScale = 1.334
                 
             //iPad Pro 12.9"
-            case 1024.0 :
+            case 1024.0, 1023.0, 1025.0 :
                 labelOffset = 45
                 labelOffset2 = 140
                 labelHeight = 60
@@ -308,7 +308,7 @@ final class Draw {
         }
         
         mainView.addSubview(drawView)
-        
+        print(iPhoneHeight,iPhoneWidth)
         //MARK: Common constants - for iPhone and iPad
         switch (iPhoneHeight, isPhone) {
             
@@ -338,7 +338,7 @@ final class Draw {
                 positionBottom = CGFloat( drawView.frame.size.height - 25 )
             
             //MARK: iPad
-            case (768.0,false), (834.0,false), (1024.0,false) :
+            case (768.0,false), (834.0,false), (1023.0,false), (1024.0,false), (1025.0,false) :
                 AlbumArtSizeX = drawView.frame.size.width - (iPadAlbumClearSpace * 1.333)
                 AlbumArtSizeY = drawView.frame.size.height - (iPadAlbumClearSpace * 1.333)
                 centerX = drawView.frame.size.width / 2

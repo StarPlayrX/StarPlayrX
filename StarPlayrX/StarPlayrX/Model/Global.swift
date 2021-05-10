@@ -30,6 +30,7 @@ internal class Global  {
     var imagechecksum = ""
     var Username = ""
     var Password = ""
+    var localeIsCA = true
     var lastCategory = "Init Cat"
     var categoryTitle = ""
     var currentChannel = "0"

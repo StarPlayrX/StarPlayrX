@@ -17,7 +17,7 @@ import AVKit
 //UIGestureRecognizerDelegate
 class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     
-    let m1 = ProcessInfo.processInfo.isiOSAppOnMac
+    let m1 = ProcessInfo.processInfo.isMacCatalystApp
 
     let g = Global.obj
     
@@ -655,16 +655,27 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         }
     }
     
-    
+ 
     @objc func systemVolumeUpdater() {
-        switch UIApplication.shared.applicationState {
+        
+        if !m1 {
             
-            case .active:
-                airplayRunner()
-            case .background:
-                airplayRunner()
-            default:
-                ()
+            VolumeSlider.isEnabled = true
+            VolumeSlider.alpha = 1.0
+            
+            switch UIApplication.shared.applicationState {
+                
+                case .active:
+                    airplayRunner()
+                case .background:
+                    airplayRunner()
+                default:
+                    ()
+            }
+        } else {
+            VolumeSlider.isEnabled = false
+            VolumeSlider.alpha = 0.5
+
         }
     }
     
@@ -677,7 +688,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         }
         
         #if !targetEnvironment(simulator)
-        if g.demomode && m1 {
+        if g.demomode || m1 {
             if Player.shared.avSession.currentRoute.outputs.first?.portType == .airPlay  {
                 VolumeSlider.isEnabled = false
             } else {

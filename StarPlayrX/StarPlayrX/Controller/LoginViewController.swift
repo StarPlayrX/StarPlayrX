@@ -11,15 +11,33 @@ import SafariServices
 import AVKit
 
 
+
 class LoginViewController: UIViewController {
-    
-    
     
     let g = Global.obj
     let p = Player.shared
     
+    func selectCanadaPlayer(_ ca : Bool) {
+        if ca {
+            siriusCanadaSwitch.isOn = true
+            let caUrl = "\(self.g.insecure)\(self.g.localhost):" + String(self.p.port) + "/ca"
+            Async.api.Text(endpoint: caUrl) { ca in print(ca as Any) }
+        } else {
+            siriusCanadaSwitch.isOn = false
+            let usUrl = "\(self.g.insecure)\(self.g.localhost):" + String(self.p.port) + "/us"
+            Async.api.Text(endpoint: usUrl) { us in print(us as Any) }
+        }
+    }
+    
+    @IBOutlet weak var siriusCanadaSwitch: UISwitch!
+    
+    @IBAction func siriusCanadaSwitchAction(_ sender: Any) {
+        selectCanadaPlayer(siriusCanadaSwitch.isOn)
+    }
+    
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
     override var prefersHomeIndicatorAutoHidden : Bool { return true }
+   
     
     
     @IBAction func starplayrx_dot_com(_ sender: Any) {
@@ -135,6 +153,12 @@ class LoginViewController: UIViewController {
                 self.g.userid = data
                 UserDefaults.standard.set(self.g.userid, forKey: "userid")
                 
+                DispatchQueue.main.async {
+                    self.g.localeIsCA = self.siriusCanadaSwitch.isOn
+                }
+                
+                UserDefaults.standard.set(self.g.localeIsCA, forKey: "localeIsCA")
+
                 self.prog(0.2, "Session")
                 self.session()
                 
@@ -505,9 +529,54 @@ class LoginViewController: UIViewController {
             }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        func bitSet(_ bits: [Int]) -> UInt {
+            return bits.reduce(0) { $0 | (1 << $1) }
+        }
+
+        func property(_ property: String, object: NSObject, set: [Int], clear: [Int]) {
+            if let value = object.value(forKey: property) as? UInt {
+                object.setValue((value & ~bitSet(clear)) | bitSet(set), forKey: property)
+            }
+        }
+
+        // disable full-screen button
+        if  let NSApplication = NSClassFromString("NSApplication") as? NSObject.Type,
+            let sharedApplication = NSApplication.value(forKeyPath: "sharedApplication") as? NSObject,
+            let windows = sharedApplication.value(forKeyPath: "windows") as? [NSObject]
+        {
+            for window in windows {
+                let resizable = 3
+                property("styleMask", object: window, set: [], clear: [resizable])
+                let fullScreenPrimary = 7
+                let fullScreenAuxiliary = 8
+                let fullScreenNone = 9
+                property("collectionBehavior", object: window, set: [fullScreenNone], clear: [fullScreenPrimary, fullScreenAuxiliary])
+            }
+        }
+    }
+    
     //view did load
     override func viewDidLoad() {
         super.viewDidLoad()
+                
+        self.tabItem(index: 1, enable: false, selectItem: false)
+        self.g.Username = UserDefaults.standard.string(forKey: "user") ?? ""
+        self.g.Password = UserDefaults.standard.string(forKey: "pass") ?? ""
+        self.userField.text = self.g.Username
+        self.passField.text = self.g.Password
+        
+        self.g.localeIsCA = UserDefaults.standard.bool(forKey: "localeIsCA")
+
+        if self.g.localeIsCA {
+            siriusCanadaSwitch.isOn = true
+            selectCanadaPlayer(true)
+        } else {
+            siriusCanadaSwitch.isOn = false
+            selectCanadaPlayer(false)
+        }
         
         #if targetEnvironment(macCatalyst)
         
@@ -521,11 +590,7 @@ class LoginViewController: UIViewController {
 
         #endif
         
-            self.tabItem(index: 1, enable: false, selectItem: false)
-            self.g.Username = UserDefaults.standard.string(forKey: "user") ?? ""
-            self.g.Password = UserDefaults.standard.string(forKey: "pass") ?? ""
-            self.userField.text = self.g.Username
-            self.passField.text = self.g.Password
+          
             
             //gUserid = UserDefaults.standard.string(forKey: "userid") ?? ""
             
@@ -545,6 +610,7 @@ class LoginViewController: UIViewController {
                 
                 self.prog(0.0, "Start", animated: false)
                 self.autoLogin()
+        
             }
             
             //Pause Gesture
