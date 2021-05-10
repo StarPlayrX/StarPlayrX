@@ -196,12 +196,14 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     #if targetEnvironment(simulator)
         runsimulation()
     #else
-        if let ap2 = GTCola.shared(), !g.demomode && !m1 {
-            ap2.hud(false) //Disable HUD on this view
-            systemVolumeUpdater()
-            setSpeakers(value: ap2.getSoda())
-        } else {
-            runsimulation()
+        if !g.demomode && !m1 {
+            if let ap2 = GTCola.shared() {
+                ap2.hud(false) //Disable HUD on this view
+                systemVolumeUpdater()
+                setSpeakers(value: ap2.getSoda())
+            } else {
+                runsimulation()
+            }
         }
     #endif
     }
@@ -650,6 +652,8 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
             #if !targetEnvironment(simulator)
             if !g.demomode && !m1 {
                 systemVolumeUpdater()
+            } else {
+                Player.shared.player.volume = self.VolumeSlider.value
             }
             #endif
         }
@@ -658,7 +662,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
  
     @objc func systemVolumeUpdater() {
         
-        if !m1 {
+        if !g.demomode && !m1 {
             
             VolumeSlider.isEnabled = true
             VolumeSlider.alpha = 1.0
@@ -673,8 +677,8 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                     ()
             }
         } else {
-            VolumeSlider.isEnabled = false
-            VolumeSlider.alpha = 0.5
+            //VolumeSlider.isEnabled = false
+            //VolumeSlider.alpha = 0.5
 
         }
     }
@@ -688,13 +692,13 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         }
         
         #if !targetEnvironment(simulator)
-        if g.demomode || m1 {
-            if Player.shared.avSession.currentRoute.outputs.first?.portType == .airPlay  {
-                VolumeSlider.isEnabled = false
-            } else {
-                VolumeSlider.isEnabled = true
+            if g.demomode || m1 {
+                if Player.shared.avSession.currentRoute.outputs.first?.portType == .airPlay  {
+                    VolumeSlider.isEnabled = false
+                } else {
+                    VolumeSlider.isEnabled = true
+                }
             }
-        }
         #endif
     }
     
@@ -704,16 +708,18 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
             if Player.shared.avSession.currentRoute.outputs.first?.portType == .airPlay {
                 
                 #if !targetEnvironment(simulator)
-                if !g.demomode && !m1 {
-                    GTCola.shared().setSodaBy(0.0)
-                }
+                    if !g.demomode && !m1 {
+                        GTCola.shared().setSodaBy(0.0)
+                    }
                 #endif
                 
             } else {
                 #if !targetEnvironment(simulator)
-                if let vol = GTCola.shared()?.getSoda(), !g.demomode && !m1 {
-                    DispatchQueue.main.async {
-                        self.VolumeSlider.setValue(vol, animated: true)
+                if !g.demomode && !m1 {
+                    if let vol = GTCola.shared()?.getSoda() {
+                        DispatchQueue.main.async {
+                            self.VolumeSlider.setValue(vol, animated: true)
+                        }
                     }
                 }
                 #endif
