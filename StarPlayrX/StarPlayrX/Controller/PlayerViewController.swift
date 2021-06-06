@@ -10,9 +10,7 @@
 import UIKit
 import AVKit
 
-#if !targetEnvironment(simulator)
-//import GTCola
-#endif
+
 
 //UIGestureRecognizerDelegate
 class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
@@ -20,6 +18,12 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     let m1 = ProcessInfo.processInfo.isMacCatalystApp
 
     let g = Global.obj
+    
+    #if !targetEnvironment(simulator)
+        let ap2volume = GTCola.shared()
+    #else
+        let ap2volume = nil
+    #endif
     
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
     override var prefersHomeIndicatorAutoHidden : Bool { return true }
@@ -197,7 +201,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         runsimulation()
     #else
         if !g.demomode && !m1 {
-            if let ap2 = GTCola.shared() {
+            if let ap2 = ap2volume {
                 ap2.hud(false) //Disable HUD on this view
                 systemVolumeUpdater()
                 setSpeakers(value: ap2.getSoda())
@@ -211,7 +215,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     func shutdownVolume() {
             #if !targetEnvironment(simulator)
             if !g.demomode && !m1 {
-                GTCola.shared().hud(true) //Enable HUD on this view
+                ap2volume?.hud(true) //Enable HUD on this view
             }
             #endif
     }
@@ -470,8 +474,8 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         }
         
         #if !targetEnvironment(simulator)
-        	if !g.demomode && !m1 {
-        	    VolumeSlider.setValue(GTCola.shared().getSoda(), animated: false)
+        	if !g.demomode && !m1, let ap2 = ap2volume?.getSoda()  {
+        	    VolumeSlider.setValue(ap2, animated: false)
         	}
         #endif
         
@@ -587,7 +591,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                         #else
                         	// your real device code
                         if !self.g.demomode && !self.m1 {
-                            GTCola.shared().setSoda(value)
+                            self.ap2volume?.setSoda(value)
                         } else {
                             Player.shared.player.volume = value
                         }
@@ -605,6 +609,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     //MARK: Add Volume Slider Action
     func addSliderAction() {
         VolumeSlider.addTarget(self, action: #selector(VolumeChanged(slider:event:)), for: .valueChanged)
+        VolumeSlider.accessibilityHint = "Volume"
     }
     
     
@@ -622,7 +627,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                 
                 #if !targetEnvironment(simulator)
                 if !g.demomode && !m1 {
-                    let vol = GTCola.shared()?.getSoda()
+                    let vol = ap2volume?.getSoda()
                     if vol == volume {
                         return
                     }
@@ -643,6 +648,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                     
                     DispatchQueue.main.async {
                         self.VolumeSlider.setValue(volume, animated: true)
+                        self.setSpeakers(value: volume)
                     }
                 }
             }
@@ -712,14 +718,14 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                 
                 #if !targetEnvironment(simulator)
                     if !g.demomode && !m1 {
-                        GTCola.shared().setSodaBy(0.0)
+                        ap2volume?.setSodaBy(0.0)
                     }
                 #endif
                 
             } else {
                 #if !targetEnvironment(simulator)
                 if !g.demomode && !m1 {
-                    if let vol = GTCola.shared()?.getSoda() {
+                    if let vol = ap2volume?.getSoda() {
                         DispatchQueue.main.async {
                             self.VolumeSlider.setValue(vol, animated: true)
                         }

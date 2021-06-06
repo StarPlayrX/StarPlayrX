@@ -527,6 +527,8 @@ class LoginViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
+        siriusCanadaSwitch.accessibilityLabel = "Canada"
+
         func bitSet(_ bits: [Int]) -> UInt {
             return bits.reduce(0) { $0 | (1 << $1) }
         }
