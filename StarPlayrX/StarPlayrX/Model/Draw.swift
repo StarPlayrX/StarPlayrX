@@ -474,7 +474,7 @@ final class Draw {
     func drawAirPlay(airplayView: UIView, playerView: UIView, centerX: CGFloat, centerY: CGFloat, rectX: CGFloat, rectY: CGFloat, width: CGFloat, height: CGFloat, wire: Bool) -> (view:UIView, picker: AVRoutePickerView)  {
         
         var airplayView = airplayView
-        
+        airplayView.accessibilityLabel = "BARF O LA"
         airplayView = UIView(frame:CGRect(x: rectX, y: rectY, width: width, height: height))
         airplayView.center = CGPoint(x: centerX, y: centerY)
         
@@ -488,15 +488,22 @@ final class Draw {
             
             airplayButton.prioritizesVideoDevices = false
             //airplayButton.delegate = self
+
             airplayButton.activeTintColor = UIColor.systemBlue
             airplayButton.tintColor = .systemBlue
             airplayView.addSubview(airplayButton)
+            
             
             return airplayButton
         }
         
         let apButton = setupAirPlayButton()
-        apButton.accessibilityLabel = "Air Play and Speakers"
+
+        
+        if let routePickerButton = apButton.subviews.first(where: { $0 is UIButton }) as? UIButton {
+            routePickerButton.accessibilityLabel = "Air Play and Speakers"
+        }
+        
         return (view:airplayView, picker: apButton)
     }
 }

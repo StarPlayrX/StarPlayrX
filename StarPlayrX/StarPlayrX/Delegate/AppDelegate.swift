@@ -52,7 +52,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         Player.shared.setupRemoteTransportControls(application: application)
         application.beginReceivingRemoteControlEvents()
-        print("HELLO")
 
         return true
     }

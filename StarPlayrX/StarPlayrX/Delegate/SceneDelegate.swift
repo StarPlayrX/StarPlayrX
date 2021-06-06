@@ -18,21 +18,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, UISplitViewControllerDe
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         
-        print("OK", ProcessInfo.processInfo.isMacCatalystApp)
-        UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.forEach { windowScene in
-            windowScene.sizeRestrictions?.minimumSize = CGSize(width: 1364.5, height: 1023.5)
-            windowScene.sizeRestrictions?.maximumSize = CGSize(width: 1364.5, height: 1023.5)
-
-       }
-        
+        if ProcessInfo.processInfo.isMacCatalystApp {
+            UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.forEach { windowScene in
+                windowScene.sizeRestrictions?.minimumSize = CGSize(width: 1364.5, height: 1023.5)
+                windowScene.sizeRestrictions?.maximumSize = CGSize(width: 1364.5, height: 1023.5)
+           }
+        }
+       
         guard let windowScene = (scene as? UIWindowScene) else { return }
            
-           #if targetEnvironment(macCatalyst)
+        #if targetEnvironment(macCatalyst)
            if let titlebar = windowScene.titlebar {
                titlebar.titleVisibility = .hidden
                titlebar.toolbar = nil
            }
-           #endif
+        #endif
         
         guard let window = window else { return }
         guard let splitViewController = window.rootViewController as? UISplitViewController else { return }

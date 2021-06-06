@@ -17,7 +17,7 @@ class SiriusViewController: UITableViewController {
     
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
     override var prefersHomeIndicatorAutoHidden : Bool { return true }
-	
+    
     
     func checkServer() {
         let pinpoint = "\(g.insecure)\(g.localhost):\(p.port)/ping"
@@ -34,14 +34,14 @@ class SiriusViewController: UITableViewController {
     }
     
     @objc func AppEnteredForeground(_ notification: Notification) {
-     	checkServer()
+        checkServer()
     }
     
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-         NotificationCenter.default.addObserver(self, selector: #selector(AppEnteredForeground(_:)), name: Notification.Name.willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(AppEnteredForeground(_:)), name: Notification.Name.willEnterForegroundNotification, object: nil)
         
         g.navBarWidth  = self.navigationController!.navigationBar.frame.width
         g.tabBarHeight = self.tabBarController!.tabBar.frame.height
@@ -53,7 +53,7 @@ class SiriusViewController: UITableViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(handleRouteChange(_:)), name: .gotRouteChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(handleInterruption(_:)), name: .gotSessionInterruption, object: nil)
-
+        
         NotificationCenter.default.addObserver(self, selector: #selector(networkInterruption(_:)), name: NSNotification.Name.AVPlayerItemFailedToPlayToEndTime, object: nil)
         
         restartPDT()
@@ -78,31 +78,31 @@ class SiriusViewController: UITableViewController {
     @objc func handleRouteChange(_ notification: Notification) {
         
         guard let userInfo = notification.userInfo,
-            let reasonValue = userInfo[AVAudioSessionRouteChangeReasonKey] as? UInt,
-            let checkHeadPhones = AVAudioSession.RouteChangeReason(rawValue: reasonValue) else {
-                return
+              let reasonValue = userInfo[AVAudioSessionRouteChangeReasonKey] as? UInt,
+              let checkHeadPhones = AVAudioSession.RouteChangeReason(rawValue: reasonValue) else {
+            return
         }
         
         switch checkHeadPhones {
-            case .newDeviceAvailable: // New device found.
-                let session = AVAudioSession.sharedInstance()
-                let startHeadPhones = hasHeadphones(in: session.currentRoute)
+        case .newDeviceAvailable: // New device found.
+            let session = AVAudioSession.sharedInstance()
+            let startHeadPhones = hasHeadphones(in: session.currentRoute)
+            
+            if p.player.rate == 0 && startHeadPhones {
+                p.playX()
+            }
+            
+        case .oldDeviceUnavailable: // Old device removed.
+            if let previousRoute =
+                userInfo[AVAudioSessionRouteChangePreviousRouteKey] as? AVAudioSessionRouteDescription {
+                let stopHeadphones = hasHeadphones(in: previousRoute)
                 
-                if p.player.rate == 0 && startHeadPhones {
-                    p.playX()
+                if p.player.rate == 1 && stopHeadphones {
+                    p.pause()
+                }
             }
             
-            case .oldDeviceUnavailable: // Old device removed.
-                if let previousRoute =
-                    userInfo[AVAudioSessionRouteChangePreviousRouteKey] as? AVAudioSessionRouteDescription {
-                    let stopHeadphones = hasHeadphones(in: previousRoute)
-                    
-                    if p.player.rate == 1 && stopHeadphones {
-                        p.pause()
-                    }
-            }
-            
-            default: ()
+        default: ()
         }
     }
     
@@ -114,9 +114,9 @@ class SiriusViewController: UITableViewController {
     @objc func handleInterruption(_ notification: Notification) {
         
         guard let userInfo = notification.userInfo,
-            let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
-            let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
-                return
+              let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
+              let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
+            return
         }
         if type == .began {
             NotificationCenter.default.post(name: .didUpdatePause, object: nil)
@@ -140,12 +140,12 @@ class SiriusViewController: UITableViewController {
         }
     }
     
-
+    
     override func viewWillAppear(_ animated: Bool) {
         KeepTableCellUpToDate()
     }
     
- 
+    
     //MARK: Read Write Cache for the PDT (Artist / Song / Album Art)
     @objc func SPXCache() {
         let ps = p.self
@@ -159,7 +159,7 @@ class SiriusViewController: UITableViewController {
                         ps.updateDisplay(key: gs.currentChannel, cache: ps.pdtCache, channelArt: item)
                     }
                 }
-               
+                
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(name: .updateChannelsView, object: nil)
                 }
@@ -177,7 +177,6 @@ class SiriusViewController: UITableViewController {
     }
     
     deinit {
-        //print("CatsDeInit")
         self.pdtTimer?.invalidate()
         self.pdtTimer = nil
     }
@@ -186,8 +185,8 @@ class SiriusViewController: UITableViewController {
         if cell.isSelected {
             cell.accessoryType = .checkmark
             cell.tintColor = UIColor(displayP3Red: 0 / 255, green: 150 / 255, blue: 255 / 255, alpha: 1.0)
-            cell.accessibilityLabel = "Channels"
-            cell.accessibilityHint = "Grouped by Category"
+            cell.accessibilityLabel = .none
+            cell.accessibilityHint = .none
             cell.textLabel?.font = UIFont.systemFont(ofSize: 25)
             cell.textLabel?.textColor = UIColor(displayP3Red: 0 / 255, green: 128 / 255, blue: 255 / 255, alpha: 0.875)
             cell.backgroundColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0) //iOS 12

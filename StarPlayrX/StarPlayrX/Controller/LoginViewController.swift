@@ -21,11 +21,11 @@ class LoginViewController: UIViewController {
         if ca {
             siriusCanadaSwitch.isOn = true
             let caUrl = "\(self.g.insecure)\(self.g.localhost):" + String(self.p.port) + "/ca"
-            Async.api.Text(endpoint: caUrl) { ca in print(ca as Any) }
+            Async.api.Text(endpoint: caUrl) { ca in /* print(ca as Any) */ }
         } else {
             siriusCanadaSwitch.isOn = false
             let usUrl = "\(self.g.insecure)\(self.g.localhost):" + String(self.p.port) + "/us"
-            Async.api.Text(endpoint: usUrl) { us in print(us as Any) }
+            Async.api.Text(endpoint: usUrl) { us in /* print(us as Any) */ }
         }
     }
     
@@ -33,11 +33,13 @@ class LoginViewController: UIViewController {
     
     @IBAction func siriusCanadaSwitchAction(_ sender: Any) {
         selectCanadaPlayer(siriusCanadaSwitch.isOn)
+        UserDefaults.standard.set(siriusCanadaSwitch.isOn, forKey: "localeIsCA")
+        g.localeIsCA = siriusCanadaSwitch.isOn
     }
     
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
     override var prefersHomeIndicatorAutoHidden : Bool { return true }
-   
+    
     
     
     @IBAction func starplayrx_dot_com(_ sender: Any) {
@@ -68,14 +70,14 @@ class LoginViewController: UIViewController {
     
     //login button action
     @IBAction func loginButton(_ sender: Any) {
-            self.g.Username = self.userField.text ?? ""
-            self.g.Password = self.passField.text ?? ""
-            self.prog(0.0, "Start", animated: false)
-            self.autoLogin()
+        self.g.Username = self.userField.text ?? ""
+        self.g.Password = self.passField.text ?? ""
+        self.prog(0.0, "Start", animated: false)
+        self.autoLogin()
     }
     
     @objc func pausePlayBack() {
-            self.p.pause()
+        self.p.pause()
     }
     
     override func accessibilityPerformMagicTap() -> Bool {
@@ -84,42 +86,42 @@ class LoginViewController: UIViewController {
     }
     
     func displayError(title: String, message: String, action: String) {
-
-            self.prog(0.0, "")
-            self.loginButton.isEnabled = true
-            self.loginButton.alpha = 1.0
-            self.showAlert(title: title, message: message, action: action)
-         
+        
+        self.prog(0.0, "    ")
+        self.loginButton.isEnabled = true
+        self.loginButton.alpha = 1.0
+        self.showAlert(title: title, message: message, action: action)
+        
     }
     
     func autoLogin() {
-            let net = Network.ability
+        let net = Network.ability
+        
+        //MARK: 1 - Logging In
+        self.loginButton.isEnabled = false
+        self.loginButton.alpha = 0.5
+        self.view?.endEditing(true)
+        
+        var ping : String? = nil
+        let pingUrl = "\(self.g.insecure)\(self.g.localhost):" + String(self.p.port) + "/ping"
+        
+        Async.api.Text(endpoint: pingUrl) { p in
             
-            //MARK: 1 - Logging In
-            self.loginButton.isEnabled = false
-            self.loginButton.alpha = 0.5
-            self.view?.endEditing(true)
+            ping = p
             
-            var ping : String? = nil
-            let pingUrl = "\(self.g.insecure)\(self.g.localhost):" + String(self.p.port) + "/ping"
-            
-            Async.api.Text(endpoint: pingUrl) { p in
-                
-                ping = p
-                
-                //Check if Local Web Server is Up
-                if let pg = ping, pg != "pong" {
-                    //print("Launching the Server.")
-                    net.LaunchServer()
-                }
-                
-                if !net.networkIsConnected {
-                    self.displayError(title: "Network error", message: "Check your internet connection and try again.", action: "OK")
-                } else {
-                    self.prog(0.01, "Login")
-                    self.login()
-                }
+            //Check if Local Web Server is Up
+            if let pg = ping, pg != "pong" {
+                //print("Launching the Server.")
+                net.LaunchServer()
             }
+            
+            if !net.networkIsConnected {
+                self.displayError(title: "Network error", message: "Check your internet connection and try again.", action: "OK")
+            } else {
+                self.prog(0.01, "Login")
+                self.login()
+            }
+        }
     }
     
     //MARK: 1 - Login
@@ -134,7 +136,7 @@ class LoginViewController: UIViewController {
         func failureMessage() {
             self.displayError(title: "Network error", message: "Check your internet connection and try again.", action: "OK")
         }
-
+        
         Async.api.Post(request: request, endpoint: endpoint, method: method) { result in
             
             guard
@@ -142,7 +144,7 @@ class LoginViewController: UIViewController {
                 let data = result.data?["data"] as? String,
                 let message = result.data?["message"] as? String,
                 let success = result.data?["success"] as? Bool
-                else { return  }
+            else { return  }
             
             if success {
                 
@@ -152,13 +154,7 @@ class LoginViewController: UIViewController {
                 UserDefaults.standard.set(self.g.Password, forKey: "pass")
                 self.g.userid = data
                 UserDefaults.standard.set(self.g.userid, forKey: "userid")
-                
-                DispatchQueue.main.async {
-                    self.g.localeIsCA = self.siriusCanadaSwitch.isOn
-                }
-                
-                UserDefaults.standard.set(self.g.localeIsCA, forKey: "localeIsCA")
-
+            
                 self.prog(0.2, "Session")
                 self.session()
                 
@@ -222,7 +218,7 @@ class LoginViewController: UIViewController {
     //MARK 4 - Artwork
     func art(channelLineUpId: String) {
         
-       // self.embeddedAlbumArt(filename: "bluenumbers") //load by default
+        // self.embeddedAlbumArt(filename: "bluenumbers") //load by default
         
         //large channel art checksum
         let GetChecksum = UserDefaults.standard.string(forKey: "largeChecksumXD") ?? "0"
@@ -251,7 +247,7 @@ class LoginViewController: UIViewController {
             
             func nextStep() {
                 self.prog(0.6, "Processing")
-
+                
                 self.processing()
             }
             
@@ -261,7 +257,7 @@ class LoginViewController: UIViewController {
                 UserDefaults.standard.removeObject(forKey: "channelDataXD")
                 UserDefaults.standard.removeObject(forKey: "largeChecksumXD")
                 //UserDefaults.standard.synchronize()
-
+                
             }
             
             func runFailure(_ str: Int) {
@@ -277,8 +273,8 @@ class LoginViewController: UIViewController {
             } else if g.imagechecksum == GetChecksum {
                 do {
                     if let readData = UserDefaults.standard.data(forKey: "channelDataXD"),
-                        let chData = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(readData),
-                        let cd = chData as? [String : Data], !cd.isEmpty {
+                       let chData = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(readData),
+                       let cd = chData as? [String : Data], !cd.isEmpty {
                         
                         g.ChannelData = cd
                         nextStep()
@@ -297,10 +293,10 @@ class LoginViewController: UIViewController {
                 
                 Async.api.CommanderData(endpoint: dataUrl, method: "large-art") { (data) in
                     guard let d = data,
-                        let chData = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(d),
-                        let cdata = chData as? [String : Data],
-                        !cdata.isEmpty
-                        else { runFailure(3); return }
+                          let chData = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(d),
+                          let cdata = chData as? [String : Data],
+                          !cdata.isEmpty
+                    else { runFailure(3); return }
                     
                     self.g.ChannelData = cdata
                     
@@ -329,7 +325,7 @@ class LoginViewController: UIViewController {
                     let item = self.g.ChannelArray[i].largeChannelArtUrl
                     self.p.updateDisplay(key: self.g.currentChannel, cache: self.p.pdtCache, channelArt: item)
                 }
-                	
+                
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(name: .updateChannelsView, object: nil)
                 }
@@ -340,7 +336,7 @@ class LoginViewController: UIViewController {
                 //print("GUIDE ERROR.")
                 //self.prog(0, "")
                 //self.showAlert(title: "Error reading reading Guide",
-                               //message: "Posible network error.", action: "OK")
+                //message: "Posible network error.", action: "OK")
             }
         }
     }
@@ -363,7 +359,7 @@ class LoginViewController: UIViewController {
             let value = getFloat(Float) //return value
             
             if Float == 1.0  {
-            	loginButton.isEnabled = true
+                loginButton.isEnabled = true
                 loginButton.alpha = 1.0
             }
             
@@ -373,7 +369,7 @@ class LoginViewController: UIViewController {
     }
     
     func finish() {
-    	self.prog(1.0, "Complete")
+        self.prog(1.0, "Complete")
         
         DispatchQueue.main.async {
             runFinish()
@@ -397,7 +393,7 @@ class LoginViewController: UIViewController {
         //g.ChannelList = nil
         
         g.ChannelArray = tableData()
-                
+        
         let sortedChannelList = Array(channelList.keys).sorted {$0.localizedStandardCompare($1) == .orderedAscending}
         let detail = NSMutableAttributedString(string: "\n" , attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]);
         let song = NSMutableAttributedString(string: "", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]);
@@ -406,21 +402,21 @@ class LoginViewController: UIViewController {
         for ch in sortedChannelList {
             
             if let blueprint = channelList[ch] as? [String : Any],
-                let number = blueprint["channelNumber"] as? String,
-                var name = blueprint["name"] as? String,
-                let mediumImage = blueprint["mediumImage"] as? String,
-                let category = blueprint["category"] as? String,
-                let preset = blueprint["preset"] as? Bool,
-                let tinyImageData = UIImage(named: "xplaceholder") {
+               let number = blueprint["channelNumber"] as? String,
+               var name = blueprint["name"] as? String,
+               let mediumImage = blueprint["mediumImage"] as? String,
+               let category = blueprint["category"] as? String,
+               let preset = blueprint["preset"] as? Bool,
+               let tinyImageData = UIImage(named: "xplaceholder") {
                 
                 //We do not allow SiriusXM in channel names, plus it's kind of redundant
-            	name = name.replacingOccurrences(of: "SiriusXM ", with: "")
+                name = name.replacingOccurrences(of: "SiriusXM ", with: "")
                 name = name.replacingOccurrences(of: "Sirius ", with: "")
                 name = name.replacingOccurrences(of: "Sirius XM ", with: "")
                 name = name.replacingOccurrences(of: "SXM ", with: "")
                 name = name.replacingOccurrences(of: "SPX ", with: "")
-
-                	
+                
+                
                 let title = NSMutableAttributedString(string: number + " ", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17)])
                 let channel = NSMutableAttributedString(string: name, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17)])
                 
@@ -429,7 +425,7 @@ class LoginViewController: UIViewController {
                 let item = (searchString: number + name , name: name, channel: number, title: title, detail: detail, image: tinyImageData, channelImage: tinyImageData, albumUrl: "", largeAlbumUrl: "", largeChannelArtUrl: mediumImage, category: category, preset: preset )
                 g.ChannelArray.append(item)
             } else {
-               runFailure();
+                runFailure();
             }
         }
         
@@ -460,15 +456,15 @@ class LoginViewController: UIViewController {
     
     //Adds in Channel Art from Data Dictionary
     func processChannelIcons()  {
-       // if !g.ChannelArray.isEmpty && !(g.ChannelData?.isEmpty ?? true) {
-            for i in 0..<g.ChannelArray.count {
-                let channel = g.ChannelArray[i].channel
-                if let chArt = g.ChannelData?[channel], let img = UIImage(data: chArt) {
-                    g.ChannelArray[i].channelImage = img
-                    g.ChannelArray[i].image = img
-                }
+        // if !g.ChannelArray.isEmpty && !(g.ChannelData?.isEmpty ?? true) {
+        for i in 0..<g.ChannelArray.count {
+            let channel = g.ChannelArray[i].channel
+            if let chArt = g.ChannelData?[channel], let img = UIImage(data: chArt) {
+                g.ChannelArray[i].channelImage = img
+                g.ChannelArray[i].image = img
             }
-       // }
+        }
+        // }
         
         self.prog(0.8, "Guide")
         guide()
@@ -478,70 +474,69 @@ class LoginViewController: UIViewController {
     //Show Alert
     func showAlert(title: String, message:String, action:String) {
         
-            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: action, style: .default, handler: { action in
-                switch action.style{
-                    case .default:
-                        print("")
-                    case .cancel:
-                        print("")
-                    case .destructive:
-                        print("")
-                    
-                    @unknown default:
-                        print("error")
-                }}))
-            self.present(alert, animated: true, completion: nil)
-       
-
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: action, style: .default, handler: { action in
+                                        switch action.style{
+                                        case .default:
+                                            ()
+                                        case .cancel:
+                                            ()
+                                        case .destructive:
+                                            ()
+                                            
+                                        @unknown default:
+                                            print("error")
+                                        }}))
+        self.present(alert, animated: true, completion: nil)
+        
+        
     }
     
     func closeStarPlayr(title: String, message:String, action:String) {
         
-            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: action, style: .default, handler: { action in
-                switch action.style{
-                    case .default:
-                        exit(0)
-                    case .cancel:
-                        print("")
-                    case .destructive:
-                        print("")
-                    
-                    @unknown default:
-                        print("error.")
-                }}))
-            self.present(alert, animated: true, completion: nil)
-       
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: action, style: .default, handler: { action in
+                                        switch action.style{
+                                        case .default:
+                                            exit(0)
+                                        case .cancel:
+                                            ()
+                                        case .destructive:
+                                            ()
+                                        @unknown default:
+                                            print("error.")
+                                        }}))
+        self.present(alert, animated: true, completion: nil)
+        
     }
     
     //set tab item
     func tabItem(index: Int, enable: Bool, selectItem: Bool) {
-            let tabBarArray = self.tabBarController?.tabBar.items
-            
-            if let tabBarItems = tabBarArray, tabBarItems.count > 0 {
-                let tabBarItem = tabBarItems[index]
-                tabBarItem.isEnabled = enable
-            }
-            
-            if selectItem {
-                self.tabBarController?.selectedIndex = index
-            }
+        let tabBarArray = self.tabBarController?.tabBar.items
+        
+        if let tabBarItems = tabBarArray, tabBarItems.count > 0 {
+            let tabBarItem = tabBarItems[index]
+            tabBarItem.isEnabled = enable
+        }
+        
+        if selectItem {
+            self.tabBarController?.selectedIndex = index
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
+        
         func bitSet(_ bits: [Int]) -> UInt {
             return bits.reduce(0) { $0 | (1 << $1) }
         }
-
+        
         func property(_ property: String, object: NSObject, set: [Int], clear: [Int]) {
             if let value = object.value(forKey: property) as? UInt {
                 object.setValue((value & ~bitSet(clear)) | bitSet(set), forKey: property)
             }
         }
-
+        
         // disable full-screen button
         if  let NSApplication = NSClassFromString("NSApplication") as? NSObject.Type,
             let sharedApplication = NSApplication.value(forKeyPath: "sharedApplication") as? NSObject,
@@ -561,7 +556,7 @@ class LoginViewController: UIViewController {
     //view did load
     override func viewDidLoad() {
         super.viewDidLoad()
-                
+        
         self.tabItem(index: 1, enable: false, selectItem: false)
         self.g.Username = UserDefaults.standard.string(forKey: "user") ?? ""
         self.g.Password = UserDefaults.standard.string(forKey: "pass") ?? ""
@@ -569,56 +564,34 @@ class LoginViewController: UIViewController {
         self.passField.text = self.g.Password
         
         self.g.localeIsCA = UserDefaults.standard.bool(forKey: "localeIsCA")
-
-        if self.g.localeIsCA {
-            siriusCanadaSwitch.isOn = true
-            selectCanadaPlayer(true)
-        } else {
-            siriusCanadaSwitch.isOn = false
-            selectCanadaPlayer(false)
-        }
+        siriusCanadaSwitch.isOn = self.g.localeIsCA
+        selectCanadaPlayer(self.g.localeIsCA)
         
-        #if targetEnvironment(macCatalyst)
-        
-        // macOS
-        //print("MAC!")
-        
-        #else
-        
-        // iOS
-        //print("iOS!")
-
-        #endif
-        
-          
+        if !self.g.Username.isEmpty && !self.g.Password.isEmpty {
             
-            //gUserid = UserDefaults.standard.string(forKey: "userid") ?? ""
-            
-            if !self.g.Username.isEmpty && !self.g.Password.isEmpty {
-                
-                if UIAccessibility.isVoiceOverRunning {
-                    DispatchQueue.main.asyncAfter( deadline: .now() + 1.5 ) { 
-                        
-                        let utterance = AVSpeechUtterance(string: "Logging In.")
-                        utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
-                        utterance.rate = 0.5
-                        
-                        let synthesizer = AVSpeechSynthesizer()
-                        synthesizer.speak(utterance)
-                    }
+            if UIAccessibility.isVoiceOverRunning {
+                DispatchQueue.main.asyncAfter( deadline: .now() + 1.5 ) {
+                    
+                    let utterance = AVSpeechUtterance(string: "Logging In.")
+                    utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
+                    utterance.rate = 0.5
+                    
+                    let synthesizer = AVSpeechSynthesizer()
+                    synthesizer.speak(utterance)
                 }
-                
-                self.prog(0.0, "Start", animated: false)
-                self.autoLogin()
-        
             }
             
-            //Pause Gesture
-            let doubleFingerTapToPause = UITapGestureRecognizer(target: self, action: #selector(self.pausePlayBack) )
-            doubleFingerTapToPause.numberOfTapsRequired = 2
-            self.view.addGestureRecognizer(doubleFingerTapToPause)
+            self.prog(0.0, "Start", animated: false)
+            self.autoLogin()
             
-
+        }
+        
+        //Pause Gesture
+        let doubleFingerTapToPause = UITapGestureRecognizer(target: self, action: #selector(self.pausePlayBack) )
+        doubleFingerTapToPause.numberOfTapsRequired = 2
+        self.view.addGestureRecognizer(doubleFingerTapToPause)
+        
+        
     }
     
     func embeddedAlbumArt(filename: String, process: Bool = false) {
@@ -626,7 +599,7 @@ class LoginViewController: UIViewController {
             
             do {
                 if let d = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData( art ),
-                    let dict = (d as? [String : Data]) /* converts Any to [String : Data] */ {
+                   let dict = (d as? [String : Data]) /* converts Any to [String : Data] */ {
                     g.ChannelData = dict
                     
                     if process {

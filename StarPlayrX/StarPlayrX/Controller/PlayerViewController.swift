@@ -172,7 +172,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
             
             PlayerXL = draw.PlayerButton(playerView: pv)
             PlayerXL.addTarget(self, action: #selector(PlayPause), for: .touchUpInside)
-            
+            PlayerXL.accessibilityLabel = "Play Pause"
             SpeakerView = draw.SpeakerImage(playerView: pv)
             updatePlayPauseIcon(play: true)
             setAllStarButton()
@@ -359,8 +359,11 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         func accessibility() {
             Artist?.accessibilityLabel = pdt.artist + ". " + pdt.song + "."
             ArtistSong?.accessibilityLabel = pdt.artist + ". " + pdt.song + "."
-            Artist?.isHighlighted = true
-            AlbumArt.accessibilityLabel = "Album Art, " + pdt.artist + ". " + pdt.song + "."
+            Song?.accessibilityLabel = ""
+            Song?.accessibilityHint = ""
+
+            //Artist?.isHighlighted = true
+           // AlbumArt.accessibilityLabel = "Album Art, " + pdt.artist + ". " + pdt.song + "."
         }
         
         func staticArtistSong() -> Array<(lbl: UILabel?, str: String)> {

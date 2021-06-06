@@ -80,7 +80,6 @@
 		6F72C69725E0C7B600B2374C /* GTSodaPop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTSodaPop.h; sourceTree = "<group>"; };
 		6F72C69825E0C7B600B2374C /* GTCola.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTCola.m; sourceTree = "<group>"; };
 		6F72C69925E0C7B600B2374C /* GTCola.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTCola.h; sourceTree = "<group>"; };
-		6F72C75C25E1DA6D00B2374C /* GTCola.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = GTCola.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,7 +149,6 @@
 				5FD5841D2470582C00002002 /* PerfectNet.framework */,
 				5FD5841E2470582C00002002 /* PerfectThread.framework */,
 				5FD58413247057FD00002002 /* CameoKit.framework */,
-				6F72C75C25E1DA6D00B2374C /* GTCola.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -469,7 +467,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = StarPlayrX/StarPlayrX.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = 469UCUB275;
 				HEADER_SEARCH_PATHS = " /Users/m1/Documents/GitHub/CameoKit/.build/checkouts/**";
 				INFOPLIST_FILE = StarPlayrX/Info.plist;
@@ -479,12 +477,12 @@
 					"@executable_path/Frameworks",
 				);
 				MACH_O_TYPE = mh_execute;
-				MARKETING_VERSION = 1.2.1;
-				ONLY_ACTIVE_ARCH = NO;
+				MARKETING_VERSION = 1.2.2;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.toddbruss.StarPlayr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "StarPlayrX/GTCola/StarPlayrX-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
@@ -501,7 +499,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = StarPlayrX/StarPlayrX.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = 469UCUB275;
 				HEADER_SEARCH_PATHS = " /Users/m1/Documents/GitHub/CameoKit/.build/checkouts/**";
 				INFOPLIST_FILE = StarPlayrX/Info.plist;
@@ -511,11 +509,12 @@
 					"@executable_path/Frameworks",
 				);
 				MACH_O_TYPE = mh_execute;
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.2.2;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.toddbruss.StarPlayr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "StarPlayrX/GTCola/StarPlayrX-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
