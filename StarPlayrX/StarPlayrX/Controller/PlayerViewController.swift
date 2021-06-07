@@ -447,10 +447,13 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
             updatePlayPauseIcon(play: false)
             Player.shared.state = .paused
             Player.shared.pause()
+            PlayerXL.accessibilityLabel = "Paused"
+            PlayerXL.accessibilityHint = ""
         } else {
             updatePlayPauseIcon(play: true)
             Player.shared.state = .stream
-            
+            PlayerXL.accessibilityLabel = "Now Playing"
+            PlayerXL.accessibilityHint = ""
             DispatchQueue.global().async {
                 Player.shared.player.pause()
                 Player.shared.playX()
@@ -576,7 +579,23 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     //MARK: Adjust the volume
     @objc func VolumeChanged(slider: UISlider, event: UIEvent) {
         
-        if let touchEvent = event.allTouches?.first {
+        DispatchQueue.main.async {
+            let value = slider.value
+            self.setSpeakers(value: value)
+
+            #if targetEnvironment(simulator)
+                Player.shared.player.volume = value
+            #else
+                // your real device code
+            if !self.g.demomode && !self.m1 {
+                self.ap2volume?.setSoda(value)
+            } else {
+                Player.shared.player.volume = value
+            }
+            #endif
+        }
+        
+        /*if let touchEvent = event.allTouches?.first {
             switch touchEvent.phase {
                 case .began:
                     removeVolumeObserver()
@@ -602,14 +621,16 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                 default:
                     return
             }
-        }
+        }*/
     }
     
     
     //MARK: Add Volume Slider Action
     func addSliderAction() {
         VolumeSlider.addTarget(self, action: #selector(VolumeChanged(slider:event:)), for: .valueChanged)
-        VolumeSlider.accessibilityHint = "Volume"
+        VolumeSlider.isContinuous = true
+        VolumeSlider.accessibilityRespondsToUserInteraction = true
+        VolumeSlider.accessibilityHint = "Volume Slider"
     }
     
     
@@ -676,15 +697,15 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
             VolumeSlider.isEnabled = true
             VolumeSlider.alpha = 1.0
             
-            switch UIApplication.shared.applicationState {
+           /* switch UIApplication.shared.applicationState {
                 
                 case .active:
                     airplayRunner()
                 case .background:
-                    airplayRunner()
+                    airpla1yRunner()
                 default:
                     ()
-            }
+            }*/
         } else {
             //VolumeSlider.isEnabled = false
             //VolumeSlider.alpha = 0.5

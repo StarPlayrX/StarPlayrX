@@ -474,7 +474,6 @@ final class Draw {
     func drawAirPlay(airplayView: UIView, playerView: UIView, centerX: CGFloat, centerY: CGFloat, rectX: CGFloat, rectY: CGFloat, width: CGFloat, height: CGFloat, wire: Bool) -> (view:UIView, picker: AVRoutePickerView)  {
         
         var airplayView = airplayView
-        airplayView.accessibilityLabel = "BARF O LA"
         airplayView = UIView(frame:CGRect(x: rectX, y: rectY, width: width, height: height))
         airplayView.center = CGPoint(x: centerX, y: centerY)
         
