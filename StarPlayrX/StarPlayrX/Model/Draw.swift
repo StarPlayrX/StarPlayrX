@@ -308,7 +308,9 @@ final class Draw {
         }
         
         mainView.addSubview(drawView)
-        print(iPhoneHeight,iPhoneWidth)
+        
+        //print(iPhoneHeight,iPhoneWidth)
+        
         //MARK: Common constants - for iPhone and iPad
         switch (iPhoneHeight, isPhone) {
             

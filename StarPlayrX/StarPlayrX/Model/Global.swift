@@ -24,7 +24,8 @@ internal class Global  {
     let insecure = "http://"
     let m3u8 = ".m3u8"
     let Server = "boss"
-    
+    let voiceOverQueue = "VoiceOverQueue"
+
     //MARK: Variables
     var demomode = false
     var imagechecksum = ""

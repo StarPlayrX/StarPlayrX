@@ -10,19 +10,17 @@
 import UIKit
 import AVKit
 
-
-
 //UIGestureRecognizerDelegate
 class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     
     let m1 = ProcessInfo.processInfo.isMacCatalystApp
 
     let g = Global.obj
-    
+
     #if !targetEnvironment(simulator)
         let ap2volume = GTCola.shared()
     #else
-        let ap2volume = nil
+        let ap2volume: ()? = nil
     #endif
     
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
@@ -182,23 +180,18 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
             setAllStarButton()
             
             //#if !targetEnvironment(simulator)
-            	let vp = draw.AirPlay(airplayView: AirPlayView, playerView: pv)
+            let vp = draw.AirPlay(airplayView: AirPlayView, playerView: pv)
             
-            	AirPlayBtn = vp.picker
-            	AirPlayView = vp.view
+            AirPlayBtn = vp.picker
+            AirPlayView = vp.view
             //#endif
         }
     }
     
     func startupVolume() {
         
-        func runsimulation() {
-            let value = Player.shared.player.volume
-            VolumeSlider.setValue(value, animated: true)
-            self.setSpeakers(value: value)
-        }
     #if targetEnvironment(simulator)
-        runsimulation()
+        runSimulation()
     #else
         if !g.demomode && !m1 {
             if let ap2 = ap2volume {
@@ -206,7 +199,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                 systemVolumeUpdater()
                 setSpeakers(value: ap2.getSoda())
             } else {
-                runsimulation()
+                runSimulation()
             }
         }
     #endif
@@ -338,6 +331,13 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         view.addGestureRecognizer(doubleFingerTapToPause)
     }
     
+    func runSimulation() {
+        var value = Player.shared.player.volume
+        //value = value == 0.0 ? 1.0 : value
+        VolumeSlider.setValue(value, animated: true)
+        self.setSpeakers(value: value)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setObservers()
@@ -345,11 +345,13 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         AirPlayBtn.delegate = self
         
         #if targetEnvironment(simulator)
-        	let value = Player.shared.player.volume
-        	VolumeSlider.setValue(value, animated: true)
-        	self.setSpeakers(value: value)
+            runSimulation()
         #endif
-        
+            
+        if self.g.demomode {
+            runSimulation()
+        }
+    
         restartPDT()
     }
     
@@ -443,21 +445,27 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     }
     
     @objc func PlayPause() {
-        if Player.shared.player.isBusy && Player.shared.state == PlayerState.playing {
+        if Player.shared.state == .playing || Player.shared.state == .stream || Player.shared.state == .buffering {
             updatePlayPauseIcon(play: false)
             Player.shared.state = .paused
             Player.shared.pause()
-            PlayerXL.accessibilityLabel = "Paused"
-            PlayerXL.accessibilityHint = ""
-        } else {
+  
+        } else if Player.shared.state == .paused || Player.shared.state == .interrupted {
             updatePlayPauseIcon(play: true)
             Player.shared.state = .stream
-            PlayerXL.accessibilityLabel = "Now Playing"
-            PlayerXL.accessibilityHint = ""
+
             DispatchQueue.global().async {
                 Player.shared.player.pause()
                 Player.shared.playX()
             }
+        }
+    
+        if Player.shared.state == .paused {
+            PlayerXL.accessibilityLabel = "Paused"
+            PlayerXL.accessibilityHint = ""
+        } else if Player.shared.state == .stream {
+            PlayerXL.accessibilityLabel = "Now Playing"
+            PlayerXL.accessibilityHint = ""
         }
     }
     

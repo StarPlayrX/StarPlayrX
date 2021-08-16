@@ -17,28 +17,29 @@ public class Network {
     static var ability = Network()
     
     let monitor = NWPathMonitor()
+    let monitorString = "Monitor"
     var networkIsConnected = Bool()
     var networkIsWiFi = Bool()
     var networkIsTripped = false
     
     func start() {
         
-        self.monitor.pathUpdateHandler = { path in
+        monitor.pathUpdateHandler = { [self] path in
             
-            self.networkIsConnected = (path.status == .satisfied)
+            networkIsConnected = (path.status == .satisfied)
             
-            if !self.networkIsConnected {
-                self.networkIsTripped = true
+            if !networkIsConnected {
+                networkIsTripped = true
             }
-        
-            self.networkIsWiFi = path.usesInterfaceType(.wifi)
+            
+            networkIsWiFi = path.usesInterfaceType(.wifi)
         }
         
-        let queue = DispatchQueue(label: "Monitor")
+        let queue = DispatchQueue(label: monitorString)
         monitor.start(queue: queue)
     }
     
-    private let autoLoginQueue = DispatchQueue(label: "VoiceOverQueue", qos: .background)
+    private let autoLoginQueue = DispatchQueue(label: Global.obj.voiceOverQueue, qos: .background)
     
     func LaunchServer() {
         do {
@@ -98,7 +99,7 @@ public class Network {
         release(socket: socketFileDescriptor)
         return true
     }
-
+    
 }
 
 
