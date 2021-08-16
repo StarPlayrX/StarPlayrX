@@ -445,6 +445,8 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     }
     
     @objc func PlayPause() {
+        PlayerXL.accessibilityHint = ""
+
         if Player.shared.state == .playing || Player.shared.state == .stream || Player.shared.state == .buffering {
             updatePlayPauseIcon(play: false)
             Player.shared.state = .paused
@@ -459,13 +461,12 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                 Player.shared.playX()
             }
         }
-    
+        
+        // Opposite Day
         if Player.shared.state == .paused {
-            PlayerXL.accessibilityLabel = "Paused"
-            PlayerXL.accessibilityHint = ""
-        } else if Player.shared.state == .stream {
             PlayerXL.accessibilityLabel = "Now Playing"
-            PlayerXL.accessibilityHint = ""
+        } else if Player.shared.state == .stream {
+            PlayerXL.accessibilityLabel = "Paused"
         }
     }
     
