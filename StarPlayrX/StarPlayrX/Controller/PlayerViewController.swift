@@ -332,7 +332,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     }
     
     func runSimulation() {
-        var value = Player.shared.player.volume
+        let value = Player.shared.player.volume
         //value = value == 0.0 ? 1.0 : value
         VolumeSlider.setValue(value, animated: true)
         self.setSpeakers(value: value)
