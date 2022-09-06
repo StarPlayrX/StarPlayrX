@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="pjj-Pg-t8m">
+    <device id="retina6_5" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Login-->
+        <scene sceneID="hNz-n2-bh7">
+            <objects>
+                <viewController extendedLayoutIncludesOpaqueBars="YES" id="9pv-A4-QxB" userLabel="Login" customClass="LoginViewController" customModule="StarPlayrX" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="tsR-hK-woN">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kba-hP-d4k">
+                                <rect key="frame" x="24" y="876" width="366" height="0.0"/>
+                                <viewLayoutGuide key="safeArea" id="nll-pG-fMa"/>
+                                <edgeInsets key="layoutMargins" top="8" left="8" bottom="8" right="8"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" image="starplayr_logo" translatesAutoresizingMaskIntoConstraints="NO" id="yyM-xm-Ah0">
+                                <rect key="frame" x="24" y="57" width="366" height="69"/>
+                                <viewLayoutGuide key="safeArea" id="2Gx-An-L3y"/>
+                                <accessibility key="accessibilityConfiguration" hint="Login" label="Star Player">
+                                    <accessibilityTraits key="traits" image="YES" notEnabled="YES"/>
+                                    <bool key="isElement" value="YES"/>
+                                </accessibility>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="69" id="zQu-MZ-ZfK"/>
+                                </constraints>
+                                <edgeInsets key="layoutMargins" top="16" left="8" bottom="8" right="8"/>
+                            </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="meb-HX-sqc">
+                                <rect key="frame" x="24" y="134" width="366" height="134"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" text="Username" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Goe-NO-FXY">
+                                        <rect key="frame" x="0.0" y="3" width="366" height="30"/>
+                                        <viewLayoutGuide key="safeArea" id="IdD-qa-G9P"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="4iZ-jg-Rkq"/>
+                                        </constraints>
+                                        <edgeInsets key="layoutMargins" top="8" left="8" bottom="8" right="8"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="highlightedColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" text="Password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qpt-bZ-8cS">
+                                        <rect key="frame" x="0.0" y="81" width="366" height="20.333333333333329"/>
+                                        <viewLayoutGuide key="safeArea" id="UKO-50-eMO"/>
+                                        <edgeInsets key="layoutMargins" top="8" left="8" bottom="8" right="8"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="highlightedColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </label>
+                                    <textField opaque="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="7iX-5e-R6C">
+                                        <rect key="frame" x="0.0" y="107.33333333333334" width="366" height="34"/>
+                                        <viewLayoutGuide key="safeArea" id="dJT-IP-BFQ"/>
+                                        <color key="backgroundColor" red="0.11452315" green="0.1135349497" blue="0.1344205141" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <edgeInsets key="layoutMargins" top="8" left="8" bottom="8" right="8"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" keyboardAppearance="alert" returnKeyType="next" secureTextEntry="YES" textContentType="password"/>
+                                    </textField>
+                                    <textField opaque="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="2iW-65-HBl">
+                                        <rect key="frame" x="0.0" y="35" width="366" height="34"/>
+                                        <viewLayoutGuide key="safeArea" id="hnn-oI-hTY"/>
+                                        <color key="backgroundColor" red="0.11452315002679825" green="0.11353494971990585" blue="0.13442051410675049" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <edgeInsets key="layoutMargins" top="8" left="8" bottom="8" right="8"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" keyboardAppearance="alert" textContentType="username"/>
+                                    </textField>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="Goe-NO-FXY" firstAttribute="leading" secondItem="7iX-5e-R6C" secondAttribute="leading" id="1wo-iw-1za"/>
+                                    <constraint firstItem="Goe-NO-FXY" firstAttribute="top" secondItem="meb-HX-sqc" secondAttribute="top" constant="3" id="4Tg-F6-H1w"/>
+                                    <constraint firstItem="Goe-NO-FXY" firstAttribute="leading" secondItem="2iW-65-HBl" secondAttribute="leading" id="5pL-67-bcJ"/>
+                                    <constraint firstItem="Goe-NO-FXY" firstAttribute="trailing" secondItem="7iX-5e-R6C" secondAttribute="trailing" id="PNK-r1-G7X"/>
+                                    <constraint firstItem="Goe-NO-FXY" firstAttribute="leading" secondItem="Qpt-bZ-8cS" secondAttribute="leading" id="Qzx-f9-MGL"/>
+                                    <constraint firstItem="Goe-NO-FXY" firstAttribute="trailing" secondItem="2iW-65-HBl" secondAttribute="trailing" id="TGc-Sb-6hN"/>
+                                    <constraint firstAttribute="trailing" secondItem="Goe-NO-FXY" secondAttribute="trailing" id="W5v-HX-Sk4"/>
+                                    <constraint firstItem="2iW-65-HBl" firstAttribute="top" secondItem="Goe-NO-FXY" secondAttribute="bottom" constant="2" id="X6F-rE-3xr"/>
+                                    <constraint firstItem="Qpt-bZ-8cS" firstAttribute="top" secondItem="2iW-65-HBl" secondAttribute="bottom" constant="12" id="Ym6-aj-VRp"/>
+                                    <constraint firstItem="Goe-NO-FXY" firstAttribute="trailing" secondItem="Qpt-bZ-8cS" secondAttribute="trailing" id="iyE-UY-GwI"/>
+                                    <constraint firstItem="Goe-NO-FXY" firstAttribute="leading" secondItem="meb-HX-sqc" secondAttribute="leading" id="ncp-sc-AGC"/>
+                                    <constraint firstAttribute="height" constant="134" id="nmm-fc-oKV"/>
+                                    <constraint firstItem="7iX-5e-R6C" firstAttribute="top" secondItem="Qpt-bZ-8cS" secondAttribute="bottom" constant="6" id="zgt-kr-qGu"/>
+                                </constraints>
+                            </view>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xlc-aG-8L5">
+                                <rect key="frame" x="24" y="344" width="366" height="4"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" systemColor="systemBlueColor"/>
+                                <color key="progressTintColor" systemColor="systemBlueColor"/>
+                                <color key="trackTintColor" red="0.11452315" green="0.1135349497" blue="0.1344205141" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </progressView>
+                            <button opaque="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="erh-Ga-kQF">
+                                <rect key="frame" x="24" y="291" width="366" height="33"/>
+                                <viewLayoutGuide key="safeArea" id="7Lm-8s-auX"/>
+                                <accessibility key="accessibilityConfiguration" label="Login"/>
+                                <edgeInsets key="layoutMargins" top="8" left="8" bottom="8" right="8"/>
+                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="17"/>
+                                <state key="normal" title="Login">
+                                    <color key="titleColor" systemColor="systemBlueColor"/>
+                                </state>
+                                <connections>
+                                    <action selector="loginButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="R9G-70-hMZ"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Status" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dZs-bB-A2a">
+                                <rect key="frame" x="24" y="371" width="366" height="20.333333333333314"/>
+                                <accessibility key="accessibilityConfiguration" label="Status"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="19" translatesAutoresizingMaskIntoConstraints="NO" id="W4b-sX-teM">
+                                <rect key="frame" x="111" y="417" width="192" height="31"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="SiriusXM Canada" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HJh-fR-xBE">
+                                        <rect key="frame" x="0.0" y="0.0" width="124" height="31"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                        <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Lf7-p5-Fxl">
+                                        <rect key="frame" x="143" y="0.0" width="51" height="31"/>
+                                        <connections>
+                                            <action selector="siriusCanadaSwitchAction:" destination="9pv-A4-QxB" eventType="valueChanged" id="J3E-LX-LjZ"/>
+                                        </connections>
+                                    </switch>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="192" id="ocr-6m-BmQ"/>
+                                </constraints>
+                            </stackView>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h7w-zh-enx">
+                                <rect key="frame" x="24" y="762" width="366" height="30"/>
+                                <state key="normal" title="StarPlayrX.com">
+                                    <color key="titleColor" systemColor="systemBlueColor"/>
+                                </state>
+                                <connections>
+                                    <action selector="starplayrx_dot_com:" destination="9pv-A4-QxB" eventType="touchUpInside" id="vuz-Qs-eFO"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Requires a streaming Satellite Radio account" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vzy-5m-lYo">
+                                <rect key="frame" x="20" y="472" width="374" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="6QO-lC-ky3"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="PQr-Ze-W5v"/>
+                        <color key="backgroundColor" red="0.161913842" green="0.16441595549999999" blue="0.18955627080000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="erh-Ga-kQF" firstAttribute="leading" secondItem="xlc-aG-8L5" secondAttribute="leading" id="35s-6U-vsd"/>
+                            <constraint firstItem="dZs-bB-A2a" firstAttribute="trailing" secondItem="xlc-aG-8L5" secondAttribute="trailing" id="3sY-8N-wmb"/>
+                            <constraint firstItem="meb-HX-sqc" firstAttribute="centerX" secondItem="tsR-hK-woN" secondAttribute="centerX" id="88u-uA-hMK"/>
+                            <constraint firstItem="W4b-sX-teM" firstAttribute="centerX" secondItem="Vzy-5m-lYo" secondAttribute="centerX" id="BPV-wK-4G5"/>
+                            <constraint firstItem="h7w-zh-enx" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Kba-hP-d4k" secondAttribute="trailing" id="Bsi-pm-EZ1"/>
+                            <constraint firstItem="xlc-aG-8L5" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Kba-hP-d4k" secondAttribute="trailing" id="CIb-mC-ipm"/>
+                            <constraint firstItem="Vzy-5m-lYo" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leadingMargin" id="CdE-L1-58k"/>
+                            <constraint firstItem="yyM-xm-Ah0" firstAttribute="leading" secondItem="meb-HX-sqc" secondAttribute="leading" id="FYA-gH-j0g"/>
+                            <constraint firstItem="yyM-xm-Ah0" firstAttribute="trailing" secondItem="meb-HX-sqc" secondAttribute="trailing" id="HAl-wX-pQZ"/>
+                            <constraint firstItem="meb-HX-sqc" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Kba-hP-d4k" secondAttribute="trailing" id="JBu-gj-l5F"/>
+                            <constraint firstItem="W4b-sX-teM" firstAttribute="centerX" secondItem="tsR-hK-woN" secondAttribute="centerX" id="JQM-f7-Ztm"/>
+                            <constraint firstItem="Vzy-5m-lYo" firstAttribute="top" secondItem="W4b-sX-teM" secondAttribute="bottom" constant="24" id="NKb-MO-HUg"/>
+                            <constraint firstItem="h7w-zh-enx" firstAttribute="leading" secondItem="Kba-hP-d4k" secondAttribute="leading" id="Nhi-lz-EVh"/>
+                            <constraint firstItem="xlc-aG-8L5" firstAttribute="top" secondItem="erh-Ga-kQF" secondAttribute="bottom" constant="20" id="Olp-Y4-O1A"/>
+                            <constraint firstItem="xlc-aG-8L5" firstAttribute="centerX" secondItem="tsR-hK-woN" secondAttribute="centerX" id="U2d-Di-DVy"/>
+                            <constraint firstItem="erh-Ga-kQF" firstAttribute="trailing" secondItem="xlc-aG-8L5" secondAttribute="trailing" id="akv-Vc-3TV"/>
+                            <constraint firstItem="meb-HX-sqc" firstAttribute="top" secondItem="yyM-xm-Ah0" secondAttribute="bottom" constant="8" symbolic="YES" id="bfE-ZP-i0a"/>
+                            <constraint firstItem="yyM-xm-Ah0" firstAttribute="top" secondItem="PQr-Ze-W5v" secondAttribute="top" constant="13" id="bmV-UZ-FgE"/>
+                            <constraint firstItem="xlc-aG-8L5" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Kba-hP-d4k" secondAttribute="leading" id="dXJ-E7-E38"/>
+                            <constraint firstItem="dZs-bB-A2a" firstAttribute="top" secondItem="xlc-aG-8L5" secondAttribute="bottom" constant="23" id="eT9-Nr-MDp"/>
+                            <constraint firstItem="PQr-Ze-W5v" firstAttribute="bottom" secondItem="h7w-zh-enx" secondAttribute="bottom" constant="21" id="fgU-my-aJ1"/>
+                            <constraint firstItem="meb-HX-sqc" firstAttribute="leading" secondItem="PQr-Ze-W5v" secondAttribute="leading" constant="24" id="hWv-Ff-gb2"/>
+                            <constraint firstAttribute="bottom" secondItem="Kba-hP-d4k" secondAttribute="bottom" constant="20" symbolic="YES" id="pKF-EA-3RK"/>
+                            <constraint firstItem="Kba-hP-d4k" firstAttribute="centerX" secondItem="tsR-hK-woN" secondAttribute="centerX" id="pKZ-Ng-VFU"/>
+                            <constraint firstItem="dZs-bB-A2a" firstAttribute="leading" secondItem="xlc-aG-8L5" secondAttribute="leading" id="uto-Zy-7FM"/>
+                            <constraint firstItem="W4b-sX-teM" firstAttribute="top" secondItem="dZs-bB-A2a" secondAttribute="bottom" constant="25.666666666666686" id="w1Z-1F-mHd"/>
+                            <constraint firstItem="xlc-aG-8L5" firstAttribute="top" secondItem="meb-HX-sqc" secondAttribute="bottom" constant="76" id="wad-dw-J9F"/>
+                            <constraint firstItem="meb-HX-sqc" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Kba-hP-d4k" secondAttribute="leading" id="wba-Mu-482"/>
+                        </constraints>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Login" image="login_icon" selectedImage="login_icon" id="acW-dT-cKf">
+                        <color key="badgeColor" name="systemBlueColor" catalog="System" colorSpace="catalog"/>
+                    </tabBarItem>
+                    <connections>
+                        <outlet property="StatusField" destination="dZs-bB-A2a" id="ddN-Lg-Ext"/>
+                        <outlet property="loginButton" destination="erh-Ga-kQF" id="Pbt-Wz-Ptx"/>
+                        <outlet property="passField" destination="7iX-5e-R6C" id="EHl-PC-sQG"/>
+                        <outlet property="progressBar" destination="xlc-aG-8L5" id="sNM-o1-cqi"/>
+                        <outlet property="siriusCanadaSwitch" destination="Lf7-p5-Fxl" id="N5B-Ec-x7N"/>
+                        <outlet property="userField" destination="2iW-65-HBl" id="AwI-h4-Nwh"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-613.04347826086962" y="521.65178571428567"/>
+        </scene>
+        <!--Player-->
+        <scene sceneID="cu1-5r-Bbj">
+            <objects>
+                <viewController title="Channel" extendedLayoutIncludesOpaqueBars="YES" id="mRL-AH-mN3" userLabel="Player" customClass="PlayerViewController" customModule="StarPlayrX" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="s6n-37-h9b">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <viewLayoutGuide key="safeArea" id="zYK-uv-bfU"/>
+                        <color key="backgroundColor" red="0.13725490196078433" green="0.14509803921568626" blue="0.15294117647058825" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Player" image="player_icon" selectedImage="player_icon" id="sVH-Ch-BbI"/>
+                    <connections>
+                        <outlet property="mainView" destination="s6n-37-h9b" id="uzn-gt-4po"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fEX-Xk-jmc" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3284.057971014493" y="-225"/>
+        </scene>
+        <!--Tab Controller-->
+        <scene sceneID="bQb-5P-ZFq">
+            <objects>
+                <tabBarController extendedLayoutIncludesOpaqueBars="YES" id="pjj-Pg-t8m" customClass="TabController" customModule="StarPlayrX" customModuleProvider="target" sceneMemberID="viewController">
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics" barStyle="black"/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" barStyle="black" id="PTi-bb-KYx">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="tintColor" systemColor="systemBlueColor"/>
+                        <color key="barTintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="9pv-A4-QxB" kind="relationship" relationship="viewControllers" id="1X2-MS-LEc"/>
+                        <segue destination="0h7-zq-JPc" kind="relationship" relationship="viewControllers" id="AbU-gI-d6e"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="NQR-Nw-Rq4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-613" y="-225"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="6DI-fg-Jnd">
+            <objects>
+                <navigationController extendedLayoutIncludesOpaqueBars="YES" id="hQY-n7-UBh" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" shadowImage="none" id="aNZ-Oq-h9B">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" systemColor="systemBlueColor"/>
+                        <color key="barTintColor" red="0.078431372549019607" green="0.086274509803921567" blue="0.094117647058823528" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="30i-H7-IK8" kind="relationship" relationship="rootViewController" id="cn7-RX-CNu"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="h0z-qh-fAy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="990" y="-225"/>
+        </scene>
+        <!--SplitViewController-->
+        <scene sceneID="52H-bx-fTE">
+            <objects>
+                <splitViewController extendedLayoutIncludesOpaqueBars="YES" id="0h7-zq-JPc" userLabel="SplitViewController" customClass="SplitViewController" customModule="StarPlayrX" customModuleProvider="target" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Channels" image="channels_icon" selectedImage="channels_icon" id="0fY-Qx-TYX" userLabel="Channels"/>
+                    <connections>
+                        <segue destination="hQY-n7-UBh" kind="relationship" relationship="masterViewController" id="eqh-H6-iiB"/>
+                    </connections>
+                </splitViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="sLB-TV-8Bo" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="186" y="-225"/>
+        </scene>
+        <!--Channels-->
+        <scene sceneID="xzI-ay-BLG">
+            <objects>
+                <viewController storyboardIdentifier="test" title="Channels" extendedLayoutIncludesOpaqueBars="YES" id="9DU-cP-DPZ" userLabel="Channels" customClass="ChannelsViewController" customModule="StarPlayrX" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="singleLineEtched" sectionIndexMinimumDisplayRowCount="1" rowHeight="1" sectionHeaderHeight="1" sectionFooterHeight="1" contentViewInsetsToSafeArea="NO" id="gHg-U0-Vfc">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="0.16078431369999999" green="0.1642173777" blue="0.18955627080000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="tintColor" red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="separatorColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="sectionIndexColor" red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="sectionIndexBackgroundColor" systemColor="systemBlueColor"/>
+                        <color key="sectionIndexTrackingBackgroundColor" red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <searchBar key="tableHeaderView" contentMode="redraw" barStyle="black" searchBarStyle="minimal" id="Xfl-bD-RZD">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="56"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" red="0.161913842" green="0.16441595549999999" blue="0.18955627080000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <color key="tintColor" red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <color key="barTintColor" red="0.161913842" green="0.16441595549999999" blue="0.18955627080000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <textInputTraits key="textInputTraits" spellCheckingType="no" keyboardAppearance="alert" returnKeyType="done"/>
+                        </searchBar>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="0.0" reuseIdentifier="Cell" textLabel="ZhS-CZ-F1K" detailTextLabel="hkb-MZ-HfO" style="IBUITableViewCellStyleSubtitle" id="8Q8-T9-1mB">
+                                <rect key="frame" x="0.0" y="111.33333206176758" width="414" height="1"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="8Q8-T9-1mB" id="n5j-vg-l5M">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="1"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ZhS-CZ-F1K">
+                                            <rect key="frame" x="20" y="-17" width="374" height="19.333333333333332"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Detail" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="hkb-MZ-HfO">
+                                            <rect key="frame" x="20" y="2.3333333333333321" width="374" height="17"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <color key="textColor" systemColor="lightTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="0.0"/>
+                                </tableViewCellContentView>
+                                <color key="backgroundColor" red="0.078431372549019607" green="0.086274509803921567" blue="0.094117647058823528" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="0.0"/>
+                            </tableViewCell>
+                        </prototypes>
+                    </tableView>
+                    <tabBarItem key="tabBarItem" title="Channels" image="channels_icon" selectedImage="channels_icon" id="HeS-tO-Seo"/>
+                    <navigationItem key="navigationItem" title="Category" id="40s-Gr-4zF" userLabel="Categories"/>
+                    <connections>
+                        <outlet property="ChannelsTableView" destination="gHg-U0-Vfc" id="f0Q-Wn-g6s"/>
+                        <outlet property="searchBar" destination="Xfl-bD-RZD" id="j4w-Uz-pTr"/>
+                        <segue destination="mRL-AH-mN3" kind="showDetail" identifier="playerViewSegue" id="3hP-OV-kZG"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="T2g-uC-7Eo" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2554" y="-225"/>
+        </scene>
+        <!--Sirius Categories-->
+        <scene sceneID="X3r-xs-8x9">
+            <objects>
+                <tableViewController title="Sirius Categories" extendedLayoutIncludesOpaqueBars="YES" id="30i-H7-IK8" customClass="SiriusViewController" customModule="StarPlayrX" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="32Y-qw-oS5">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="0.161913842" green="0.16441595549999999" blue="0.18955627080000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="separatorColor" red="0.161913842" green="0.16441595549999999" blue="0.18955627080000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="sectionIndexColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="sectionIndexBackgroundColor" red="0.078431372549019607" green="0.086274509803921567" blue="0.13333333333333333" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="sectionIndexTrackingBackgroundColor" red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" id="3St-SO-c8w">
+                                <rect key="frame" x="0.0" y="44.666666030883789" width="414" height="43.666667938232422"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3St-SO-c8w" id="pQk-sy-YBn">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.666667938232422"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="9DU-cP-DPZ" kind="show" id="Yfh-MA-I60"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="30i-H7-IK8" id="fKB-HM-hEk"/>
+                            <outlet property="delegate" destination="30i-H7-IK8" id="zF6-00-FZk"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Categories" id="oP2-rz-j4K"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="FFc-n3-bSd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1776" y="-225"/>
+        </scene>
+    </scenes>
+    <color key="tintColor" red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+    <resources>
+        <image name="channels_icon" width="30" height="30"/>
+        <image name="login_icon" width="30" height="30"/>
+        <image name="none" width="128" height="128"/>
+        <image name="player_icon" width="30" height="30"/>
+        <image name="starplayr_logo" width="1583" height="314"/>
+        <systemColor name="lightTextColor">
+            <color white="1" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemBlueColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>
