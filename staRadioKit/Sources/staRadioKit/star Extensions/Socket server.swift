@@ -77,13 +77,13 @@ extension Socket {
                 sin6_addr: in6addr_any,
                 sin6_scope_id: 0)
 #endif
-            if let address = listenAddress {
-                if address.withCString({ cstring in inet_pton(AF_INET6, cstring, &addr.sin6_addr) }) == 1 {
-                    //print("\(address) is converted to \(addr.sin6_addr).")
-                } else {
-                    //print("\(address) is not converted.")
-                }
-            }
+//            if let address = listenAddress {
+//                if address.withCString({ cstring in inet_pton(AF_INET6, cstring, &addr.sin6_addr) }) == 1 {
+//                    //print("\(address) is converted to \(addr.sin6_addr).")
+//                } else {
+//                    //print("\(address) is not converted.")
+//                }
+//            }
             bindResult = withUnsafePointer(to: &addr) {
                 bind(socketFileDescriptor, UnsafePointer<sockaddr>(OpaquePointer($0)), socklen_t(MemoryLayout<sockaddr_in6>.size))
             }

@@ -86,13 +86,13 @@ final class Player {
 
                 let p = self.player
                 p.insert(playItem, after: nil)
-                p.currentItem?.preferredForwardBufferDuration = 0
-                p.currentItem?.automaticallyPreservesTimeOffsetFromLive = false
+                p.currentItem?.preferredForwardBufferDuration = 9
+                p.currentItem?.automaticallyPreservesTimeOffsetFromLive = true
                 p.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = true
                 p.automaticallyWaitsToMinimizeStalling = true
                 p.appliesMediaSelectionCriteriaAutomatically = true
-                p.allowsExternalPlayback = false
-                p.playImmediately(atRate: 1.0)
+                p.allowsExternalPlayback = true
+                p.play()
 
                 DispatchQueue.main.asyncAfter(deadline: .now() + (avSession.outputLatency * 1.0))  { [weak self] in
                     guard let self = self else { return }

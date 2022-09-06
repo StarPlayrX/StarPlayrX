@@ -12,7 +12,6 @@ open class HttpRouter {
     public init() {}
     
     private class Node {
-        
         /// The children nodes that form the route
         var nodes = [String: Node]()
         

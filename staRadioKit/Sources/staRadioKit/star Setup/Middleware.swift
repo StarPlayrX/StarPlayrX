@@ -54,33 +54,33 @@ public func streamingServer() -> HttpServer {
     
     //MARK: - POST Login Route
     autoreleasepool {
-        server.POST["/api/v2/autologin"] = loginRoute()
-        server.POST["/api/v2/login"]     = loginRoute()
+        server.post["/api/v2/autologin"] = loginRoute()
+        server.post["/api/v2/login"]     = loginRoute()
     }
     
     //MARK: - POST Session Route
     autoreleasepool {
-        server.POST["/api/v2/session"] = sessionRoute()
+        server.post["/api/v2/session"] = sessionRoute()
     }
     
     autoreleasepool {
-        server.POST["/api/v2/channels"] = channelsRoute()
+        server.post["/api/v2/channels"] = channelsRoute()
     }
     
     autoreleasepool {
-        server.GET["/pdt"] = pdtRoute()
+        server.get["/pdt"] = pdtRoute()
     }
     
     autoreleasepool {
-        server.GET["/key/1"] = keyOneRoute()
+        server.get["/key/1"] = keyOneRoute()
     }
     
     autoreleasepool {
-        server.GET["/playlist/:channelid"] = playlistRoute()
+        server.get["/playlist/:channelid"] = playlistRoute()
     }
     
     autoreleasepool {
-        server.GET["/audio/:aac"] = audioRoute()
+        server.get["/audio/:aac"] = audioRoute()
     }
     
     autoreleasepool {

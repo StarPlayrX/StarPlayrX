@@ -13,18 +13,19 @@ public enum SerializationError: Error {
 }
 
 public protocol HttpResponseBodyWriter {
-    func write(_ file: String.File) throws
-    func write(_ data: [UInt8]) throws
-    func write(_ data: ArraySlice<UInt8>) throws
-    func write(_ data: NSData) throws
+    //    func write(_ file: String.File) throws
     func write(_ data: Data) throws
+    func write(_ data: [UInt8]) throws
+//    func write(_ data: ArraySlice<UInt8>) throws
+//    func write(_ data: NSData) throws
+
 }
 
 public enum HttpResponseBody {
     
     case json(Any)
-    case html(String)
-    case htmlBody(String)
+//    case html(String)
+//    case htmlBody(String)
     case text(String)
     case data(Data, contentType: String? = nil)
     case custom(Any, (Any) throws -> String)
@@ -45,17 +46,17 @@ public enum HttpResponseBody {
                 return (data.count, {
                     try $0.write(data)
                 })
-            case .html(let html):
-                let data = [UInt8](html.utf8)
-                return (data.count, {
-                    try $0.write(data)
-                })
-            case .htmlBody(let body):
-                let serialized = "<html><meta charset=\"UTF-8\"><body>\(body)</body></html>"
-                let data = [UInt8](serialized.utf8)
-                return (data.count, {
-                    try $0.write(data)
-                })
+//            case .html(let html):
+//                let data = [UInt8](html.utf8)
+//                return (data.count, {
+//                    try $0.write(data)
+//                })
+//            case .htmlBody(let body):
+//                let serialized = "<html><meta charset=\"UTF-8\"><body>\(body)</body></html>"
+//                let data = [UInt8](serialized.utf8)
+//                return (data.count, {
+//                    try $0.write(data)
+//                })
             case .data(let data, _):
                 return (data.count, {
                     try $0.write(data)
@@ -137,7 +138,7 @@ public enum HttpResponse {
             }
             switch body {
             case .json: headers["Content-Type"] = "application/json"
-            case .html, .htmlBody: headers["Content-Type"] = "text/html"
+//            case .html, .htmlBody: headers["Content-Type"] = "text/html"
             case .text: headers["Content-Type"] = "text/plain"
             case .data(_, let contentType): headers["Content-Type"] = contentType
             default:break
@@ -174,17 +175,6 @@ public enum HttpResponse {
     }
 }
 
-/**
- Makes it possible to compare handler responses with '==', but
- ignores any associated values. This should generally be what
- you want. E.g.:
- 
- let resp = handler(updatedRequest)
- if resp == .NotFound {
- print("Client requested not found: \(request.url)")
- }
- */
-
 func == (inLeft: HttpResponse, inRight: HttpResponse) -> Bool {
-    return inLeft.statusCode == inRight.statusCode
+    inLeft.statusCode == inRight.statusCode
 }
