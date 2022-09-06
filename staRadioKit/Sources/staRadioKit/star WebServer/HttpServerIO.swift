@@ -33,11 +33,8 @@ open class HttpServerIO {
             return HttpServerIOState(rawValue: stateValue)!
         }
         set(state) {
-#if !os(Linux)
-            OSAtomicCompareAndSwapInt(self.state.rawValue, state.rawValue, &stateValue)
-#else
             self.stateValue = state.rawValue
-#endif
+            
         }
     }
     
@@ -145,21 +142,21 @@ open class HttpServerIO {
         
         let socket: Socket
         
-//        func write(_ file: String.File) throws {
-//            try socket.writeFile(file)
-//        }
+        //        func write(_ file: String.File) throws {
+        //            try socket.writeFile(file)
+        //        }
         
         func write(_ data: [UInt8]) throws {
             try socket.writeUInt8(data)
         }
         
-//        func write(_ data: ArraySlice<UInt8>) throws {
-//            try socket.writeUInt8(data)
-//        }
+        //        func write(_ data: ArraySlice<UInt8>) throws {
+        //            try socket.writeUInt8(data)
+        //        }
         
-//        func write(_ data: NSData) throws {
-//            try socket.writeData(data)
-//        }
+        //        func write(_ data: NSData) throws {
+        //            try socket.writeData(data)
+        //        }
         
         func write(_ data: Data) throws {
             try socket.writeData(data)

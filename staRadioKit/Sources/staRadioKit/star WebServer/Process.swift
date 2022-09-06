@@ -10,17 +10,15 @@ import Foundation
 public class ProcessX {
     
     public static var pid: Int {
-        return Int(getpid())
+        Int(getpid())
     }
     
     public static var tid: UInt64 {
-#if os(Linux)
-        return UInt64(pthread_self())
-#else
+        
         var tid: __uint64_t = 0
         pthread_threadid_np(nil, &tid)
         return UInt64(tid)
-#endif
+        
     }
     
     private static var signalsWatchers = [(Int32) -> Void]()

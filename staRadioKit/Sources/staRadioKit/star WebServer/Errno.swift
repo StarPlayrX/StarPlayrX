@@ -9,7 +9,6 @@ import Foundation
 
 public class Errno {
     public class func description() -> String {
-        // https://forums.developer.apple.com/thread/113919
-        String(cString: strerror(errno))
+        "\(String(describing: strerror(errno)))"
     }
 }

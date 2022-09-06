@@ -22,7 +22,7 @@ func Playlist(channelid: String) -> String {
 //        bitrate = "32k"
 //    }
     
-    let size = "medium"
+    let size = "large"
     let underscore = "_"
     let version = "v3"
     let ext = ".m3u8"

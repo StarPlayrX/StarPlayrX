@@ -113,17 +113,13 @@ extension String {
         while let ent = readdir(dir) {
             var name = ent.pointee.d_name
             let fileName = withUnsafePointer(to: &name) { (ptr) -> String? in
-#if os(Linux)
-                return String(validatingUTF8: ptr.withMemoryRebound(to: CChar.self, capacity: Int(ent.pointee.d_reclen), { (ptrc) -> [CChar] in
-                    return [CChar](UnsafeBufferPointer(start: ptrc, count: 256))
-                }))
-#else
+                
                 var buffer = ptr.withMemoryRebound(to: CChar.self, capacity: Int(ent.pointee.d_reclen), { (ptrc) -> [CChar] in
                     return [CChar](UnsafeBufferPointer(start: ptrc, count: Int(ent.pointee.d_namlen)))
                 })
                 buffer.append(0)
                 return String(validatingUTF8: buffer)
-#endif
+                
             }
             if let fileName = fileName {
                 results.append(fileName)

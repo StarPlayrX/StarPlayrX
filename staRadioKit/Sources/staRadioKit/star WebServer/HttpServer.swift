@@ -11,13 +11,10 @@ open class HttpServer: HttpServerIO {
     
     public static let VERSION: String = {
         
-#if os(Linux)
-        return "1.5.0"
-#else
         let bundle = Bundle(for: HttpServer.self)
         guard let version = bundle.infoDictionary?["CFBundleShortVersionString"] as? String else { return "Unspecified" }
         return version
-#endif
+        
     }()
     
     private let router = HttpRouter()

@@ -20,7 +20,6 @@
 		5F5C5028244CBCD500A35D76 /* ChannelsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5022244CBCD500A35D76 /* ChannelsViewController.swift */; };
 		5F5C5029244CBCD500A35D76 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5023244CBCD500A35D76 /* LoginViewController.swift */; };
 		5F5C5044244CC22A00A35D76 /* bluenumbers.dms in Resources */ = {isa = PBXBuildFile; fileRef = 5F5C5042244CC22A00A35D76 /* bluenumbers.dms */; };
-		5F5C5045244CC22A00A35D76 /* demoart.dms in Resources */ = {isa = PBXBuildFile; fileRef = 5F5C5043244CC22A00A35D76 /* demoart.dms */; };
 		5F5C505B244CC26000A35D76 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5048244CC26000A35D76 /* Player.swift */; };
 		5F5C5060244CC26000A35D76 /* Sync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C504D244CC26000A35D76 /* Sync.swift */; };
 		5F5C5062244CC26000A35D76 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C504F244CC26000A35D76 /* Extensions.swift */; };
@@ -48,7 +47,6 @@
 		5F5C5022244CBCD500A35D76 /* ChannelsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelsViewController.swift; sourceTree = "<group>"; };
 		5F5C5023244CBCD500A35D76 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		5F5C5042244CC22A00A35D76 /* bluenumbers.dms */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = bluenumbers.dms; sourceTree = "<group>"; };
-		5F5C5043244CC22A00A35D76 /* demoart.dms */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = demoart.dms; sourceTree = "<group>"; };
 		5F5C5048244CC26000A35D76 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		5F5C504D244CC26000A35D76 /* Sync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sync.swift; sourceTree = "<group>"; };
 		5F5C504F244CC26000A35D76 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -141,7 +139,6 @@
 			isa = PBXGroup;
 			children = (
 				5F5C5042244CC22A00A35D76 /* bluenumbers.dms */,
-				5F5C5043244CC22A00A35D76 /* demoart.dms */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -247,7 +244,6 @@
 				5F5C5044244CC22A00A35D76 /* bluenumbers.dms in Resources */,
 				5F5C5014244CBBD300A35D76 /* Assets.xcassets in Resources */,
 				5F5C5012244CBBD300A35D76 /* Main.storyboard in Resources */,
-				5F5C5045244CC22A00A35D76 /* demoart.dms in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -432,7 +428,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = StarPlayrX/StarPlayrX.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 469UCUB275;
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = StarPlayrX/Info.plist;
@@ -464,7 +460,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = StarPlayrX/StarPlayrX.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 469UCUB275;
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = StarPlayrX/Info.plist;

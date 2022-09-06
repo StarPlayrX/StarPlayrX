@@ -13,19 +13,13 @@ public enum SerializationError: Error {
 }
 
 public protocol HttpResponseBodyWriter {
-    //    func write(_ file: String.File) throws
     func write(_ data: Data) throws
     func write(_ data: [UInt8]) throws
-//    func write(_ data: ArraySlice<UInt8>) throws
-//    func write(_ data: NSData) throws
-
 }
 
 public enum HttpResponseBody {
     
     case json(Any)
-//    case html(String)
-//    case htmlBody(String)
     case text(String)
     case data(Data, contentType: String? = nil)
     case custom(Any, (Any) throws -> String)
@@ -46,17 +40,7 @@ public enum HttpResponseBody {
                 return (data.count, {
                     try $0.write(data)
                 })
-//            case .html(let html):
-//                let data = [UInt8](html.utf8)
-//                return (data.count, {
-//                    try $0.write(data)
-//                })
-//            case .htmlBody(let body):
-//                let serialized = "<html><meta charset=\"UTF-8\"><body>\(body)</body></html>"
-//                let data = [UInt8](serialized.utf8)
-//                return (data.count, {
-//                    try $0.write(data)
-//                })
+
             case .data(let data, _):
                 return (data.count, {
                     try $0.write(data)

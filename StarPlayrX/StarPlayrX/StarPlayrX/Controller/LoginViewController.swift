@@ -240,7 +240,7 @@ class LoginViewController: UIViewController {
         
         func runArt() {
             
-            self.embeddedAlbumArt(filename: "demoart", process: false)
+            self.embeddedAlbumArt(filename: "bluenumbers", process: false)
             
             func nextStep() {
                 self.prog(0.6, "Processing")
@@ -259,7 +259,7 @@ class LoginViewController: UIViewController {
             
             func runFailure(_ str: Int) {
                 //print("FAILURE: \(str)")
-                self.embeddedAlbumArt(filename: "demoart", process: true)
+                self.embeddedAlbumArt(filename: "bluenumbers", process: true)
                 UserDefaults.standard.removeObject(forKey: "channelDataXD")
                 UserDefaults.standard.removeObject(forKey: "largeChecksumXD")
                 //UserDefaults.standard.synchronize()
