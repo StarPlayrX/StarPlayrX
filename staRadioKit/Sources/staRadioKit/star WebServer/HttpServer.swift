@@ -11,7 +11,7 @@ import Foundation
 
 open class HttpServer: HttpServerIO {
     
-    public static let VERSION: String = {
+    public static let version: String = {
         
         let bundle = Bundle(for: HttpServer.self)
         guard let version = bundle.infoDictionary?["CFBundleShortVersionString"] as? String else { return "Unspecified" }
@@ -38,22 +38,10 @@ open class HttpServer: HttpServerIO {
     public var routes: [String] {
         router.routes()
     }
-    
-    public var notFoundHandler: ((HttpRequest) -> HttpResponse)?
-    
-    public var middleware = [(HttpRequest) -> HttpResponse?]()
-    
-    override open func dispatch(_ request: HttpRequest) -> ([String: String], (HttpRequest) -> HttpResponse) {
-        for layer in middleware {
-            if let response = layer(request) {
-                return ([:], { _ in response })
-            }
-        }
         
+    override open func dispatch(_ request: HttpRequest) -> ([String: String], (HttpRequest) -> HttpResponse) {
         if let result = router.route(request.method, path: request.path) {
             return result
-        } else if let notFoundHandler = self.notFoundHandler {
-            return ([:], notFoundHandler)
         }
         
         return super.dispatch(request)

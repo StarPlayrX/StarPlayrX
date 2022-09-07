@@ -58,6 +58,7 @@ open class HttpRouter {
     }
     
     public func route(_ method: String?, path: String) -> ([String: String], (HttpRequest) -> HttpResponse)? {
+        //FixMe - test async
         return queue.sync {
             if let method = method {
                 let pathSegments = (method + "/" + stripQuery(path)).split("/")
@@ -96,7 +97,6 @@ open class HttpRouter {
     }
     
     private func findHandler(_ node: inout Node, params: inout [String: String], generator: inout IndexingIterator<[String]>) -> ((HttpRequest) -> HttpResponse)? {
-        
         var matchedRoutes = [Node]()
         let pattern = generator.map { $0 }
         let numberOfElements = pattern.count
@@ -117,72 +117,32 @@ open class HttpRouter {
     private func findHandler(_ node: inout Node, params: inout [String: String], pattern: [String], matchedNodes: inout [Node], index: Int, count: Int) {
         
         if index < count, let pathToken = pattern[index].removingPercentEncoding {
-            
-            var currentIndex = index + 1
+            let currentIndex = index + 1
             let variableNodes = node.nodes.filter { $0.0.first == ":" }
-            if let variableNode = variableNodes.first {
-                if currentIndex == count && variableNode.1.isEndOfRoute {
-                    // if it's the last element of the pattern and it's a variable, stop the search and
-                    // append a tail as a value for the variable.
-                    let tail = pattern[currentIndex..<count].joined(separator: "/")
-                    if tail.count > 0 {
-                        params[variableNode.0] = pathToken + "/" + tail
-                    } else {
-                        params[variableNode.0] = pathToken
-                    }
-                    
-                    matchedNodes.append(variableNode.value)
-                    return
-                }
-                params[variableNode.0] = pathToken
-                findHandler(&node.nodes[variableNode.0]!, params: &params, pattern: pattern, matchedNodes: &matchedNodes, index: currentIndex, count: count)
-            }
             
-            if var node = node.nodes[pathToken] {
+            if let variableNode = variableNodes.first, currentIndex == count && variableNode.1.isEndOfRoute {
+                let tail = pattern[currentIndex..<count].joined(separator: "/")
+                params[variableNode.0] = tail.count > 0 ? pathToken + "/" + tail : pathToken
+                matchedNodes.append(variableNode.value)
+            } else if var node = node.nodes[pathToken] {
                 findHandler(&node, params: &params, pattern: pattern, matchedNodes: &matchedNodes, index: currentIndex, count: count)
             }
-            
-            if var node = node.nodes["*"] {
-                findHandler(&node, params: &params, pattern: pattern, matchedNodes: &matchedNodes, index: currentIndex, count: count)
-            }
-            
-            if let startStarNode = node.nodes["**"] {
-                if startStarNode.isEndOfRoute {
-                    // ** at the end of a route works as a catch-all
-                    matchedNodes.append(startStarNode)
-                    return
-                }
-                
-                let startStarNodeKeys = startStarNode.nodes.keys
-                currentIndex += 1
-                while currentIndex < count, let pathToken = pattern[currentIndex].removingPercentEncoding {
-                    currentIndex += 1
-                    if startStarNodeKeys.contains(pathToken) {
-                        findHandler(&startStarNode.nodes[pathToken]!, params: &params, pattern: pattern, matchedNodes: &matchedNodes, index: currentIndex, count: count)
-                    }
-                }
-            }
+        } else if node.isEndOfRoute && index == count {
+            matchedNodes.append(node)
         }
         
-        if node.isEndOfRoute && index == count {
-            // if it's the last element and the path to match is done then it's a pattern matching
-            matchedNodes.append(node)
-            return
-        }
     }
     
     private func stripQuery(_ path: String) -> String {
-        if let path = path.components(separatedBy: "?").first {
-            return path
+        if let stripped = path.components(separatedBy: "?").first {
+            return stripped
         }
         return path
     }
 }
 
 extension String {
-    
     func split(_ separator: Character) -> [String] {
         return self.split { $0 == separator }.map(String.init)
     }
-    
 }

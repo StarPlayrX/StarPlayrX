@@ -44,7 +44,7 @@ open class HttpServerIO {
     public var listenAddressIPv4: String?
     public var listenAddressIPv6: String?
     
-    private let queue = DispatchQueue(label: "swifter.embedded.lite.io")
+    private let queue = DispatchQueue(label: "swifter.embedded.lite.socketqueue")
     
     public func port() throws -> Int {
        Int(try socket.port())

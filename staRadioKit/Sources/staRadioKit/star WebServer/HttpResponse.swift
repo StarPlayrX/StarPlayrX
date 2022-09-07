@@ -42,7 +42,7 @@ public enum HttpResponseBody {
                 return (data.count, {
                     try $0.write(data)
                 })
-
+                
             case .data(let data, _):
                 return (data.count, {
                     try $0.write(data)
@@ -67,9 +67,7 @@ public enum HttpResponse {
     
     case switchProtocols([String: String], (Socket) -> Void)
     case ok(HttpResponseBody, [String: String] = [:]), created, accepted
-    case movedPermanently(String)
-    case movedTemporarily(String)
-    case badRequest(HttpResponseBody?), unauthorized(HttpResponseBody?), forbidden(HttpResponseBody?), notFound(HttpResponseBody? = nil), notAcceptable(HttpResponseBody?), tooManyRequests(HttpResponseBody?), internalServerError(HttpResponseBody?)
+    case notFound(HttpResponseBody? = nil)
     case raw(Int, String, [String: String]?, ((HttpResponseBodyWriter) throws -> Void)? )
     
     public var statusCode: Int {
@@ -78,15 +76,7 @@ public enum HttpResponse {
         case .ok                      : return 200
         case .created                 : return 201
         case .accepted                : return 202
-        case .movedPermanently        : return 301
-        case .movedTemporarily        : return 307
-        case .badRequest              : return 400
-        case .unauthorized            : return 401
-        case .forbidden               : return 403
         case .notFound                : return 404
-        case .notAcceptable           : return 406
-        case .tooManyRequests         : return 429
-        case .internalServerError     : return 500
         case .raw(let code, _, _, _)  : return code
         }
     }
@@ -97,21 +87,13 @@ public enum HttpResponse {
         case .ok                       : return "OK"
         case .created                  : return "Created"
         case .accepted                 : return "Accepted"
-        case .movedPermanently         : return "Moved Permanently"
-        case .movedTemporarily         : return "Moved Temporarily"
-        case .badRequest               : return "Bad Request"
-        case .unauthorized             : return "Unauthorized"
-        case .forbidden                : return "Forbidden"
         case .notFound                 : return "Not Found"
-        case .notAcceptable            : return "Not Acceptable"
-        case .tooManyRequests          : return "Too Many Requests"
-        case .internalServerError      : return "Internal Server Error"
         case .raw(_, let phrase, _, _) : return phrase
         }
     }
     
     public func headers() -> [String: String] {
-        var headers = ["Server": "Swifter \(HttpServer.VERSION)"]
+        var headers = ["Server": "Swifter \(HttpServer.version)"]
         switch self {
         case .switchProtocols(let switchHeaders, _):
             for (key, value) in switchHeaders {
@@ -123,15 +105,10 @@ public enum HttpResponse {
             }
             switch body {
             case .json: headers["Content-Type"] = "application/json"
-//            case .html, .htmlBody: headers["Content-Type"] = "text/html"
             case .text: headers["Content-Type"] = "text/plain"
             case .data(_, let contentType): headers["Content-Type"] = contentType
             default:break
             }
-        case .movedPermanently(let location):
-            headers["Location"] = location
-        case .movedTemporarily(let location):
-            headers["Location"] = location
         case .raw(_, _, let rawHeaders, _):
             if let rawHeaders = rawHeaders {
                 for (key, value) in rawHeaders {
@@ -146,7 +123,7 @@ public enum HttpResponse {
     func content() -> (length: Int, write: ((HttpResponseBodyWriter) throws -> Void)?) {
         switch self {
         case .ok(let body, _)          : return body.content()
-        case .badRequest(let body), .unauthorized(let body), .forbidden(let body), .notFound(let body), .tooManyRequests(let body), .internalServerError(let body) : return body?.content() ?? (-1, nil)
+        case .notFound(let body)       : return body?.content() ?? (-1, nil)
         case .raw(_, _, _, let writer) : return (-1, writer)
         default                        : return (-1, nil)
         }
@@ -160,6 +137,6 @@ public enum HttpResponse {
     }
 }
 
-func == (inLeft: HttpResponse, inRight: HttpResponse) -> Bool {
-    inLeft.statusCode == inRight.statusCode
-}
+//func == (inLeft: HttpResponse, inRight: HttpResponse) -> Bool {
+//    inLeft.statusCode == inRight.statusCode
+//}
