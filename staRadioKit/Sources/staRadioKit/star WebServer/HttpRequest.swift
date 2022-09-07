@@ -20,7 +20,16 @@ public class HttpRequest {
     public var address: String?
     public var params: [String: String]
     
-    internal init(path: String = "", queryParams: [(String, String)] = [("","")], method: String = "", headers: [String : String] = [:], body: [UInt8] = [], address: String? = nil, params: [String : String] = [:]) {
+    internal init
+    (
+        path: String = "",
+        queryParams: [(String, String)] = [("","")],
+        method: String = "",
+        headers: [String : String] = [:],
+        body: [UInt8] = [],
+        address: String? = nil,
+        params: [String : String] = [:]
+    ) {
         self.path = path
         self.queryParams = queryParams
         self.method = method
@@ -49,7 +58,7 @@ public class HttpRequest {
         else {
             return []
         }
-     
+        
         return utf8String.components(separatedBy: "&").map { param -> (String, String) in
             let tokens = param.components(separatedBy: "=")
             
@@ -168,7 +177,6 @@ public class HttpRequest {
         return String(bytes: temp, encoding: String.Encoding.utf8)
     }
     
-    // swiftlint:disable identifier_name
     static let CR = UInt8(13)
     static let NL = UInt8(10)
     

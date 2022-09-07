@@ -11,12 +11,11 @@ import Foundation
 
 extension Socket {
     
-    // swiftlint:disable function_body_length
     /// - Parameters:
     ///   - listenAddress: String representation of the address the socket should accept
     ///       connections from. It should be in IPv4 format if forceIPv4 == true,
     ///       otherwise - in IPv6.
-    public class func tcpSocketForListen(_ port: in_port_t, _ forceIPv4: Bool = false, _ maxPendingConnection: Int32 = SOMAXCONN, _ listenAddress: String? = nil) throws -> Socket {
+    public class func tcpSocketForListen(_ port: in_port_t, _ forceIPv4: Bool = true, _ maxPendingConnection: Int32 = SOMAXCONN, _ listenAddress: String? = nil) throws -> Socket {
         
         let socketFileDescriptor = socket(forceIPv4 ? AF_INET : AF_INET6, SOCK_STREAM, 0)
         

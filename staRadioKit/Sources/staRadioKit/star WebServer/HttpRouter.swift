@@ -105,7 +105,6 @@ open class HttpRouter {
         return matchedRoutes.first?.handler
     }
     
-    // swiftlint:disable function_parameter_count
     /// Find the handlers for a specified route
     ///
     /// - Parameters:

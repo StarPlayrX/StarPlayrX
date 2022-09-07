@@ -52,9 +52,7 @@ open class HttpServer: HttpServerIO {
         
         if let result = router.route(request.method, path: request.path) {
             return result
-        }
-        
-        if let notFoundHandler = self.notFoundHandler {
+        } else if let notFoundHandler = self.notFoundHandler {
             return ([:], notFoundHandler)
         }
         

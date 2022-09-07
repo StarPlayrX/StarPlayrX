@@ -14,8 +14,6 @@ public func startServer(_ port: UInt16) {
     print("Server has started...\n\n")
 }
 
-
-// swiftlint:disable function_body_length
 public func streamingServer() -> HttpServer {
     
     let server = HttpServer()

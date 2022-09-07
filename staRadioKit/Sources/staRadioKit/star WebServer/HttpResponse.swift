@@ -63,7 +63,6 @@ public enum HttpResponseBody {
     }
 }
 
-// swiftlint:disable cyclomatic_complexity
 public enum HttpResponse {
     
     case switchProtocols([String: String], (Socket) -> Void)

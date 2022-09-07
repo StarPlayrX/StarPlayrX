@@ -9,21 +9,6 @@
 
 import Foundation
 
-public enum SocketError: Error {
-    case socketCreationFailed(String)
-    case socketSettingReUseAddrFailed(String)
-    case bindFailed(String)
-    case listenFailed(String)
-    case writeFailed(String)
-    case getPeerNameFailed(String)
-    case convertingPeerNameFailed
-    case getNameInfoFailed(String)
-    case acceptFailed(String)
-    case recvFailed(String)
-    case getSockNameFailed(String)
-}
-
-// swiftlint: disable identifier_name
 open class Socket: Hashable, Equatable {
     
     let socketFileDescriptor: Int32
@@ -191,6 +176,20 @@ open class Socket: Hashable, Equatable {
 
 public func == (socket1: Socket, socket2: Socket) -> Bool {
     socket1.socketFileDescriptor == socket2.socketFileDescriptor
+}
+
+public enum SocketError: Error {
+    case socketCreationFailed(String)
+    case socketSettingReUseAddrFailed(String)
+    case bindFailed(String)
+    case listenFailed(String)
+    case writeFailed(String)
+    case getPeerNameFailed(String)
+    case convertingPeerNameFailed
+    case getNameInfoFailed(String)
+    case acceptFailed(String)
+    case recvFailed(String)
+    case getSockNameFailed(String)
 }
 
 public class ErrNumString {

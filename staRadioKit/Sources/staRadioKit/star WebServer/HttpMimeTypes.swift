@@ -1,5 +1,5 @@
 //
-//  MimeTypes.swift
+//  HttpMimeTypes.swift
 //  Swifter
 //
 //  Created by Daniel Große on 16.02.18.
@@ -11,7 +11,7 @@ import Foundation
 
 internal let DEFAULT_MIME_TYPE = "audio/aac"
 
-internal let mimeTypes = [
+internal let HttpMimeTypes = [
     "m3u8": "application/x-mpegURL",
     "aac" : "audio/aac",
     "txt" : "text/plain",
@@ -19,8 +19,8 @@ internal let mimeTypes = [
 ]
 
 internal func matchMimeType(extens: String?) -> String {
-    if extens != nil && mimeTypes.contains(where: { $0.0 == extens!.lowercased() }) {
-        return mimeTypes[extens!.lowercased()]!
+    if extens != nil && HttpMimeTypes.contains(where: { $0.0 == extens!.lowercased() }) {
+        return HttpMimeTypes[extens!.lowercased()]!
     }
     return DEFAULT_MIME_TYPE
 }
@@ -43,7 +43,7 @@ extension String {
     }
 }
 
-//internal let mimeTypes = [
+//internal let HttpMimeTypes = [
 //    "aac" : "audio/aac",
 //    "txt" : "text/plain",
 //    "webp": "image/webp",
