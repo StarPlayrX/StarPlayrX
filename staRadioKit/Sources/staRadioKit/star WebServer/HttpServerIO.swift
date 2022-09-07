@@ -3,7 +3,9 @@
 //  Swifter
 //
 //  Copyright (c) 2014-2016 Damian Kołakowski. All rights reserved.
-//
+
+//  Swifter Embedded Lite by Todd Bruss on 9/6/22.
+//  Copyright © 2022 Todd Bruss. All rights reserved.
 
 import Foundation
 import Dispatch
@@ -15,7 +17,6 @@ public protocol HttpServerIODelegate: AnyObject {
 open class HttpServerIO {
     
     public weak var delegate: HttpServerIODelegate?
-    
     private var socket = Socket(socketFileDescriptor: -1)
     private var sockets = Set<Socket>()
     
@@ -29,43 +30,35 @@ open class HttpServerIO {
     private var stateValue: Int32 = HttpServerIOState.stopped.rawValue
     
     public private(set) var state: HttpServerIOState {
+        
         get {
-            return HttpServerIOState(rawValue: stateValue)!
+            HttpServerIOState(rawValue: stateValue)!
         }
+        
         set(state) {
             self.stateValue = state.rawValue
-            
         }
     }
     
     public var operating: Bool { return self.state == .running }
-    
-    /// String representation of the IPv4 address to receive requests from.
-    /// It's only used when the server is started with `forceIPv4` option set to true.
-    /// Otherwise, `listenAddressIPv6` will be used.
     public var listenAddressIPv4: String?
-    
-    /// String representation of the IPv6 address to receive requests from.
-    /// It's only used when the server is started with `forceIPv4` option set to false.
-    /// Otherwise, `listenAddressIPv4` will be used.
     public var listenAddressIPv6: String?
     
-    private let queue = DispatchQueue(label: "swifter.httpserverio.clientsockets")
+    private let queue = DispatchQueue(label: "swifter.embedded.lite.io")
     
     public func port() throws -> Int {
-        return Int(try socket.port())
+       Int(try socket.port())
     }
     
     public func isIPv4() throws -> Bool {
-        return try socket.isIPv4()
+        try socket.isIPv4()
     }
     
     deinit {
         stop()
     }
     
-    @available(macOS 10.10, *)
-    public func start(_ port: in_port_t = 8080, forceIPv4: Bool = false, priority: DispatchQoS.QoSClass = DispatchQoS.QoSClass.background) throws {
+    public func start(_ port: in_port_t, forceIPv4: Bool = true, priority: DispatchQoS.QoSClass = DispatchQoS.QoSClass.userInteractive) throws {
         guard !self.operating else { return }
         stop()
         self.state = .starting
@@ -109,7 +102,7 @@ open class HttpServerIO {
     }
     
     open func dispatch(_ request: HttpRequest) -> ([String: String], (HttpRequest) -> HttpResponse) {
-        return ([:], { _ in HttpResponse.notFound(nil) })
+        ([:], { _ in HttpResponse.notFound(nil) })
     }
     
     private func handleConnection(_ socket: Socket) {
@@ -141,22 +134,10 @@ open class HttpServerIO {
     private struct InnerWriteContext: HttpResponseBodyWriter {
         
         let socket: Socket
-        
-        //        func write(_ file: String.File) throws {
-        //            try socket.writeFile(file)
-        //        }
-        
+    
         func write(_ data: [UInt8]) throws {
             try socket.writeUInt8(data)
         }
-        
-        //        func write(_ data: ArraySlice<UInt8>) throws {
-        //            try socket.writeUInt8(data)
-        //        }
-        
-        //        func write(_ data: NSData) throws {
-        //            try socket.writeData(data)
-        //        }
         
         func write(_ data: Data) throws {
             try socket.writeData(data)
@@ -196,7 +177,6 @@ open class HttpServerIO {
             try writeClosure(context)
         }
         
-        print(responseHeader)
         return keepAlive && content.length != -1
     }
 }

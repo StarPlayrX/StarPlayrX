@@ -3,7 +3,9 @@
 //  Swifter
 //
 //  Copyright (c) 2014-2016 Damian Kołakowski. All rights reserved.
-//
+
+//  Swifter Embedded Lite by Todd Bruss on 9/6/22.
+//  Copyright © 2022 Todd Bruss. All rights reserved.
 
 import Foundation
 
@@ -23,9 +25,7 @@ open class HttpRouter {
     }
     
     private var rootNode = Node()
-    
-    /// The Queue to handle the thread safe access to the routes
-    private let queue = DispatchQueue(label: "swifter.httpserverio.httprouter")
+        private let queue = DispatchQueue(label: "swifter.embedded.lite.queue")
     
     public func routes() -> [String] {
         var routes = [String]()
@@ -58,7 +58,6 @@ open class HttpRouter {
     }
     
     public func route(_ method: String?, path: String) -> ([String: String], (HttpRequest) -> HttpResponse)? {
-        
         return queue.sync {
             if let method = method {
                 let pathSegments = (method + "/" + stripQuery(path)).split("/")
@@ -81,7 +80,6 @@ open class HttpRouter {
     }
     
     private func inflate(_ node: inout Node, generator: inout IndexingIterator<[String]>) -> Node {
-        
         var currentNode = node
         
         while let pathSegment = generator.next() {

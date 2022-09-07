@@ -3,7 +3,9 @@
 //  Swifter
 // 
 //  Copyright (c) 2014-2016 Damian Kołakowski. All rights reserved.
-//
+
+//  Swifter Embedded Lite by Todd Bruss on 9/6/22.
+//  Copyright © 2022 Todd Bruss. All rights reserved.
 
 import Foundation
 
@@ -13,9 +15,6 @@ enum HttpParserError: Error, Equatable {
 }
 
 public class HttpParser {
-    
-    public init() { }
-    
     public func readHttpRequest(_ socket: Socket) throws -> HttpRequest {
         let statusLine = try socket.readLine()
         let statusLineTokens = statusLine.components(separatedBy: " ")
@@ -41,7 +40,7 @@ public class HttpParser {
     }
     
     private func readBody(_ socket: Socket, size: Int) throws -> [UInt8] {
-        return try socket.read(length: size)
+        try socket.read(length: size)
     }
     
     private func readHeaders(_ socket: Socket) throws -> [String: String] {
@@ -56,9 +55,7 @@ public class HttpParser {
     }
     
     func supportsKeepAlive(_ headers: [String: String]) -> Bool {
-        if let value = headers["connection"] {
-            return "keep-alive" == value.trimmingCharacters(in: .whitespaces)
-        }
-        return false
+        guard let value = headers["connection"] else { return false }
+        return "keep-alive" == value.trimmingCharacters(in: .whitespaces)
     }
 }

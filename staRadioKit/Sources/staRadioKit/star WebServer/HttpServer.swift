@@ -3,7 +3,9 @@
 //  Swifter
 //
 //  Copyright (c) 2014-2016 Damian Kołakowski. All rights reserved.
-//
+
+//  Swifter Embedded Lite by Todd Bruss on 9/6/22.
+//  Copyright © 2022 Todd Bruss. All rights reserved.
 
 import Foundation
 
@@ -20,15 +22,11 @@ open class HttpServer: HttpServerIO {
     private let router = HttpRouter()
     
     public override init() {
-        self.delete = MethodRoute(method: "DELETE", router: router)
-        self.patch  = MethodRoute(method: "PATCH", router: router)
-        self.head   = MethodRoute(method: "HEAD", router: router)
-        self.post   = MethodRoute(method: "POST", router: router)
-        self.get    = MethodRoute(method: "GET", router: router)
-        self.put    = MethodRoute(method: "PUT", router: router)
+        self.post = MethodRoute(method: "POST", router: router)
+        self.get  = MethodRoute(method: "GET",  router: router)
     }
     
-    public var delete, patch, head, post, get, put: MethodRoute
+    public var post, get: MethodRoute
     
     public subscript(path: String) -> ((HttpRequest) -> HttpResponse)? {
         get { return nil }
@@ -38,7 +36,7 @@ open class HttpServer: HttpServerIO {
     }
     
     public var routes: [String] {
-        return router.routes()
+        router.routes()
     }
     
     public var notFoundHandler: ((HttpRequest) -> HttpResponse)?
@@ -51,12 +49,15 @@ open class HttpServer: HttpServerIO {
                 return ([:], { _ in response })
             }
         }
+        
         if let result = router.route(request.method, path: request.path) {
             return result
         }
+        
         if let notFoundHandler = self.notFoundHandler {
             return ([:], notFoundHandler)
         }
+        
         return super.dispatch(request)
     }
     
@@ -64,7 +65,7 @@ open class HttpServer: HttpServerIO {
         public let method: String
         public let router: HttpRouter
         public subscript(path: String) -> ((HttpRequest) -> HttpResponse)? {
-            get { return nil }
+            get { nil }
             set {
                 router.register(method, path: path, handler: newValue)
             }

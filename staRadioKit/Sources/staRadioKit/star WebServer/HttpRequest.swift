@@ -3,21 +3,32 @@
 //  Swifter
 //
 //  Copyright (c) 2014-2016 Damian Kołakowski. All rights reserved.
-//
+
+//  Swifter Embedded Lite by Todd Bruss on 9/6/22.
+//  Copyright © 2022 Todd Bruss. All rights reserved.
+
 
 import Foundation
 
 public class HttpRequest {
     
-    public var path: String = ""
-    public var queryParams: [(String, String)] = []
-    public var method: String = ""
-    public var headers: [String: String] = [:]
-    public var body: [UInt8] = []
-    public var address: String? = ""
-    public var params: [String: String] = [:]
+    public var path: String
+    public var queryParams: [(String, String)]
+    public var method: String
+    public var headers: [String: String]
+    public var body: [UInt8]
+    public var address: String?
+    public var params: [String: String]
     
-    public init() {}
+    internal init(path: String = "", queryParams: [(String, String)] = [("","")], method: String = "", headers: [String : String] = [:], body: [UInt8] = [], address: String? = nil, params: [String : String] = [:]) {
+        self.path = path
+        self.queryParams = queryParams
+        self.method = method
+        self.headers = headers
+        self.body = body
+        self.address = address
+        self.params = params
+    }
     
     public func hasTokenForHeader(_ headerName: String, token: String) -> Bool {
         guard let headerValue = headers[headerName] else {
@@ -31,20 +42,25 @@ public class HttpRequest {
             return []
         }
         let contentTypeHeaderTokens = contentTypeHeader.components(separatedBy: ";").map { $0.trimmingCharacters(in: .whitespaces) }
-        guard let contentType = contentTypeHeaderTokens.first, contentType == "application/x-www-form-urlencoded" else {
+        
+        guard
+            let contentType = contentTypeHeaderTokens.first, contentType == "application/x-www-form-urlencoded",
+            let utf8String = String(bytes: body, encoding: .utf8)
+        else {
             return []
         }
-        guard let utf8String = String(bytes: body, encoding: .utf8) else {
-            // Consider to throw an exception here (examine the encoding from headers).
-            return []
-        }
+     
         return utf8String.components(separatedBy: "&").map { param -> (String, String) in
             let tokens = param.components(separatedBy: "=")
-            if let name = tokens.first?.removingPercentEncoding, let value = tokens.last?.removingPercentEncoding, tokens.count == 2 {
-                return (name.replacingOccurrences(of: "+", with: " "),
-                        value.replacingOccurrences(of: "+", with: " "))
+            
+            guard
+                let name = tokens.first?.removingPercentEncoding,
+                let value = tokens.last?.removingPercentEncoding, tokens.count == 2
+            else {
+                return ("", "")
             }
-            return ("", "")
+            
+            return (name.replacingOccurrences(of: "+", with: " "), value.replacingOccurrences(of: "+", with: " "))
         }
     }
     
@@ -54,11 +70,11 @@ public class HttpRequest {
         public let body: [UInt8]
         
         public var name: String? {
-            return valueFor("content-disposition", parameter: "name")?.unquote()
+            valueFor("content-disposition", parameter: "name") //?.unquote()
         }
         
         public var fileName: String? {
-            return valueFor("content-disposition", parameter: "filename")?.unquote()
+            valueFor("content-disposition", parameter: "filename") //?.unquote()
         }
         
         private func valueFor(_ headerName: String, parameter: String) -> String? {
@@ -82,10 +98,12 @@ public class HttpRequest {
         guard let contentTypeHeader = headers["content-type"] else {
             return []
         }
+        
         let contentTypeHeaderTokens = contentTypeHeader.components(separatedBy: ";").map { $0.trimmingCharacters(in: .whitespaces) }
         guard let contentType = contentTypeHeaderTokens.first, contentType == "multipart/form-data" else {
             return []
         }
+        
         var boundary: String?
         contentTypeHeaderTokens.forEach({
             let tokens = $0.components(separatedBy: "=")
@@ -93,18 +111,22 @@ public class HttpRequest {
                 boundary = tokens.last
             }
         })
+        
         if let boundary = boundary, boundary.utf8.count > 0 {
             return parseMultiPartFormData(body, boundary: "--\(boundary)")
         }
+        
         return []
     }
     
     private func parseMultiPartFormData(_ data: [UInt8], boundary: String) -> [MultiPart] {
         var generator = data.makeIterator()
         var result = [MultiPart]()
+        
         while let part = nextMultiPart(&generator, boundary: boundary, isFirst: result.isEmpty) {
             result.append(part)
         }
+        
         return result
     }
     
@@ -114,8 +136,9 @@ public class HttpRequest {
                 return nil
             }
         } else {
-            let /* ignore */ _ = nextUTF8MultiPartLine(&generator)
+            nextUTF8MultiPartLine(&generator)
         }
+        
         var headers = [String: String]()
         while let line = nextUTF8MultiPartLine(&generator), !line.isEmpty {
             let tokens = line.components(separatedBy: ":")
@@ -123,12 +146,15 @@ public class HttpRequest {
                 headers[name.lowercased()] = value.trimmingCharacters(in: .whitespaces)
             }
         }
+        
         guard let body = nextMultiPartBody(&generator, boundary: boundary) else {
             return nil
         }
+        
         return MultiPart(headers: headers, body: body)
     }
     
+    @discardableResult
     private func nextUTF8MultiPartLine(_ generator: inout IndexingIterator<[UInt8]>) -> String? {
         var temp = [UInt8]()
         while let value = generator.next() {

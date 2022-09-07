@@ -3,7 +3,9 @@
 //  Swifter
 //
 //  Created by Damian Kolakowski on 13/07/16.
-//
+
+//  Swifter Embedded Lite by Todd Bruss on 9/6/22.
+//  Copyright © 2022 Todd Bruss. All rights reserved.
 
 import Foundation
 
@@ -19,12 +21,12 @@ extension Socket {
         let socketFileDescriptor = socket(forceIPv4 ? AF_INET : AF_INET6, SOCK_STREAM, 0)
         
         if socketFileDescriptor == -1 {
-            throw SocketError.socketCreationFailed(Errno.description())
+            throw SocketError.socketCreationFailed(ErrNumString.description())
         }
         
         var value: Int32 = 1
         if setsockopt(socketFileDescriptor, SOL_SOCKET, SO_REUSEADDR, &value, socklen_t(MemoryLayout<Int32>.size)) == -1 {
-            let details = Errno.description()
+            let details = ErrNumString.description()
             Socket.close(socketFileDescriptor)
             throw SocketError.socketSettingReUseAddrFailed(details)
         }
@@ -64,16 +66,17 @@ extension Socket {
         }
         
         if bindResult == -1 {
-            let details = Errno.description()
+            let details = ErrNumString.description()
             Socket.close(socketFileDescriptor)
             throw SocketError.bindFailed(details)
         }
         
         if listen(socketFileDescriptor, maxPendingConnection) == -1 {
-            let details = Errno.description()
+            let details = ErrNumString.description()
             Socket.close(socketFileDescriptor)
             throw SocketError.listenFailed(details)
         }
+        
         return Socket(socketFileDescriptor: socketFileDescriptor)
     }
     
@@ -81,10 +84,13 @@ extension Socket {
         var addr = sockaddr()
         var len: socklen_t = 0
         let clientSocket = accept(self.socketFileDescriptor, &addr, &len)
+        
         if clientSocket == -1 {
-            throw SocketError.acceptFailed(Errno.description())
+            throw SocketError.acceptFailed(ErrNumString.description())
         }
+        
         Socket.setNoSigPipe(clientSocket)
+        
         return Socket(socketFileDescriptor: clientSocket)
     }
 }

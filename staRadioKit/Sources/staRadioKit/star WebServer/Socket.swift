@@ -3,7 +3,9 @@
 //  Swifter
 //
 //  Copyright (c) 2014-2016 Damian Kołakowski. All rights reserved.
-//
+
+//  Swifter Embedded Lite by Todd Bruss on 9/6/22.
+//  Copyright © 2022 Todd Bruss. All rights reserved.
 
 import Foundation
 
@@ -52,7 +54,7 @@ open class Socket: Hashable, Equatable {
         return try withUnsafePointer(to: &addr) { pointer in
             var len = socklen_t(MemoryLayout<sockaddr_in>.size)
             if getsockname(socketFileDescriptor, UnsafeMutablePointer(OpaquePointer(pointer)), &len) != 0 {
-                throw SocketError.getSockNameFailed(Errno.description())
+                throw SocketError.getSockNameFailed(ErrNumString.description())
             }
             let sin_port = pointer.pointee.sin_port
             return Int(OSHostByteOrder()) != OSLittleEndian ? sin_port.littleEndian : sin_port.bigEndian
@@ -64,7 +66,7 @@ open class Socket: Hashable, Equatable {
         return try withUnsafePointer(to: &addr) { pointer in
             var len = socklen_t(MemoryLayout<sockaddr_in>.size)
             if getsockname(socketFileDescriptor, UnsafeMutablePointer(OpaquePointer(pointer)), &len) != 0 {
-                throw SocketError.getSockNameFailed(Errno.description())
+                throw SocketError.getSockNameFailed(ErrNumString.description())
             }
             return Int32(pointer.pointee.sin_family) == AF_INET
         }
@@ -88,7 +90,7 @@ open class Socket: Hashable, Equatable {
             let result = write(self.socketFileDescriptor, pointer + sent, Int(length - sent))
 
             if result <= 0 {
-                throw SocketError.writeFailed(Errno.description())
+                throw SocketError.writeFailed(ErrNumString.description())
             }
             sent += result
         }
@@ -106,7 +108,7 @@ open class Socket: Hashable, Equatable {
         let count = Darwin.read(self.socketFileDescriptor as Int32, &byte, 1)
         
         guard count > 0 else {
-            throw SocketError.recvFailed(Errno.description())
+            throw SocketError.recvFailed(ErrNumString.description())
         }
         return byte
     }
@@ -137,11 +139,10 @@ open class Socket: Hashable, Equatable {
         while offset < length {
             // Compute next read length in bytes. The bytes read is never more than kBufferLength at once.
             let readLength = offset + Socket.kBufferLength < length ? Socket.kBufferLength : length - offset
-            
             let bytesRead = Darwin.read(self.socketFileDescriptor as Int32, baseAddress + offset, readLength)
             
             guard bytesRead > 0 else {
-                throw SocketError.recvFailed(Errno.description())
+                throw SocketError.recvFailed(ErrNumString.description())
             }
             
             offset += bytesRead
@@ -156,21 +157,23 @@ open class Socket: Hashable, Equatable {
     public func readLine() throws -> String {
         var characters: String = ""
         var index: UInt8 = 0
+        
         repeat {
             index = try self.read()
             if index > Socket.CR { characters.append(Character(UnicodeScalar(index))) }
         } while index != Socket.NL
+        
         return characters
     }
     
     public func peername() throws -> String {
         var addr = sockaddr(), len: socklen_t = socklen_t(MemoryLayout<sockaddr>.size)
         if getpeername(self.socketFileDescriptor, &addr, &len) != 0 {
-            throw SocketError.getPeerNameFailed(Errno.description())
+            throw SocketError.getPeerNameFailed(ErrNumString.description())
         }
         var hostBuffer = [CChar](repeating: 0, count: Int(NI_MAXHOST))
         if getnameinfo(&addr, len, &hostBuffer, socklen_t(hostBuffer.count), nil, 0, NI_NUMERICHOST) != 0 {
-            throw SocketError.getNameInfoFailed(Errno.description())
+            throw SocketError.getNameInfoFailed(ErrNumString.description())
         }
         return String(cString: hostBuffer)
     }
@@ -187,5 +190,11 @@ open class Socket: Hashable, Equatable {
 }
 
 public func == (socket1: Socket, socket2: Socket) -> Bool {
-    return socket1.socketFileDescriptor == socket2.socketFileDescriptor
+    socket1.socketFileDescriptor == socket2.socketFileDescriptor
+}
+
+public class ErrNumString {
+    public class func description() -> String {
+        "\(String(describing: strerror(errno)))"
+    }
 }

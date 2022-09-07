@@ -9,7 +9,7 @@ import Foundation
 
 func channelsRoute() -> ((HttpRequest) -> HttpResponse) {
     return { request in
-        let _ = Session(channelid: "siriushits1")
+        Session(channelid: "siriushits1")
         let api = Channels()
         var data = Data()
         
