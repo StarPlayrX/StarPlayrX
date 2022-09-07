@@ -43,7 +43,7 @@ final class Player {
     
     func new(_ state: PlayerState? = nil) {
         if state == .stream {
-            player.pause()
+            //player.pause()
             self.playX()
         } else if player.rate == 1 || self.state == .playing {
             self.pause()
@@ -79,30 +79,35 @@ final class Player {
         state = .buffering
     
         func stream() {
-            if let url = URL(string: "\(g.insecure)\(g.localhost):\(port)/playlist/\(g.currentChannel)\(g.m3u8)") {
-                
-                let asset = AVAsset(url: url)
-                let playItem = AVPlayerItem(asset:asset)
+            DispatchQueue.main.async {
+                if let url = URL(string: "\(self.g.insecure)\(self.g.localhost):\(self.port)/playlist/\(self.g.currentChannel)\(self.g.m3u8)") {
+                    
+                    let asset = AVAsset(url: url)
+                    let playItem = AVPlayerItem(asset:asset)
 
-                let p = self.player
-                p.insert(playItem, after: nil)
-                p.currentItem?.preferredForwardBufferDuration = 9
-                p.currentItem?.automaticallyPreservesTimeOffsetFromLive = true
-                p.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = true
-                p.automaticallyWaitsToMinimizeStalling = true
-                p.appliesMediaSelectionCriteriaAutomatically = true
-                p.allowsExternalPlayback = true
-                p.play()
+                    let p = self.player
+                    p.insert(playItem, after: nil)
+                    p.currentItem?.preferredForwardBufferDuration = 0
+                    p.currentItem?.automaticallyPreservesTimeOffsetFromLive = true
+                    p.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = true
+                    p.automaticallyWaitsToMinimizeStalling = true
+                    p.appliesMediaSelectionCriteriaAutomatically = true
+                    p.allowsExternalPlayback = true
+                    p.playImmediately(atRate: 1.0)
+                    p.play()
 
-                DispatchQueue.main.asyncAfter(deadline: .now() + (avSession.outputLatency * 1.0))  { [weak self] in
-                    guard let self = self else { return }
-                    self.SPXCache()
-                }
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + avSession.outputLatency * 2.0) { [weak self] in
-                    self?.player.currentItem?.preferredForwardBufferDuration = 1
-                    self?.state = .playing
-                    NotificationCenter.default.post(name: .didUpdatePlay, object: nil)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + (self.avSession.outputLatency * 1.0))  { [weak self] in
+                        guard let self = self else { return }
+                        self.SPXCache()
+                    }
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + self.avSession.outputLatency * 2.0) { [weak self] in
+                        self?.player.currentItem?.preferredForwardBufferDuration = 1
+                        self?.state = .playing
+                        NotificationCenter.default.post(name: .didUpdatePlay, object: nil)
+                        p.play()
+
+                    }
                 }
             }
         }
@@ -146,9 +151,9 @@ final class Player {
     }
     
     func runReset(starplayrx: AVPlayerItem) {
+        player.replaceCurrentItem(with: nil)
         starplayrx.asset.cancelLoading()
         player.remove(starplayrx)
-        player.replaceCurrentItem(with: nil)
     }
     
     func resetPlayer() {
@@ -442,7 +447,7 @@ final class Player {
     }
     
     public func autoLaunchServer(completionHandler: CompletionHandler) {
-        //print("Restarting Server...")
+        print("Restarting Server...")
         
         if UIAccessibility.isVoiceOverRunning {
             let utterance = AVSpeechUtterance(string: "Buffering")

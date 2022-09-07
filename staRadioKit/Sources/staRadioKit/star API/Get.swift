@@ -9,7 +9,7 @@ internal func GetAsync(endpoint: String, DictionaryHandler: @escaping Dictionary
     urlReq.httpMethod = "GET"
     urlReq.timeoutInterval = TimeInterval(15)
     urlReq.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
-    urlReq.cachePolicy = .useProtocolCachePolicy
+    //urlReq.cachePolicy = .useProtocolCachePolicy
 
     let task = URLSession.shared.dataTask(with: urlReq ) { ( returndata, response, _ ) in
         if let r = returndata {

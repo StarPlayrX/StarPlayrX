@@ -56,10 +56,6 @@ extension UIImage {
     }
 }
 
-
-       
-
-
 //Some extra variables, so we can check the status of our AVPlayer
 extension AVQueuePlayer {
     var isDead: Bool {

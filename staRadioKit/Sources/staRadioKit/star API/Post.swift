@@ -11,7 +11,7 @@ import Foundation
 
 internal func PostSync(request: Dictionary<String, Any>, endpoint: String, method: String, PostTupleHandler: @escaping PostTupleHandler) {
     
-    _ = Session(channelid: "siriushits1")
+    Session(channelid: "siriushits1")
 
     let semaphore = DispatchSemaphore(value: 0)
 
@@ -27,7 +27,9 @@ internal func PostSync(request: Dictionary<String, Any>, endpoint: String, metho
     
     urlReq.addValue("application/json", forHTTPHeaderField: "Content-Type")
     urlReq.httpMethod = "POST"
-    urlReq.timeoutInterval = TimeInterval(30)
+    urlReq.timeoutInterval = TimeInterval(15)
+    urlReq.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+
     urlReq.setValue("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0.2 Safari/605.1.15", forHTTPHeaderField: "User-Agent")
     
     let task = URLSession.shared.dataTask(with: urlReq ) { ( data, response, _ ) in
