@@ -49,8 +49,8 @@ internal func processPDT(data: DiscoverChannelList) -> [String:Any] {
         if userX.channels.count > 1 {
             for ( key, value ) in userX.channels {
                 
-                let v = value as! [String: Any]
-                let name = v["name"] as! String
+                let v = value as? [String: Any]
+                guard let name = v?["name"] as? String else { return ArtistSongData}
                 
                 //Substitute text for when channel guide is offline
                 ArtistSongData[key] = ["image" : "", "artist": key, "song" : name]

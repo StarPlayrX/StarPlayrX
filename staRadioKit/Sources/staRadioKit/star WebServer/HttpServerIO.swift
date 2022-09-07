@@ -132,7 +132,6 @@ open class HttpServerIO {
     }
     
     private struct InnerWriteContext: HttpResponseBodyWriter {
-        
         let socket: Socket
     
         func write(_ data: [UInt8]) throws {
@@ -146,9 +145,6 @@ open class HttpServerIO {
     
     private func respond(_ socket: Socket, response: HttpResponse, keepAlive: Bool) throws -> Bool {
         guard self.operating else { return false }
-        
-        // Some web-socket clients (like Jetfire) expects to have header section in a single packet.
-        // We can't promise that but make sure we invoke "write" only once for response header section.
         
         var responseHeader = String()
         

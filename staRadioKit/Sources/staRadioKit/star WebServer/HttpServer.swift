@@ -11,13 +11,7 @@ import Foundation
 
 open class HttpServer: HttpServerIO {
     
-    public static let version: String = {
-        
-        let bundle = Bundle(for: HttpServer.self)
-        guard let version = bundle.infoDictionary?["CFBundleShortVersionString"] as? String else { return "Unspecified" }
-        return version
-        
-    }()
+    public static let version = Bundle(for: HttpServer.self).infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.3.1"
     
     private let router = HttpRouter()
     
@@ -30,9 +24,7 @@ open class HttpServer: HttpServerIO {
     
     public subscript(path: String) -> ((HttpRequest) -> HttpResponse)? {
         get { return nil }
-        set {
-            router.register(nil, path: path, handler: newValue)
-        }
+        set { router.register(nil, path: path, handler: newValue) }
     }
     
     public var routes: [String] {
@@ -42,9 +34,9 @@ open class HttpServer: HttpServerIO {
     override open func dispatch(_ request: HttpRequest) -> ([String: String], (HttpRequest) -> HttpResponse) {
         if let result = router.route(request.method, path: request.path) {
             return result
+        } else {
+            return ([:], { _ in HttpResponse.notFound(nil) })
         }
-        
-        return super.dispatch(request)
     }
     
     public struct MethodRoute {
