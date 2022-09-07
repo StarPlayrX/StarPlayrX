@@ -35,7 +35,7 @@ internal func GetPdtSync(endpoint: String, method: String, PdtHandler: @escaping
     
     var urlReq = URLRequest(url: url)
     urlReq.httpMethod = "GET"
-    urlReq.timeoutInterval = TimeInterval(10)
+    urlReq.timeoutInterval = TimeInterval(5)
     
     let task = URLSession.shared.dataTask(with: urlReq ) { ( data, response, error ) in
 

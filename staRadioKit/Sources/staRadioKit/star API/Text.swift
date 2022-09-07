@@ -8,7 +8,7 @@ internal func TextSync(endpoint: String, TextHandler: @escaping TextHandler)  {
 
     var urlReq = URLRequest(url: url)
     urlReq.httpMethod = "GET"
-    urlReq.timeoutInterval = TimeInterval(10)
+    urlReq.timeoutInterval = TimeInterval(5)
     urlReq.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
     
     let task = URLSession.shared.dataTask(with: urlReq ) { ( data, _, _ ) in

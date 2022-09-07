@@ -6,7 +6,6 @@
 //
 
 import Foundation
-//import AppKit
 
 public func startServer(_ port: UInt16) {
     let server = streamingServer()

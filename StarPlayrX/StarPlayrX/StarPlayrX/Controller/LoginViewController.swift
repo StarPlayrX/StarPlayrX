@@ -289,29 +289,29 @@ class LoginViewController: UIViewController {
                 let dataUrl = "\(g.secure)\(g.domain):\(g.secureport)/large"
                 
                 Async.api.CommanderData(endpoint: dataUrl, method: "large-art") { (data) in
-                    guard let d = data,
-                          let chData = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(d),
-                          let cdata = chData as? [String : Data],
-                          !cdata.isEmpty
-                    else { runFailure(3); return }
-                    
-                    self.g.ChannelData = cdata
-                    
-                    do {
-                        let writeData = try NSKeyedArchiver.archivedData(withRootObject: self.g.ChannelData as Any, requiringSecureCoding: false)
-                        UserDefaults.standard.set(writeData, forKey: "channelDataXD")
-                        UserDefaults.standard.set(self.g.imagechecksum, forKey: "largeChecksumXD")
-                        nextStep()
-                    } catch {
-                        runFailure(4)
-                        print(error)
+                    autoreleasepool {
+                        guard let d = data,
+                              let chData = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(d),
+                              let cdata = chData as? [String : Data],
+                              !cdata.isEmpty
+                        else { runFailure(3); return }
+                        
+                        self.g.ChannelData = cdata
+                        
+                        do {
+                            let writeData = try NSKeyedArchiver.archivedData(withRootObject: self.g.ChannelData as Any, requiringSecureCoding: false)
+                            UserDefaults.standard.set(writeData, forKey: "channelDataXD")
+                            UserDefaults.standard.set(self.g.imagechecksum, forKey: "largeChecksumXD")
+                            nextStep()
+                        } catch {
+                            runFailure(4)
+                            print(error)
+                        }
                     }
                 }
             }
         }
     }
-    
-    
     
     func guide() {
         //MARK: Skip Check
