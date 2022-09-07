@@ -71,32 +71,17 @@ open class Socket: Hashable, Equatable {
     }
     
     public func writeUTF8(_ string: String) throws {
-        try writeUInt8(ArraySlice(string.utf8))
+        try writeBuffer([UInt8](string.utf8), length: (string.utf8).count)
     }
     
     public func writeUInt8(_ data: [UInt8]) throws {
-        try writeUInt8(ArraySlice(data))
+        try writeBuffer([UInt8](data), length: data.count)
     }
-    
-    public func writeUInt8(_ data: ArraySlice<UInt8>) throws {
-        try data.withUnsafeBufferPointer {
-            try writeBuffer($0.baseAddress!, length: data.count)
-        }
-    }
-    
-    public func writeData(_ data: NSData) throws {
-        try writeBuffer(data.bytes, length: data.length)
-    }
-    
+
     public func writeData(_ data: Data) throws {
-        try data.withUnsafeBytes { (body: UnsafeRawBufferPointer) -> Void in
-            if let baseAddress = body.baseAddress, body.count > 0 {
-                let pointer = baseAddress.assumingMemoryBound(to: UInt8.self)
-                try self.writeBuffer(pointer, length: data.count)
-            }
-        }
+        try writeBuffer([UInt8](data), length: data.count)
     }
-    
+
     private func writeBuffer(_ pointer: UnsafeRawPointer, length: Int) throws {
         var sent = 0
         while sent < length {
