@@ -7,21 +7,21 @@
 
 import Foundation
 
-func sessionRoute() -> ((HttpRequest) -> HttpResponse) {
-    return { request in
-        let json = try? JSONSerialization.jsonObject(with: Data(request.body), options: JSONSerialization.ReadingOptions.mutableContainers) as? [String:String]
+func sessionRoute() -> ((HttpRequest) -> HttpResponse) {{ request in
+    autoreleasepool {
+        let json = try? JSONSerialization.jsonObject(with: Data(request.body), options: JSONSerialization.ReadingOptions.fragmentsAllowed) as? [String:String]
         
         guard
             let channelid = json?["channelid"]
         else {
-            return HttpResponse.ok(.data(Data(), contentType: "application/json"))
+            return HttpResponse.notFound(.none)
         }
         
         let returnData = Session(channelid: channelid)
         if !returnData.isEmpty { storeCookiesX() }
-    
-        let object = ["data": returnData, "message": "coolbeans", "success": true] as [String : Any]
-        let data = try! JSONSerialization.data(withJSONObject: object)
-        return HttpResponse.ok(.data(data, contentType: "application/json"))
+        
+        let obj = ["data": returnData, "message": "coolbeans", "success": true] as [String : Any]
+        
+        return HttpResponse.ok(.json(obj))
     }
-}
+}}

@@ -98,13 +98,10 @@ struct Checksum {
     * https://opensource.apple.com/source/CommonCrypto/CommonCrypto-60118.50.1/include/CommonDigest.h.auto.html
     **/
     enum HashAlgorithm {
-        case md5
         case sha256
 
         func digestLength() -> Int {
             switch self {
-            case .md5:
-                return Int(CC_MD5_DIGEST_LENGTH)
             case .sha256:
                 return Int(CC_SHA256_DIGEST_LENGTH)
             }
@@ -114,8 +111,6 @@ struct Checksum {
         /// Calls the given closure with a pointer to the underlying unsafe bytes of the data's contiguous storage.
         func digestCalculation(data: UnsafeRawPointer!, len: UInt32, digestArray: UnsafeMutablePointer<UInt8>!) {
             switch self {
-            case .md5:
-                CC_MD5(data, len, digestArray)
             case .sha256:
                 CC_SHA256(data, len, digestArray)
             }
