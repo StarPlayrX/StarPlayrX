@@ -12,7 +12,11 @@ import Foundation
 open class Socket: Hashable, Equatable {
     
     let socketFileDescriptor: Int32
+    static let kBufferLength = 1024
+
     private var shutdown = false
+    static let CR: UInt8 = 13
+    static let NL: UInt8 = 10
     
     public init(socketFileDescriptor: Int32) {
         self.socketFileDescriptor = socketFileDescriptor
@@ -35,76 +39,6 @@ open class Socket: Hashable, Equatable {
         }
     }
 
-    /// Read a single byte off the socket. This method is optimized for reading
-    /// a single byte. For reading multiple bytes, use read(length:), which will
-    /// pre-allocate heap space and read directly into it.
-    ///
-    /// - Returns: A single byte
-    /// - Throws: SocketError.recvFailed if unable to read from the socket
-    open func read() throws -> UInt8 {
-        var byte: UInt8 = 0
-        
-        let count = Darwin.read(self.socketFileDescriptor as Int32, &byte, 1)
-        
-        guard count > 0 else {
-            throw SocketError.recvFailed(ErrNumString.description())
-        }
-        return byte
-    }
-    
-    /// Read up to `length` bytes from this socket
-    ///
-    /// - Parameter length: The maximum bytes to read
-    /// - Returns: A buffer containing the bytes read
-    /// - Throws: SocketError.recvFailed if unable to read bytes from the socket
-    open func read(length: Int) throws -> [UInt8] {
-        return try [UInt8](unsafeUninitializedCapacity: length) { buffer, bytesRead in
-            bytesRead = try read(into: &buffer, length: length)
-        }
-    }
-    
-    static let kBufferLength = 1024
-    
-    /// Read up to `length` bytes from this socket into an existing buffer
-    ///
-    /// - Parameter into: The buffer to read into (must be at least length bytes in size)
-    /// - Parameter length: The maximum bytes to read
-    /// - Returns: The number of bytes read
-    /// - Throws: SocketError.recvFailed if unable to read bytes from the socket
-    func read(into buffer: inout UnsafeMutableBufferPointer<UInt8>, length: Int) throws -> Int {
-        var offset = 0
-        guard let baseAddress = buffer.baseAddress else { return 0 }
-        
-        while offset < length {
-            // Compute next read length in bytes. The bytes read is never more than kBufferLength at once.
-            let readLength = offset + Socket.kBufferLength < length ? Socket.kBufferLength : length - offset
-            let bytesRead = Darwin.read(self.socketFileDescriptor as Int32, baseAddress + offset, readLength)
-            
-            guard bytesRead > 0 else {
-                throw SocketError.recvFailed(ErrNumString.description())
-            }
-            
-            offset += bytesRead
-        }
-        
-        return offset
-    }
-    
-    private static let CR: UInt8 = 13
-    private static let NL: UInt8 = 10
-    
-    public func readLine() throws -> String {
-        var characters: String = ""
-        var index: UInt8 = 0
-        
-        repeat {
-            index = try self.read()
-            if index > Socket.CR { characters.append(Character(UnicodeScalar(index))) }
-        } while index != Socket.NL
-        
-        return characters
-    }
-    
     public func peername() throws -> String {
         var addr = sockaddr(), len: socklen_t = socklen_t(MemoryLayout<sockaddr>.size)
         if getpeername(self.socketFileDescriptor, &addr, &len) != 0 {
@@ -130,24 +64,4 @@ open class Socket: Hashable, Equatable {
 
 public func == (socket1: Socket, socket2: Socket) -> Bool {
     socket1.socketFileDescriptor == socket2.socketFileDescriptor
-}
-
-public enum SocketError: Error {
-    case socketCreationFailed(String)
-    case socketSettingReUseAddrFailed(String)
-    case bindFailed(String)
-    case listenFailed(String)
-    case writeFailed(String)
-    case getPeerNameFailed(String)
-    case convertingPeerNameFailed
-    case getNameInfoFailed(String)
-    case acceptFailed(String)
-    case recvFailed(String)
-    case getSockNameFailed(String)
-}
-
-public class ErrNumString {
-    public class func description() -> String {
-        "\(String(describing: strerror(errno)))"
-    }
 }

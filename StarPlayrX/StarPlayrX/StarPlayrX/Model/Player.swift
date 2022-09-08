@@ -93,7 +93,7 @@ final class Player {
                     p.appliesMediaSelectionCriteriaAutomatically = true
                     p.allowsExternalPlayback = true
                     p.playImmediately(atRate: 1.0)
-                    p.play()
+                    //p.play()
 
                     DispatchQueue.main.asyncAfter(deadline: .now() + (self.avSession.outputLatency * 1.0))  { [weak self] in
                         guard let self = self else { return }
@@ -104,7 +104,7 @@ final class Player {
                         self?.player.currentItem?.preferredForwardBufferDuration = 1
                         self?.state = .playing
                         NotificationCenter.default.post(name: .didUpdatePlay, object: nil)
-                        p.play()
+                        //p.play()
 
                     }
                 }

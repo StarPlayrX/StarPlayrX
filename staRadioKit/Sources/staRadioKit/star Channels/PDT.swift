@@ -80,7 +80,8 @@ struct Checksum {
 
         /// Call corresponding digest calculation
         data.withUnsafeBytes {
-            algorithm.digestCalculation(data: $0.baseAddress, len: UInt32(data.count), digestArray: &digest)
+            guard let base = $0.baseAddress else { return }
+            algorithm.digestCalculation(data: base, len: UInt32(data.count), digestArray: &digest)
         }
 
         var hashString = ""
@@ -109,7 +110,7 @@ struct Checksum {
 
         /// CC_[HashAlgorithm] performs a digest calculation and places the result in the caller-supplied buffer for digest
         /// Calls the given closure with a pointer to the underlying unsafe bytes of the data's contiguous storage.
-        func digestCalculation(data: UnsafeRawPointer!, len: UInt32, digestArray: UnsafeMutablePointer<UInt8>!) {
+        func digestCalculation(data: UnsafeRawPointer, len: UInt32, digestArray: UnsafeMutablePointer<UInt8>) {
             switch self {
             case .sha256:
                 CC_SHA256(data, len, digestArray)

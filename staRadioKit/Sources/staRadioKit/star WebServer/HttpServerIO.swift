@@ -129,11 +129,13 @@ open class HttpServerIO {
             } catch {
                 //print("Failed to send response: \(error)")
             }
+            
 //            if let session = response.socketSession() {
 //                delegate?.socketConnectionReceived(socket)
 //                session(socket)
 //                break
 //            }
+            
             if !keepConnection { break }
         }
         socket.close()

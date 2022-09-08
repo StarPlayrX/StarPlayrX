@@ -12,7 +12,7 @@ import MediaPlayer
 
 class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     
-    let m1 = ProcessInfo.processInfo.isMacCatalystApp
+    let isMacCatalystApp = ProcessInfo.processInfo.isMacCatalystApp
     let g = Global.obj
     
     #if !targetEnvironment(simulator)
@@ -188,7 +188,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         #if targetEnvironment(simulator)
         runSimulation()
         #else
-        if !g.demomode && !m1 {
+        if !g.demomode && !isMacCatalystApp {
             if let ap2 = ap2volume {
                 ap2.hud(false) //Disable HUD on this view
                 volumeChanged()
@@ -202,7 +202,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     
     func shutdownVolume() {
         #if !targetEnvironment(simulator)
-        if !g.demomode && !m1 {
+        if !g.demomode && !isMacCatalystApp {
             ap2volume?.hud(true) //Enable HUD on this view
         }
         #endif
@@ -328,7 +328,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         if VolumeSlider.isTracking { return }
         
         #if !targetEnvironment(simulator)
-        if !g.demomode && !m1, let ap2 = Player.shared.avSession.outputVolume as Float?  {
+        if !g.demomode && !isMacCatalystApp, let ap2 = Player.shared.avSession.outputVolume as Float?  {
             DispatchQueue.main.async {
                 self.VolumeSlider.setValue(ap2, animated: true)
                 self.setSpeakers(value: ap2)
@@ -515,7 +515,8 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         }
         
         #if !targetEnvironment(simulator)
-        if !g.demomode && !m1, let ap2 = ap2volume?.getSoda()  {
+        if !g.demomode && !isMacCatalystApp, let ap2 = ap2volume?.getSoda()  {
+            
             VolumeSlider.setValue(ap2, animated: false)
         }
         #endif
@@ -624,7 +625,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
             Player.shared.player.volume = value
             #else
             // your real device code
-            if !self.g.demomode && !self.m1 {
+            if !self.g.demomode && !self.isMacCatalystApp {
                 self.ap2volume?.setSoda(value)
             } else {
                 Player.shared.player.volume = value
@@ -653,7 +654,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         }
         
         #if !targetEnvironment(simulator)
-        if g.demomode || m1 {
+        if g.demomode || isMacCatalystApp {
             if Player.shared.avSession.currentRoute.outputs.first?.portType == .airPlay  {
                 VolumeSlider.isEnabled = false
             } else {
@@ -674,14 +675,14 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
             if Player.shared.avSession.currentRoute.outputs.first?.portType == .airPlay {
                 
                 #if !targetEnvironment(simulator)
-                if !g.demomode && !m1 {
+                if !g.demomode && !isMacCatalystApp {
                     ap2volume?.setSodaBy(0.0)
                 }
                 #endif
                 
             } else {
                 #if !targetEnvironment(simulator)
-                if !g.demomode && !m1 {
+                if !g.demomode && !isMacCatalystApp {
                     if let vol = ap2volume?.getSoda() {
                         DispatchQueue.main.async {
                             self.VolumeSlider.setValue(vol, animated: true)
