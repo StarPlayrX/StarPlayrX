@@ -15,7 +15,15 @@ public protocol HttpServerIODelegate: AnyObject {
 }
 
 open class HttpServerIO {
-    
+    internal init(delegate: HttpServerIODelegate? = nil, socket: Socket = Socket(socketFileDescriptor: -1), sockets: Set<Socket> = Set<Socket>(), stateValue: Int32 = HttpServerIOState.stopped.rawValue, listenAddressIPv4: String? = nil, listenAddressIPv6: String? = nil) {
+        self.delegate = delegate
+        self.socket = socket
+        self.sockets = sockets
+        self.stateValue = stateValue
+        self.listenAddressIPv4 = listenAddressIPv4
+        self.listenAddressIPv6 = listenAddressIPv6
+    }
+        
     public weak var delegate: HttpServerIODelegate?
     private var socket = Socket(socketFileDescriptor: -1)
     private var sockets = Set<Socket>()
@@ -121,11 +129,11 @@ open class HttpServerIO {
             } catch {
                 //print("Failed to send response: \(error)")
             }
-            if let session = response.socketSession() {
-                delegate?.socketConnectionReceived(socket)
-                session(socket)
-                break
-            }
+//            if let session = response.socketSession() {
+//                delegate?.socketConnectionReceived(socket)
+//                session(socket)
+//                break
+//            }
             if !keepConnection { break }
         }
         socket.close()
@@ -134,11 +142,11 @@ open class HttpServerIO {
     private struct InnerWriteContext: HttpResponseBodyWriter {
         let socket: Socket
     
-        func write(_ data: [UInt8]) throws {
+        func write(bytes data: [UInt8]) throws {
             try socket.writeUInt8(data)
         }
         
-        func write(_ data: Data) throws {
+        func write(data: Data) throws {
             try socket.writeData(data)
         }
     }

@@ -10,18 +10,6 @@ import Foundation
 //Cached verison of Playlist
 func Playlist(channelid: String) -> String {
     let bitrate = "256k"
-    
-//    let net = Network.ability
-//
-//    //Get Network Info, so we know what to do with the stream
-//    if ( net.networkIsWiFi && net.networkIsConnected ) {
-//        bitrate = "256k"
-//    } else if ( !net.networkIsWiFi && net.networkIsConnected ) {
-//        bitrate = "64k"
-//    } else {
-//        bitrate = "32k"
-//    }
-    
     let size = "large"
     let underscore = "_"
     let version = "v3"

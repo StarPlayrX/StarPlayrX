@@ -55,7 +55,7 @@ internal func processNPL(data: NowPlayingLiveStruct) {
                         
                         let albumart = j.relativeURL
                         
-                        if let key = MD5(artist + song), albumart.contains("_m.")  {
+                        if let key = sha256(artist + song), albumart.contains("_m.")  {
                             MemBase[key] = albumart.replacingOccurrences(of: "%Album_Art%", with: "http://albumart.siriusxm.com")
                             break
                         }

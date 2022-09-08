@@ -17,12 +17,12 @@ public func startServer(_ port: UInt16) {
 public func streamingServer() -> HttpServer {
     let server = HttpServer()
     
-    server["/ping"] = { request in
+    server.get["/ping"] = { request in
         return HttpResponse.ok(.text("pong"))
     }
     
     //MARK: - US Route
-    server["/us"] = { request in
+    server.get["/us"] = { request in
         
         playerDomain = "player.siriusxm.com"
         root = "\(playerDomain)/rest/v2/experience/modules"
@@ -32,7 +32,7 @@ public func streamingServer() -> HttpServer {
     }
     
     //MARK: - CA Route
-    server["/ca"] = { request in
+    server.get["/ca"] = { request in
         
         playerDomain = "player.siriusxm.ca"
         root = "\(playerDomain)/rest/v2/experience/modules"
@@ -41,18 +41,16 @@ public func streamingServer() -> HttpServer {
         return HttpResponse.ok(.text(appRegion))
     }
     
-    
     server.post["/api/v2/autologin"]   = loginRoute()
     server.post["/api/v2/login"]       = loginRoute()
-    
     server.post["/api/v2/session"]     = sessionRoute()
     server.post["/api/v2/channels"]    = channelsRoute()
     server.get["/pdt"]                 = pdtRoute()
     server.get["/key/1"]               = keyOneRoute()
     server.get["/playlist/:channelid"] = playlistRoute()
-    server.get["/audio/:aac"]          = audioRoute()
+    server.get["/audio/:aac"]          = audioRoute(useBuffer: true)
     
-    server["/routes"] = { request in
+    server.get["/routes"] = { request in
         print("")
         print(server.routes) //Keep this, prevents server from giving up.
         print("")

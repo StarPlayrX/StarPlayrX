@@ -10,16 +10,13 @@
 import Foundation
 
 open class HttpServer: HttpServerIO {
-    
-    public static let version = Bundle(for: HttpServer.self).infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.3.1"
-    
-    private let router = HttpRouter()
-    
-    public override init() {
+    public init() {
         self.post = MethodRoute(method: "POST", router: router)
         self.get  = MethodRoute(method: "GET",  router: router)
     }
+    public static let version = Bundle(for: HttpServer.self).infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.3.1"
     
+    private let router = HttpRouter()
     public var post, get: MethodRoute
     
     public subscript(path: String) -> ((HttpRequest) -> HttpResponse)? {
@@ -36,17 +33,6 @@ open class HttpServer: HttpServerIO {
             return result
         } else {
             return ([:], { _ in HttpResponse.notFound(nil) })
-        }
-    }
-    
-    public struct MethodRoute {
-        public let method: String
-        public let router: HttpRouter
-        public subscript(path: String) -> ((HttpRequest) -> HttpResponse)? {
-            get { nil }
-            set {
-                router.register(method, path: path, handler: newValue)
-            }
         }
     }
 }

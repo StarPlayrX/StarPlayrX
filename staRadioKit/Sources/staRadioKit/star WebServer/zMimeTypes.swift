@@ -7,41 +7,8 @@
 //  Swifter Embedded Lite by Todd Bruss on 9/6/22.
 //  Copyright © 2022 Todd Bruss. All rights reserved.
 
-import Foundation
+//
 
-internal let DEFAULT_MIME_TYPE = "audio/aac"
-
-internal let HttpMimeTypes = [
-    "m3u8": "application/x-mpegURL",
-    "aac" : "audio/aac",
-    "txt" : "text/plain",
-    "json": "application/json",
-]
-
-internal func matchMimeType(extens: String?) -> String {
-    if extens != nil && HttpMimeTypes.contains(where: { $0.0 == extens!.lowercased() }) {
-        return HttpMimeTypes[extens!.lowercased()]!
-    }
-    return DEFAULT_MIME_TYPE
-}
-
-extension NSURL {
-    public func mimeType() -> String {
-        return matchMimeType(extens: self.pathExtension)
-    }
-}
-
-extension NSString {
-    public func mimeType() -> String {
-        return matchMimeType(extens: self.pathExtension)
-    }
-}
-
-extension String {
-    public func mimeType() -> String {
-        return (NSString(string: self)).mimeType()
-    }
-}
 
 //internal let HttpMimeTypes = [
 //    "aac" : "audio/aac",

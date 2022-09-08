@@ -29,58 +29,12 @@ open class Socket: Hashable, Equatable {
     public func close() {
         if shutdown {
             return
+        } else {
+            shutdown = true
+            Socket.close(self.socketFileDescriptor)
         }
-        shutdown = true
-        Socket.close(self.socketFileDescriptor)
-    }
-    
-    public func port() throws -> in_port_t {
-        var addr = sockaddr_in()
-        return try withUnsafePointer(to: &addr) { pointer in
-            var len = socklen_t(MemoryLayout<sockaddr_in>.size)
-            if getsockname(socketFileDescriptor, UnsafeMutablePointer(OpaquePointer(pointer)), &len) != 0 {
-                throw SocketError.getSockNameFailed(ErrNumString.description())
-            }
-            let sin_port = pointer.pointee.sin_port
-            return Int(OSHostByteOrder()) != OSLittleEndian ? sin_port.littleEndian : sin_port.bigEndian
-        }
-    }
-    
-    public func isIPv4() throws -> Bool {
-        var addr = sockaddr_in()
-        return try withUnsafePointer(to: &addr) { pointer in
-            var len = socklen_t(MemoryLayout<sockaddr_in>.size)
-            if getsockname(socketFileDescriptor, UnsafeMutablePointer(OpaquePointer(pointer)), &len) != 0 {
-                throw SocketError.getSockNameFailed(ErrNumString.description())
-            }
-            return Int32(pointer.pointee.sin_family) == AF_INET
-        }
-    }
-    
-    public func writeUTF8(_ string: String) throws {
-        try writeBuffer([UInt8](string.utf8), length: (string.utf8).count)
-    }
-    
-    public func writeUInt8(_ data: [UInt8]) throws {
-        try writeBuffer([UInt8](data), length: data.count)
     }
 
-    public func writeData(_ data: Data) throws {
-        try writeBuffer([UInt8](data), length: data.count)
-    }
-
-    private func writeBuffer(_ pointer: UnsafeRawPointer, length: Int) throws {
-        var sent = 0
-        while sent < length {
-            let result = write(self.socketFileDescriptor, pointer + sent, Int(length - sent))
-
-            if result <= 0 {
-                throw SocketError.writeFailed(ErrNumString.description())
-            }
-            sent += result
-        }
-    }
-    
     /// Read a single byte off the socket. This method is optimized for reading
     /// a single byte. For reading multiple bytes, use read(length:), which will
     /// pre-allocate heap space and read directly into it.

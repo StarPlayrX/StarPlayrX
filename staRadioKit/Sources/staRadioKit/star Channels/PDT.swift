@@ -6,8 +6,7 @@
 //
 
 import Foundation
-import CryptoKit
-
+import CommonCrypto
 
 internal func PDTendpoint() -> String {
     
@@ -35,7 +34,7 @@ internal func processPDT(data: DiscoverChannelList) -> [String:Any] {
             let cutlayer = markerLists?.first
             
             if let markers = cutlayer?.markers, let item = markers.first, let song = item.cut?.title, let artist = item.cut?.artists?.first?.name, let getchannelbyId = userX.ids[channelid ?? ""] as? [String: Any], let channelNo = getchannelbyId["channelNumber"] as? String {
-                if let key = MD5(artist + song), let image = MemBase[key] {
+                if let key = sha256(artist + song), let image = MemBase[key] {
                     ArtistSongData[channelNo] = ["image" : image, "artist" : artist, "song" : song]
                 } else {
                     ArtistSongData[channelNo] = ["image" : "", "artist" : artist, "song" : song]
@@ -67,13 +66,59 @@ internal func processPDT(data: DiscoverChannelList) -> [String:Any] {
 
 
 //MARK: New and Improved MD5
-func MD5(_ d: String) -> String? {
-    
-    var str = String()
-    
-    for byte in Insecure.MD5.hash(data: d.data(using: .utf8) ?? Data() ) {
-        str += String(format: "%02x", byte)
+public func sha256(_ str: String) -> String? {
+    guard let data = str.data(using: .utf8) else { return nil }
+    return Checksum.hash(data: data, using: .sha256)
+}
+
+struct Checksum {
+    private init() {}
+
+    static func hash(data: Data, using algorithm: HashAlgorithm) -> String {
+        /// Creates an array of unsigned 8 bit integers that contains zeros equal in amount to the digest length
+        var digest = [UInt8](repeating: 0, count: algorithm.digestLength())
+
+        /// Call corresponding digest calculation
+        data.withUnsafeBytes {
+            algorithm.digestCalculation(data: $0.baseAddress, len: UInt32(data.count), digestArray: &digest)
+        }
+
+        var hashString = ""
+        /// Unpack each byte in the digest array and add them to the hashString
+        for byte in digest {
+            hashString += String(format:"%02x", UInt8(byte))
+        }
+
+        return hashString
     }
-    
-    return str
+
+    /**
+    * Hash using CommonCrypto
+    * API exposed from CommonCrypto-60118.50.1:
+    * https://opensource.apple.com/source/CommonCrypto/CommonCrypto-60118.50.1/include/CommonDigest.h.auto.html
+    **/
+    enum HashAlgorithm {
+        case md5
+        case sha256
+
+        func digestLength() -> Int {
+            switch self {
+            case .md5:
+                return Int(CC_MD5_DIGEST_LENGTH)
+            case .sha256:
+                return Int(CC_SHA256_DIGEST_LENGTH)
+            }
+        }
+
+        /// CC_[HashAlgorithm] performs a digest calculation and places the result in the caller-supplied buffer for digest
+        /// Calls the given closure with a pointer to the underlying unsafe bytes of the data's contiguous storage.
+        func digestCalculation(data: UnsafeRawPointer!, len: UInt32, digestArray: UnsafeMutablePointer<UInt8>!) {
+            switch self {
+            case .md5:
+                CC_MD5(data, len, digestArray)
+            case .sha256:
+                CC_SHA256(data, len, digestArray)
+            }
+        }
+    }
 }

@@ -10,10 +10,11 @@
 import Foundation
 
 open class HttpRouter {
-    
-    public init() {}
-    
-    private class Node {
+    internal init(rootNode: HttpRouter.Node = Node()) {
+        self.rootNode = rootNode
+    }
+
+    internal class Node {
         /// The children nodes that form the route
         var nodes = [String: Node]()
         

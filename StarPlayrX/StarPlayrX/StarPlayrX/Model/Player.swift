@@ -9,7 +9,6 @@
 import Foundation
 import staRadioKit
 import MediaPlayer
-import CryptoKit
 
 final class Player {
     static let shared = Player()
@@ -58,11 +57,11 @@ final class Player {
     //MARK: Update the screen
     func syncArt() {
         
-        if let md5 = self.MD5(String(CACurrentMediaTime().description)) {
-            self.previousMD5 = md5
+        if let md5 = sha256(String(CACurrentMediaTime().description)) {
+            self.previousHash = md5
         } else {
             let str = "Hello, Last Star Player X."
-            self.previousMD5 = self.MD5(String(str)) ?? str
+            self.previousHash = sha256(String(str)) ?? str
         }
         
         if let i = g.ChannelArray.firstIndex(where: {$0.channel == g.currentChannel}) {
@@ -187,19 +186,19 @@ final class Player {
     
     
     
-    var previousMD5 = "reset"
+    var previousHash = "reset"
     
     //MARK: New and Improved MD5
-    func MD5(_ d: String) -> String? {
-        
-        var str = String()
-        
-        for byte in Insecure.MD5.hash(data: d.data(using: .utf8) ?? Data() ) {
-            str += String(format: "%02x", byte)
-        }
-        
-        return str
-    }
+//    func MD5(_ d: String) -> String? {
+//
+//        var str = String()
+//
+//        for byte in Insecure.MD5.hash(data: d.data(using: .utf8) ?? Data() ) {
+//            str += String(format: "%02x", byte)
+//        }
+//
+//        return str
+//    }
     
     //MARK: Update our display
     func updateDisplay(key: String, cache: [String : Any], channelArt: String, _ animated: Bool = true) {
@@ -207,11 +206,11 @@ final class Player {
             let artist = value["artist"] as String?,
             let song   = value["song"] as String?,
             let image  = value["image"] as String?,
-            let md5 = MD5(artist + song + key + channelArt + image),
-            previousMD5 != md5
+            let hash = sha256(artist + song + key + channelArt + image),
+            previousHash != hash
         {
             
-            previousMD5 = md5
+            previousHash = hash
             g.NowPlaying = (channel:key,artist:artist,song:song,albumArt:image,channelArt:channelArt, image: nil ) as NowPlayingType
             
             updateNowPlayingX(animated)

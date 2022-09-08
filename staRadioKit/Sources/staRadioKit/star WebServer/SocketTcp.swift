@@ -33,31 +33,26 @@ extension Socket {
         
         var bindResult: Int32 = -1
         if forceIPv4 {
-            var addr = sockaddr_in(
+            var addr = sockaddr_in (
                 sin_len: UInt8(MemoryLayout<sockaddr_in>.stride),
                 sin_family: UInt8(AF_INET),
                 sin_port: port.bigEndian,
                 sin_addr: in_addr(s_addr: in_addr_t(0)),
-                sin_zero: (0, 0, 0, 0, 0, 0, 0, 0))
-            
-            if let address = listenAddress {
-                if address.withCString({ cstring in inet_pton(AF_INET, cstring, &addr.sin_addr) }) == 1 {
-                    // print("\(address) is converted to \(addr.sin_addr).")
-                } else {
-                    // print("\(address) is not converted.")
-                }
-            }
+                sin_zero: (0, 0, 0, 0, 0, 0, 0, 0)
+            )
+
             bindResult = withUnsafePointer(to: &addr) {
                 bind(socketFileDescriptor, UnsafePointer<sockaddr>(OpaquePointer($0)), socklen_t(MemoryLayout<sockaddr_in>.size))
             }
         } else {
-            var addr = sockaddr_in6(
+            var addr = sockaddr_in6 (
                 sin6_len: UInt8(MemoryLayout<sockaddr_in6>.stride),
                 sin6_family: UInt8(AF_INET6),
                 sin6_port: port.bigEndian,
                 sin6_flowinfo: 0,
                 sin6_addr: in6addr_any,
-                sin6_scope_id: 0)
+                sin6_scope_id: 0
+            )
 
             bindResult = withUnsafePointer(to: &addr) {
                 bind(socketFileDescriptor, UnsafePointer<sockaddr>(OpaquePointer($0)), socklen_t(MemoryLayout<sockaddr_in6>.size))
@@ -68,28 +63,12 @@ extension Socket {
             let details = ErrNumString.description()
             Socket.close(socketFileDescriptor)
             throw SocketError.bindFailed(details)
-        }
-        
-        if listen(socketFileDescriptor, maxPendingConnection) == -1 {
+        } else if listen(socketFileDescriptor, maxPendingConnection) == -1 {
             let details = ErrNumString.description()
             Socket.close(socketFileDescriptor)
             throw SocketError.listenFailed(details)
         }
         
         return Socket(socketFileDescriptor: socketFileDescriptor)
-    }
-    
-    public func acceptClientSocket() throws -> Socket {
-        var addr = sockaddr()
-        var len: socklen_t = 0
-        let clientSocket = accept(self.socketFileDescriptor, &addr, &len)
-        
-        if clientSocket == -1 {
-            throw SocketError.acceptFailed(ErrNumString.description())
-        }
-        
-        Socket.setNoSigPipe(clientSocket)
-        
-        return Socket(socketFileDescriptor: clientSocket)
     }
 }
