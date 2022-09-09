@@ -12,7 +12,9 @@ import MediaPlayer
 
 class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     
-    let isMacCatalystApp = ProcessInfo.processInfo.isMacCatalystApp
+    
+   
+    
     let g = Global.obj
     
     #if !targetEnvironment(simulator)
@@ -122,6 +124,10 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     
     override func loadView() {
         super.loadView()
+        
+        if #available(iOS 13.0, *) {
+            isMacCatalystApp = ProcessInfo.processInfo.isMacCatalystApp
+        }
         
         var isPhone = true
         var NavY = CGFloat(0)
@@ -625,7 +631,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
             Player.shared.player.volume = value
             #else
             // your real device code
-            if !self.g.demomode && !self.isMacCatalystApp {
+            if !self.g.demomode && !isMacCatalystApp {
                 self.ap2volume?.setSoda(value)
             } else {
                 Player.shared.player.volume = value
@@ -638,7 +644,9 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     func addSliderAction() {
         VolumeSlider.addTarget(self, action: #selector(VolumeChanged(slider:event:)), for: .valueChanged)
         VolumeSlider.isContinuous = true
-        VolumeSlider.accessibilityRespondsToUserInteraction = true
+        if #available(iOS 13.0, *) {
+            VolumeSlider.accessibilityRespondsToUserInteraction = true
+        }
         VolumeSlider.accessibilityHint = "Volume Slider"
     }
     
@@ -671,29 +679,38 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     }
     
     func airplayRunner() {
-        if tabBarController?.tabBar.selectedItem?.title == channelString && title == g.currentChannelName {
-            if Player.shared.avSession.currentRoute.outputs.first?.portType == .airPlay {
-                
-                #if !targetEnvironment(simulator)
-                if !g.demomode && !isMacCatalystApp {
-                    ap2volume?.setSodaBy(0.0)
-                }
-                #endif
-                
-            } else {
-                #if !targetEnvironment(simulator)
-                if !g.demomode && !isMacCatalystApp {
-                    if let vol = ap2volume?.getSoda() {
-                        DispatchQueue.main.async {
-                            self.VolumeSlider.setValue(vol, animated: true)
+        var isTrue = false
+        DispatchQueue.main.sync {
+            isTrue = tabBarController?.tabBar.selectedItem?.title == self.channelString
+            
+            if isTrue && title == g.currentChannelName {
+                if Player.shared.avSession.currentRoute.outputs.first?.portType == .airPlay {
+                    
+                    #if !targetEnvironment(simulator)
+                    if !g.demomode && !isMacCatalystApp {
+                        ap2volume?.setSodaBy(0.0)
+                    }
+                    #endif
+                    
+                } else {
+                    #if !targetEnvironment(simulator)
+                    if !g.demomode && !isMacCatalystApp {
+                        if let vol = ap2volume?.getSoda() {
+                            DispatchQueue.main.async {
+                                self.VolumeSlider.setValue(vol, animated: true)
+                            }
                         }
                     }
+                    #endif
                 }
-                #endif
+                
+                DispatchQueue.main.async {
+                    self.isSliderEnabled()
+                }
             }
-            
-            isSliderEnabled()
         }
+                
+    
     }
     
     override func accessibilityPerformMagicTap() -> Bool {

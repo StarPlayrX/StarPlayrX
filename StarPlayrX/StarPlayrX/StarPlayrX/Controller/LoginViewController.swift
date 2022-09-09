@@ -10,8 +10,6 @@ import UIKit
 import SafariServices
 import AVKit
 
-
-
 class LoginViewController: UIViewController {
     
     let g = Global.obj

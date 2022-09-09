@@ -1,9 +1,9 @@
 ///
-///  MemberTableViewController.swift
-///  SugLoginUser
+///  ChannelsViewController.swift
+///  StarPlayrX
 ///
 ///  Created by Todd Bruss on 12/4/18.
-///  Copyright © 2018 SignUpGenius. All rights reserved.
+///  Copyright © 2018 StarPlayrX. All rights reserved.
 ///
 
 import UIKit
@@ -30,7 +30,6 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
                 } else {
                     allStarButton.setImage(UIImage(named: "star_off"), for: .normal)
                     allStarButton.accessibilityLabel = "Preset Off."
-
                 }
                 break
             }
@@ -50,11 +49,9 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
                 if g.ChannelArray[index].preset {
                     allStarButton.setImage(UIImage(named: "star_on"), for: .normal)
                     allStarButton.accessibilityLabel = "Preset On, Channel \(g.currentChannelName)"
-                    
                 } else {
                     allStarButton.setImage(UIImage(named: "star_off"), for: .normal)
                     allStarButton.accessibilityLabel = "Preset Off"
-                    
                 }
             }
             
@@ -154,11 +151,6 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
         }
     }
     
-    @objc func updateChannelsView() {
-        
-    }
-    
-    
     override func viewWillAppear(_ animated: Bool) {
         
         if let searchbartext = searchBar.text {
@@ -167,14 +159,12 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
             } else if g.SearchText.count > 0 {
                 searchBar.text = g.SearchText
             }
-            
         }
     
         self.title == g.categoryTitle ? UpdateTableView(scrollPosition: .none) : UpdateTableView(scrollPosition: .middle)
         self.title = g.categoryTitle
         
         checkForAllStar()
-        
     }
         
     
@@ -194,14 +184,12 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
         }
     }
     
-    
     func SPXSelectRow(myTableView: UITableView, position: Int, scrollPosition: UITableView.ScrollPosition) {
         let sizeTable = myTableView.numberOfRows(inSection: 0)
         guard position >= 0 && position < sizeTable else { return }
         let indexPath = IndexPath(row: position, section: 0)
         myTableView.selectRow(at: indexPath, animated: false, scrollPosition: scrollPosition)
     }
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -210,20 +198,16 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
 
         ChannelsTableView.delegate = self
         UpdateTableView()
-        
-        //self.clearsSelectionOnViewWillAppear = true
-    
+            
         searchBar.backgroundColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0)
         searchBar.barTintColor = UIColor(displayP3Red: 41 / 255, green: 42 / 255, blue: 48 / 255, alpha: 1.0)
         searchBar.delegate = self
         ChannelsTableView.rowHeight = 80
         ChannelsTableView.estimatedRowHeight = 80
-
         searchBar.sizeToFit()
         
         setAllStarButton()
     }
-    
    
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if cell.isSelected {
@@ -238,30 +222,24 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
         }
     }
     
-    
     @objc func UpdateTableView(scrollPosition: UITableView.ScrollPosition = .none) {
         updateFilter()
         ChannelsTableView.reloadData()
         SelectMyRow(scrollPosition: scrollPosition)
     }
    
-    
     @objc func pausePlayBack() {
         p.pause()
     }
-    
-    
+
     override func accessibilityPerformMagicTap() -> Bool {
         p.magicTapped()
         return true
     }
-      
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
-    
     
     override func tableView(_ tableView : UITableView, didSelectRowAt indexPath: IndexPath) {
         guard
@@ -300,7 +278,6 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
             //iPad 9"
             case 768.0 :
                 iPad = true
-
             default :
                 iPad = false
         }
@@ -312,7 +289,6 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
         }
     }
     
-    
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -323,7 +299,6 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
         return filterdata.count
     }
   	
-    
     //Display the channels view
     override func tableView(_ tableView: UITableView,
         cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -353,11 +328,6 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
           
             cell.detailTextLabel?.numberOfLines = 2
         }
-        
         return cell
     }
-    
 }
-
-
-

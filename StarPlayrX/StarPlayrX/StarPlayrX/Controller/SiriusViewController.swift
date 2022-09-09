@@ -18,10 +18,9 @@ class SiriusViewController: UITableViewController {
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
     override var prefersHomeIndicatorAutoHidden : Bool { return true }
     
-    
     func checkServer() {
         let pinpoint = "\(g.insecure)\(g.localhost):\(p.port)/ping"
-        Async.api.Text(endpoint: pinpoint ) { pong in
+        Async.api.Text(endpoint: pinpoint) { pong in
             guard let ping = pong else { self.launchServer(); return }
             ping == "pong" ? ()/* Do Nothing */ : self.launchServer()
         }
@@ -144,7 +143,6 @@ class SiriusViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         KeepTableCellUpToDate()
     }
-    
     
     //MARK: Read Write Cache for the PDT (Artist / Song / Album Art)
     @objc func SPXCache() {

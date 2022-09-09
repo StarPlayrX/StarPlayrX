@@ -42,7 +42,6 @@ final class Player {
     
     func new(_ state: PlayerState? = nil) {
         if state == .stream {
-            //player.pause()
             self.playX()
         } else if player.rate == 1 || self.state == .playing {
             self.pause()
@@ -87,27 +86,28 @@ final class Player {
                     let p = self.player
                     p.insert(playItem, after: nil)
                     p.currentItem?.preferredForwardBufferDuration = 0
-                    p.currentItem?.automaticallyPreservesTimeOffsetFromLive = true
+                    if #available(iOS 13.0, *) {
+                        p.currentItem?.automaticallyPreservesTimeOffsetFromLive = true
+                    }
                     p.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = true
                     p.automaticallyWaitsToMinimizeStalling = true
                     p.appliesMediaSelectionCriteriaAutomatically = true
                     p.allowsExternalPlayback = true
-                    p.playImmediately(atRate: 1.0)
-                    //p.play()
-
-                    DispatchQueue.main.asyncAfter(deadline: .now() + (self.avSession.outputLatency * 1.0))  { [weak self] in
-                        guard let self = self else { return }
-                        self.SPXCache()
-                    }
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + self.avSession.outputLatency * 2.0) { [weak self] in
-                        self?.player.currentItem?.preferredForwardBufferDuration = 1
-                        self?.state = .playing
-                        NotificationCenter.default.post(name: .didUpdatePlay, object: nil)
-                        //p.play()
-
-                    }
+                    p.play()
                 }
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + (self.avSession.outputLatency * 0.5))  { [weak self] in
+                guard let self = self else { return }
+                self.SPXCache()
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + self.avSession.outputLatency * 2.0) { [weak self] in
+                self?.player.currentItem?.preferredForwardBufferDuration = 1
+                self?.state = .playing
+                NotificationCenter.default.post(name: .didUpdatePlay, object: nil)
+                self?.player.playImmediately(atRate: 1.0)
+
             }
         }
         
@@ -138,11 +138,13 @@ final class Player {
         let p = self.player
         
         p.currentItem?.preferredForwardBufferDuration = 0
-        p.currentItem?.automaticallyPreservesTimeOffsetFromLive = true
+        if #available(iOS 13.0, *) {
+            p.currentItem?.automaticallyPreservesTimeOffsetFromLive = true
+        } 
         p.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = true
         p.automaticallyWaitsToMinimizeStalling = true
         p.appliesMediaSelectionCriteriaAutomatically = true
-        p.allowsExternalPlayback = false
+        p.allowsExternalPlayback = true
 
         DispatchQueue.main.asyncAfter(deadline: .now() + avSession.outputLatency * 2.0) { [weak self] in
             self?.player.currentItem?.preferredForwardBufferDuration = 1
@@ -436,9 +438,13 @@ final class Player {
         nowPlayingInfo[MPNowPlayingInfoPropertyDefaultPlaybackRate] = 1.0
         
         if self.player.rate == 1 {
-            nowPlayingInfoCenter.playbackState = .playing
+            if #available(iOS 13.0, *) {
+                nowPlayingInfoCenter.playbackState = .playing
+            }
         } else {
-            nowPlayingInfoCenter.playbackState = .paused
+            if #available(iOS 13.0, *) {
+                nowPlayingInfoCenter.playbackState = .paused
+            }
         }
         
         nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo

@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+
 internal class Global  {
     static let obj = Global()
     
@@ -97,3 +98,5 @@ enum Speakers : String {
     case speaker9 = "speaker9"
     case speaker10 = "speaker10"
 }
+
+

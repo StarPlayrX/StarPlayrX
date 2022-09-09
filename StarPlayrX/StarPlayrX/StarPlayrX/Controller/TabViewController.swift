@@ -17,11 +17,14 @@ class TabController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
  		
-        let appearance = tabBar.standardAppearance
-        appearance.shadowImage = nil
-        appearance.shadowColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0)
-        appearance.backgroundColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0)
-        tabBar.standardAppearance = appearance
+        if #available(iOS 13.0, *) {
+            let appearance = tabBar.standardAppearance
+            appearance.shadowImage = nil
+            appearance.shadowColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0)
+            appearance.backgroundColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0)
+            tabBar.standardAppearance = appearance
+        } 
+      
         tabBar.layer.borderWidth = 0.0
         tabBar.clipsToBounds = true
        

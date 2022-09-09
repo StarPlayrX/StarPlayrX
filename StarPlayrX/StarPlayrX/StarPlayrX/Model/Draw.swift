@@ -120,7 +120,7 @@ final class Draw {
     }
     
     //MARK: 8 - Draw AirPlay Button
-    func AirPlay(airplayView: UIView, playerView: UIView) -> (view: UIView, picker: AVRoutePickerView ) {
+    func AirPlay(airplayView: UIView, playerView: UIView) -> (view: UIView, picker: AVRoutePickerView) {
         
         let vp = self.drawAirPlay(airplayView: airplayView, playerView: playerView, centerX: playerView.frame.size.width - buttonOffset, centerY: positionBottom, rectX: 0, rectY: 0, width: airplaySize, height: airplaySize, wire: false)
     
@@ -487,7 +487,9 @@ final class Draw {
             
             let airplayButton = AVRoutePickerView(frame: buttonFrame)
             
-            airplayButton.prioritizesVideoDevices = false
+            if #available(iOS 13.0, *) {
+                airplayButton.prioritizesVideoDevices = false
+            }
             //airplayButton.delegate = self
 
             airplayButton.activeTintColor = UIColor.systemBlue

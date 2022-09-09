@@ -16,14 +16,16 @@ class SplitViewController: UISplitViewController, UISplitViewControllerDelegate 
         self.delegate = self
         self.preferredDisplayMode = UISplitViewController.DisplayMode.oneBesideSecondary
         
-        if let appearance = navigationController?.navigationBar.standardAppearance {
-            appearance.shadowImage = .none
-            appearance.shadowColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0)
-            appearance.backgroundColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0)
-            appearance.titleTextAttributes =  [ .foregroundColor : UIColor.white ]
-            navigationController?.navigationBar.standardAppearance = appearance
-            navigationController?.navigationBar.layer.borderWidth = 0.0
-        }
+        if #available(iOS 13.0, *) {
+            if let appearance = navigationController?.navigationBar.standardAppearance {
+                appearance.shadowImage = .none
+                appearance.shadowColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0)
+                appearance.backgroundColor = UIColor(displayP3Red: 20 / 255, green: 22 / 255, blue: 24 / 255, alpha: 1.0)
+                appearance.titleTextAttributes =  [ .foregroundColor : UIColor.white ]
+                navigationController?.navigationBar.standardAppearance = appearance
+                navigationController?.navigationBar.layer.borderWidth = 0.0
+            }
+        } 
         
         self.view.backgroundColor = UIColor(displayP3Red: 35 / 255, green: 37 / 255, blue: 39 / 255, alpha: 1.0)
         
