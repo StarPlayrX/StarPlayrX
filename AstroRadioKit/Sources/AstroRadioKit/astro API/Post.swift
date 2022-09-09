@@ -8,17 +8,14 @@
 
 import Foundation
 
-
 internal func PostSync(request: Dictionary<String, Any>, endpoint: String, method: String, PostTupleHandler: @escaping PostTupleHandler) {
     
-    Session(channelid: "siriushits1")
-
-    let semaphore = DispatchSemaphore(value: 0)
-
-    //var syncData : PostReturnTuple = (message: "", success: false, data: [:], response: HTTPURLResponse() )
     let dummy = (message: method + " failed in guard statement", success: false, data: ["": ""], response: nil ) as PostReturnTuple
     guard let url = URL(string: endpoint) else { PostTupleHandler(dummy); return }
 
+    Session(channelid: "siriushits1")
+
+    let semaphore = DispatchSemaphore(value: 0)
     var urlReq = URLRequest(url: url)
     
     if method != "channels" {

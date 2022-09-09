@@ -8,8 +8,7 @@
 
 import Network
 import Foundation
-import staRadioKit
-
+import AstroRadioKit
 
 public class Network {
     

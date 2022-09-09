@@ -1,8 +1,8 @@
 import Foundation
 
-
 //MARK: GetAsync
-internal func GetAsync(endpoint: String, DictionaryHandler: @escaping DictionaryHandler)  {
+internal func GetAsync(endpoint: String, DictionaryHandler: @escaping DictionaryHandler) {
+    
     guard let url = URL(string: endpoint) else { DictionaryHandler(.none); return}
     
     var urlReq = URLRequest(url: url)
@@ -23,11 +23,9 @@ internal func GetAsync(endpoint: String, DictionaryHandler: @escaping Dictionary
     task.resume()
 }
 
-
-
 //MARK: - GetPdtAsyc
 internal func GetPdtSync(endpoint: String, method: String, PdtHandler: @escaping PdtHandler) {
-    
+
     guard let url = URL(string: endpoint) else { PdtHandler(nil); return }
     
     let semaphore = DispatchSemaphore(value: 0)

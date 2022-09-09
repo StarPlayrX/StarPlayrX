@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import staRadioKit
+import AstroRadioKit
 import MediaPlayer
 
 final class Player {

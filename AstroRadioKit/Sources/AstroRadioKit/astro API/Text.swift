@@ -1,7 +1,7 @@
 import Foundation
 
 //MARK: Text
-internal func TextSync(endpoint: String, TextHandler: @escaping TextHandler)  {
+internal func TextSync(endpoint: String, TextHandler: @escaping TextHandler) {
     guard let url = URL(string: endpoint) else { TextHandler("error1"); return}
     
     let semaphore = DispatchSemaphore(value: 0)

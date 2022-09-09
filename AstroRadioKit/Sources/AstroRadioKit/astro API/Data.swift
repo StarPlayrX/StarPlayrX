@@ -9,6 +9,7 @@ import Foundation
 
 //MARK: Data Sync
 internal func dataSync(endpoint: String, method: String, DataHandler: @escaping DataHandler ) {
+ 
     guard let url = URL(string: endpoint) else { DataHandler(.none); return}
     
     let semaphore = DispatchSemaphore(value: 0)

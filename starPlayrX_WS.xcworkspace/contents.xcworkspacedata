@@ -5,6 +5,6 @@
       location = "group:StarPlayrX/StarPlayrX/StarPlayrX.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:staRadioKit">
+      location = "group:StarPlayrX/StarPlayrX/../../AstroRadioKit">
    </FileRef>
 </Workspace>
