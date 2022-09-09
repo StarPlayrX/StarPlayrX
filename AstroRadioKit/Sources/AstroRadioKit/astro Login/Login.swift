@@ -98,10 +98,3 @@ func processLogin(username: String, pass: String, result: PostReturnTuple) -> (s
     
     return (success: false, message: "To err is human. We had a login failure.", data: "")
 }
-
-
-
-
-    
-
-
