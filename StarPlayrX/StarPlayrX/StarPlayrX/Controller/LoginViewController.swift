@@ -83,7 +83,7 @@ class LoginViewController: UIViewController {
     
     func displayError(title: String, message: String, action: String) {
         DispatchQueue.main.async {
-            self.prog(0.0, "    ")
+            self.prog(0.0, "")
             self.loginButton.isEnabled = true
             self.loginButton.alpha = 1.0
             self.showAlert(title: title, message: message, action: action)
@@ -114,7 +114,7 @@ class LoginViewController: UIViewController {
             if !net.networkIsConnected {
                 self.displayError(title: "Network error", message: "Check your internet connection and try again.", action: "OK")
             } else {
-                self.prog(0.01, "Login")
+                self.prog(0.1, "Login")
                 self.login()
             }
         }
@@ -225,7 +225,7 @@ class LoginViewController: UIViewController {
         
         Async.api.Text(endpoint: checksumUrl) { sum in
             
-            self.prog(0.6, "Artwork")
+            self.prog(0.6, "Processing")
             
             if let check = sum {
                 self.g.imagechecksum = String(check)
@@ -426,7 +426,7 @@ class LoginViewController: UIViewController {
         
         
         //Read in the presets
-        let x = (UserDefaults.standard.array(forKey: "SPXPresets") ?? ["2","3","4"]) as! [String]
+        guard let x = (UserDefaults.standard.array(forKey: "SPXPresets") ?? ["2","3","4"]) as? [String] else { return }
         
         p.SPXPresets = x
         if !p.SPXPresets.isEmpty && !g.ChannelArray.isEmpty {
@@ -443,7 +443,7 @@ class LoginViewController: UIViewController {
             }
         }
         
-        self.prog(0.7, "Icons")
+        self.prog(0.8, "Icons")
         self.processChannelIcons()
     }
     
@@ -461,7 +461,7 @@ class LoginViewController: UIViewController {
         }
         // }
         
-        self.prog(0.8, "Guide")
+        self.prog(1.0, "Guide")
         guide()
     }
     

@@ -13,7 +13,7 @@ class Sync {
     
     //MARK: Read a data file Synchronously
     func readLocalDataFile(filename:String) -> Data?  {
-        try? NSData(contentsOfFile: Bundle.main.path(forResource: filename, ofType: "dms")!) as Data
+        try? NSData(contentsOfFile: Bundle.main.path(forResource: filename, ofType: "dms") ?? "") as Data
     }
 }
 

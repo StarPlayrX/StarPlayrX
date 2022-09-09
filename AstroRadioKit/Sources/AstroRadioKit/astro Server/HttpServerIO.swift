@@ -40,7 +40,7 @@ open class HttpServerIO {
     public private(set) var state: HttpServerIOState {
         
         get {
-            HttpServerIOState(rawValue: stateValue)!
+            HttpServerIOState(rawValue: stateValue) ?? HttpServerIOState.stopped
         }
         
         set(state) {

@@ -89,7 +89,7 @@ open class HttpRouter {
                 currentNode = nextNode
             } else {
                 currentNode.nodes[pathSegment] = Node()
-                currentNode = currentNode.nodes[pathSegment]!
+                currentNode = currentNode.nodes[pathSegment] ?? currentNode
             }
         }
         

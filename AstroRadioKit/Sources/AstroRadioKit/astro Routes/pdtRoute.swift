@@ -27,7 +27,7 @@ func pdtRoute() -> ((HttpRequest) -> HttpResponse) {{ request in
                 for ( key, value ) in userX.channels {
                     
                     let v = value as! [String: Any]
-                    let name = v["name"] as! String
+                    let name = v["name"] as? String
                     
                     //Substitute text for when channel guide is offline
                     artist_song_data[key] = ["image": "", "artist": key, "song": name]
