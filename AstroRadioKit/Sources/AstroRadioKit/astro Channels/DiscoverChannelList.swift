@@ -36,9 +36,6 @@ struct ModuleList: Codable {
 // MARK: - Module
 struct Module: Codable {
     var moduleResponse: ModuleResponse?
-    /*var moduleArea, moduleType: String?
-    var updateFrequency: Int?
-    var wallClockRenderTime: String?*/
 }
 
 // MARK: - ModuleResponse

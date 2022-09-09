@@ -29,7 +29,7 @@ func Playlist(channelid: String) -> String {
     
     source = source.replacingOccurrences(of: "32k",  with: bitrate)
     source = source.replacingOccurrences(of: "key/1", with: tail)
-    source = source + userX.consumer + "&token=" + userX.token
+    source += userX.consumer + "&token=" + userX.token
         
 	return source
 }
