@@ -680,8 +680,8 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     
     func airplayRunner() {
         var isTrue = false
-        DispatchQueue.main.sync {
-            isTrue = tabBarController?.tabBar.selectedItem?.title == self.channelString
+        DispatchQueue.main.async { [self] in
+            isTrue = tabBarController?.tabBar.selectedItem?.title == channelString
             
             if isTrue && title == g.currentChannelName {
                 if Player.shared.avSession.currentRoute.outputs.first?.portType == .airPlay {
