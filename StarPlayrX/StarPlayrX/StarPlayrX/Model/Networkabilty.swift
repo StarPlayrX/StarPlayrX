@@ -8,7 +8,7 @@
 
 import Network
 import Foundation
-import AstroRadioKit
+import StarPlayrRadioKit
 
 public class Network {
     

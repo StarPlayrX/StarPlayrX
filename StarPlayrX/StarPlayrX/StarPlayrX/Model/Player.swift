@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import AstroRadioKit
+import StarPlayrRadioKit
 import MediaPlayer
 
 final class Player {
@@ -71,36 +71,32 @@ final class Player {
     
     
     func playX() {
+        self.player.volume = 0
         resetPlayer()
-
         let pinpoint = "\(g.insecure)\(g.localhost):\(self.port)/ping"
         state = .buffering
 
         func stream() {
             DispatchQueue.main.async {
                 if let url = URL(string: "\(self.g.insecure)\(self.g.localhost):\(self.port)/playlist/\(self.g.currentChannel)\(self.g.m3u8)") {
-                    
-
                     let asset = AVAsset(url: url)
                     let playItem = AVPlayerItem(asset:asset)
 
                     let p = self.player
                     p.insert(playItem, after: nil)
                     p.currentItem?.preferredForwardBufferDuration = 0
-                    if #available(iOS 13.0, *) {
-                        p.currentItem?.automaticallyPreservesTimeOffsetFromLive = true
-                    }
                     p.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = true
                     p.automaticallyWaitsToMinimizeStalling = true
                     p.appliesMediaSelectionCriteriaAutomatically = true
                     p.allowsExternalPlayback = true
-                    
-                    p.volume = 0
-                    p.play()
+                    p.playImmediately(atRate: 1.0)
                     
                     //MARK: Todd B - Todo fix fade in on player view ToddB FIXME
                     p.fadeVolume(from: 0, to: 1, duration: Float(5))
                     
+                    if #available(iOS 13.0, *) {
+                        p.currentItem?.automaticallyPreservesTimeOffsetFromLive = true
+                    }
                 }
             }
             
@@ -113,6 +109,10 @@ final class Player {
                 self?.player.currentItem?.preferredForwardBufferDuration = 1
                 self?.state = .playing
                 NotificationCenter.default.post(name: .didUpdatePlay, object: nil)
+                
+                if self?.player.rate != 1 {
+                    self?.player.playImmediately(atRate: 1.0)
+                }
 
             }
         }
