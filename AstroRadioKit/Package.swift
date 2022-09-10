@@ -12,21 +12,12 @@ let package = Package(
             targets: ["AstroRadioKit"]),
     ],
     dependencies: [
-        
-        // Dependencies declare other packages that this package depends on.
         .package(url: "https://github.com/StarPlayrX/Swifter-Lite", branch: "1.5.1")
     ],
     targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "AstroRadioKit",
             dependencies: [.product(name: "SwifterLite", package: "Swifter-Lite")]
         ),
     ]
 )
-
-/*
- dependency 'SwifterLite' in target 'radioKit' requires explicit declaration; reference the package in the target dependency with '.product(name: "SwifterLite", package: "Swifter-Lite")'
- 
- */
