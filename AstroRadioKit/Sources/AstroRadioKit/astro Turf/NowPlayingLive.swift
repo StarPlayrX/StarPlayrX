@@ -43,21 +43,24 @@ public func nowPlayingLive(channelid: String) -> String {
 internal func processNPL(data: NowPlayingLiveStruct) {
     if let markers = data.moduleListResponse.moduleList.modules.first?.moduleResponse.liveChannelData.markerLists {
         
-        MemBase = [:]
+        //Reset MemBase
+        if MemBase.count > 100 {
+            MemBase = [:]
+        }
         
-        
-        for m in markers {
-            
-            for i in m.markers {
-                let cut = i.cut
-                if let artist = cut?.artists.first?.name, let song = cut?.title, let art = cut?.album?.creativeArts  {
-                    for j in art.reversed() {
-                        
-                        let albumart = j.relativeURL
-                        
-                        if let key = sha256(artist + song), albumart.contains("_m.")  {
-                            MemBase[key] = albumart.replacingOccurrences(of: "%Album_Art%", with: "http://albumart.siriusxm.com")
-                            break
+        autoreleasepool {
+            for m in markers {
+                for i in m.markers {
+                    let cut = i.cut
+                    if let artist = cut?.artists.first?.name, let song = cut?.title, let art = cut?.album?.creativeArts  {
+                        for j in art.reversed() {
+                            
+                            let albumart = j.relativeURL
+                            
+                            if let key = sha256(artist + song), albumart.contains("_m.")  {
+                                MemBase[key] = albumart.replacingOccurrences(of: "%Album_Art%", with: "http://albumart.siriusxm.com")
+                                break
+                            }
                         }
                     }
                 }

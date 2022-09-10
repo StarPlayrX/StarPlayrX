@@ -1,10 +1,5 @@
 import Foundation
 
-//streaming flag
-public var streaming: Bool = false
-
-//local
-public let ipaddress: String = "127.0.0.1"
 //source
 public var usePrime: Bool = false
 public let http: String = "https://"
@@ -13,13 +8,11 @@ public var root: String = "player.siriusxm.com/rest/v2/experience/modules"
 public var playerDomain = "player.siriusxm.com"
 public var appRegion = "US"
 
-public var connectionType = "wifi"
-public var connectionInt = 1
 
 public var hls_sources = Dictionary<String, String>()
+
 internal var MemBase = Dictionary<String?, String?>()
-public var largeChannelLineUp = Data()
-public var smallChannelLineUp = Data()
+internal let audioFormat = "audio/aac"
 
 public typealias LoginData = ( email:String, pass:String, channels:  Dictionary<String, Any>,
     ids:  Dictionary<String, Any>, channel: String, token: String, loggedin: Bool,  gupid: String, consumer: String, key: String, keyurl: String )

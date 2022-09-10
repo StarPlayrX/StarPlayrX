@@ -75,11 +75,12 @@ final class Player {
 
         let pinpoint = "\(g.insecure)\(g.localhost):\(self.port)/ping"
         state = .buffering
-    
+
         func stream() {
             DispatchQueue.main.async {
                 if let url = URL(string: "\(self.g.insecure)\(self.g.localhost):\(self.port)/playlist/\(self.g.currentChannel)\(self.g.m3u8)") {
                     
+
                     let asset = AVAsset(url: url)
                     let playItem = AVPlayerItem(asset:asset)
 
@@ -93,11 +94,17 @@ final class Player {
                     p.automaticallyWaitsToMinimizeStalling = true
                     p.appliesMediaSelectionCriteriaAutomatically = true
                     p.allowsExternalPlayback = true
+                    
+                    p.volume = 0
                     p.play()
+                    
+                    //MARK: Todd B - Todo fix fade in on player view ToddB FIXME
+                    p.fadeVolume(from: 0, to: 1, duration: Float(5))
+                    
                 }
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + (self.avSession.outputLatency * 0.5))  { [weak self] in
+            DispatchQueue.main.asyncAfter(deadline: .now() + (self.avSession.outputLatency))  { [weak self] in
                 guard let self = self else { return }
                 self.SPXCache()
             }
@@ -106,7 +113,6 @@ final class Player {
                 self?.player.currentItem?.preferredForwardBufferDuration = 1
                 self?.state = .playing
                 NotificationCenter.default.post(name: .didUpdatePlay, object: nil)
-                self?.player.playImmediately(atRate: 1.0)
 
             }
         }
