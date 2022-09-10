@@ -35,3 +35,4 @@ typealias DataHandler       = (_ data:Data?) 				   -> Void
 typealias TextHandler       = (_ text:String?) 			   	   -> Void
 typealias PdtHandler        = (_ struct:DiscoverChannelList?)  -> Void
 typealias LiveHandler 		= (_ struct:NowPlayingLiveStruct?) -> Void
+

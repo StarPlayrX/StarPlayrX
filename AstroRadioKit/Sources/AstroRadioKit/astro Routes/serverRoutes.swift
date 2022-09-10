@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwifterLite
 
 public func startServer(_ port: UInt16) {
     let server = streamingServer()

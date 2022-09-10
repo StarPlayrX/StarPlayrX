@@ -25,6 +25,7 @@
 		5F5C5062244CC26000A35D76 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C504F244CC26000A35D76 /* Extensions.swift */; };
 		5F5C5065244CC26000A35D76 /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5052244CC26000A35D76 /* Global.swift */; };
 		5F5C506A244CC26000A35D76 /* Networkabilty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5C5057244CC26000A35D76 /* Networkabilty.swift */; };
+		5F68F28528CD01DD00F3E73C /* SwifterLite in Frameworks */ = {isa = PBXBuildFile; productRef = 5F68F28428CD01DD00F3E73C /* SwifterLite */; };
 		5FCEF5F728CAC5A80066802A /* AstroRadioKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5FCEF5F628CAC5A80066802A /* AstroRadioKit */; };
 		5FDAD9BA2464EFBA008E38A8 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDAD9B92464EFBA008E38A8 /* Async.swift */; };
 		6F72C69A25E0C7B600B2374C /* GTSodaPop.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F72C69625E0C7B600B2374C /* GTSodaPop.m */; };
@@ -67,6 +68,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5FCEF5F728CAC5A80066802A /* AstroRadioKit in Frameworks */,
+				5F68F28528CD01DD00F3E73C /* SwifterLite in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -196,6 +198,7 @@
 			name = StarPlayrX;
 			packageProductDependencies = (
 				5FCEF5F628CAC5A80066802A /* AstroRadioKit */,
+				5F68F28428CD01DD00F3E73C /* SwifterLite */,
 			);
 			productName = StarPlayrX;
 			productReference = 5F5C5005244CBBD300A35D76 /* StarPlayrX.app */;
@@ -226,6 +229,9 @@
 				Base,
 			);
 			mainGroup = 5F5C4FFC244CBBD300A35D76;
+			packageReferences = (
+				5F68F28328CD01DD00F3E73C /* XCRemoteSwiftPackageReference "Swifter-Lite" */,
+			);
 			productRefGroup = 5F5C5006244CBBD300A35D76 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -510,7 +516,23 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		5F68F28328CD01DD00F3E73C /* XCRemoteSwiftPackageReference "Swifter-Lite" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/StarPlayrX/Swifter-Lite";
+			requirement = {
+				branch = 1.5.1;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
+		5F68F28428CD01DD00F3E73C /* SwifterLite */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5F68F28328CD01DD00F3E73C /* XCRemoteSwiftPackageReference "Swifter-Lite" */;
+			productName = SwifterLite;
+		};
 		5FCEF5F628CAC5A80066802A /* AstroRadioKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AstroRadioKit;

@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import SwifterLite
 
-func playlistRoute() -> ((HttpRequest) -> HttpResponse) {{ request in
+func playlistRoute() -> httpReq {{ request in
     autoreleasepool {
         var data = Data()
         

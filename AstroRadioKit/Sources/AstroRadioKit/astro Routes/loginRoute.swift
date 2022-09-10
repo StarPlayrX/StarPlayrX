@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import SwifterLite
 
-func loginRoute() -> ((HttpRequest) -> HttpResponse) {{ request in
+func loginRoute() -> httpReq {{ request in
     autoreleasepool {
         let json = try? JSONSerialization.jsonObject(with: Data(request.body), options: JSONSerialization.ReadingOptions.fragmentsAllowed) as? [String : Any]
         var obj = [String : Any]()

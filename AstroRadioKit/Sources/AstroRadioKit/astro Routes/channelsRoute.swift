@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import SwifterLite
 
-func channelsRoute() -> ((HttpRequest) -> HttpResponse) {{ request in
+func channelsRoute() -> httpReq {{ request in
     autoreleasepool {
         Session(channelid: "siriushits1")
         let api = Channels()

@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import SwifterLite
 
-func audioRoute(useBuffer: Bool) -> ((HttpRequest) -> HttpResponse) {{ request in
+func audioRoute(useBuffer: Bool) -> httpReq {{ request in
     autoreleasepool {
         guard
             let aac  = request.params[":aac"]

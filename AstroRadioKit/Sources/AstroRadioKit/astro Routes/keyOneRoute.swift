@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import SwifterLite
 
-func keyOneRoute() -> ((HttpRequest) -> HttpResponse) {{ request in
+func keyOneRoute() -> httpReq {{ request in
     guard let data = Data(base64Encoded: userX.key) else {
         return HttpResponse.notFound(.none)
     }

@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import SwifterLite
 
-func pdtRoute() -> ((HttpRequest) -> HttpResponse) {{ request in
+func pdtRoute() -> httpReq {{ request in
     autoreleasepool {
         var obj = [ String : Any]()
         
