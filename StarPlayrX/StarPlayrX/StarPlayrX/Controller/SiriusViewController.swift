@@ -19,7 +19,7 @@ class SiriusViewController: UITableViewController {
     override var prefersHomeIndicatorAutoHidden : Bool { return true }
     
     func checkServer() {
-        let pinpoint = "\(g.insecure)\(g.localhost):\(p.port)/ping"
+        let pinpoint = "\(g.insecure)\(g.localhost):\(p.port)/api/v3/ping"
         Async.api.Text(endpoint: pinpoint) { pong in
             guard let ping = pong else { self.launchServer(); return }
             ping == "pong" ? ()/* Do Nothing */ : self.launchServer()

@@ -73,7 +73,7 @@ final class Player {
     func playX() {
         self.player.volume = 0
         resetPlayer()
-        let pinpoint = "\(g.insecure)\(g.localhost):\(self.port)/ping"
+        let pinpoint = "\(g.insecure)\(g.localhost):\(self.port)/api/v3/ping"
         state = .buffering
 
         func stream() {
