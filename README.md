@@ -2,6 +2,8 @@
 
 third party SiriusXM streaming radio player for iOS, iPad and macOS via Mac Catalyst (iPadOS user interface).
 
+Supported OS's: iOS 12 and later, macOS 10.15 and later
+
 StarPlayrX popularity started with six visually impaired beta testers. StarPlayrX is accessible and its one if its greatest strengths.
 
 Linked dependencies via Swift Package Manager:
