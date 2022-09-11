@@ -19,11 +19,11 @@ class LoginViewController: UIViewController {
         if ca {
             siriusCanadaSwitch.isOn = true
             let caUrl = "\(self.g.insecure)\(self.g.localhost):" + String(self.p.port) + "/ca"
-            Async.api.Text(endpoint: caUrl) { ca in /* print(ca as Any) */ }
+            Async.api.Text(endpoint: caUrl) { _ in /* print(ca as Any) */ }
         } else {
             siriusCanadaSwitch.isOn = false
             let usUrl = "\(self.g.insecure)\(self.g.localhost):" + String(self.p.port) + "/us"
-            Async.api.Text(endpoint: usUrl) { us in /* print(us as Any) */ }
+            Async.api.Text(endpoint: usUrl) { _ in /* print(us as Any) */ }
         }
     }
     
@@ -68,7 +68,7 @@ class LoginViewController: UIViewController {
     @IBAction func loginButton(_ sender: Any) {
         self.g.Username = self.userField.text ?? ""
         self.g.Password = self.passField.text ?? ""
-        self.prog(0.0, "Start", animated: false)
+        self.prog(0.0, "", animated: false)
         self.autoLogin()
     }
     
@@ -98,15 +98,13 @@ class LoginViewController: UIViewController {
         self.loginButton.alpha = 0.5
         self.view?.endEditing(true)
         
-        var ping : String? = nil
         let pingUrl = "\(self.g.insecure)\(self.g.localhost):" + String(self.p.port) + "/ping"
-        
-        Async.api.Text(endpoint: pingUrl) { p in
+    
+        Async.api.Text(endpoint: pingUrl) { ping in
             
-            ping = p
             
             //Check if Local Web Server is Up
-            if let pg = ping, pg != "pong" {
+            if let ping = ping, ping != "pong" {
                 //print("Launching the Server.")
                 net.LaunchServer()
             }
@@ -114,7 +112,7 @@ class LoginViewController: UIViewController {
             if !net.networkIsConnected {
                 self.displayError(title: "Network error", message: "Check your internet connection and try again.", action: "OK")
             } else {
-                self.prog(0.1, "Login")
+                self.prog(0.0, "Login")
                 self.login()
             }
         }
@@ -125,11 +123,10 @@ class LoginViewController: UIViewController {
         let endpoint = g.insecure + g.local + ":" + String(p.port)  + "/api/v2/autologin"
         let method = "login"
         let request = ["user":g.Username,"pass":g.Password] as Dictionary
-        
+    
         //Turns on Demo Mode
         g.demomode = g.Username.contains(g.demoname)
-        
-        
+    
         func failureMessage() {
             self.displayError(title: "Network error", message: "Check your internet connection and try again.", action: "OK")
         }
@@ -150,16 +147,14 @@ class LoginViewController: UIViewController {
                 UserDefaults.standard.set(self.g.userid, forKey: "userid")
                 
                 DispatchQueue.main.async {
-                    self.prog(0.2, "Session")
+                    self.prog(0.2, "Login")
                     self.session()
                 }
             } else {
                 DispatchQueue.main.async {
                     self.loginButton.isEnabled = true
                     self.loginButton.alpha = 1.0
-                    
                     if data == "411" {
-                        
                         self.prog(0, "")
                         self.closeStarPlayr(title: "Local Network Error",
                                             message: message, action: "Close StarPlayrX")
@@ -179,7 +174,8 @@ class LoginViewController: UIViewController {
         
         Async.api.Post(request: request, endpoint: endpoint, method: method) { result in
             
-            self.prog(0.3, "Channels")
+            
+           self.prog(0.3, "Session")
             
             if let data = result?.data?["data"] as? String {
                 self.channels(channelLineUpId:data)
@@ -199,8 +195,8 @@ class LoginViewController: UIViewController {
             Async.api.Post(request: request, endpoint: endpoint, method: method) { result in
                 if let data = result?.data?["data"] as? [String : Any] {
                     self.g.ChannelList = data
-                    
-                    self.prog(0.4, "Artwork")
+                                        
+                    self.prog(0.4, "Channels")
                     
                     self.art(channelLineUpId: channelLineUpId)
                 } else {
@@ -225,7 +221,7 @@ class LoginViewController: UIViewController {
         
         Async.api.Text(endpoint: checksumUrl) { sum in
             
-            self.prog(0.6, "Processing")
+            self.prog(0.5, "Artwork")
             
             if let check = sum {
                 self.g.imagechecksum = String(check)
@@ -241,7 +237,7 @@ class LoginViewController: UIViewController {
             self.embeddedAlbumArt(filename: "bluenumbers", process: false)
             
             func nextStep() {
-                self.prog(0.6, "Processing")
+                self.prog(0.6, "Artwork")
                 
                 self.processing()
             }
@@ -461,7 +457,7 @@ class LoginViewController: UIViewController {
         }
         // }
         
-        self.prog(1.0, "Guide")
+        self.prog(0.9, "Guide")
         guide()
     }
     
@@ -575,7 +571,7 @@ class LoginViewController: UIViewController {
                 }
             }
             
-            self.prog(0.0, "Start", animated: false)
+            self.prog(0.0, "", animated: false)
             self.autoLogin()
         }
         
