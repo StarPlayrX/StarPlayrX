@@ -53,7 +53,7 @@ public class Network {
     }
     
     //MARK: Port Finder - This is some deep sh*t
-    func open(port: in_port_t) -> (Bool) {
+    func open(port: in_port_t) -> Bool {
         
         func release(socket: Int32) {
             Darwin.shutdown(socket, SHUT_RDWR)
