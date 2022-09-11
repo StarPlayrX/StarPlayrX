@@ -10,4 +10,4 @@ StarPlayrRadioKit middleware, SiriusXM abstraction layer, HLS streamer
 
 SwifterLite embedded webserver based on Swifter with its focus on REST, json, audio/video streaming, data, bytes, and ping/text
 
-v1.3.1 is undergoing sound quality testing. Known issues slight periodic gap in sound playback. This is being investigated.
+v1.3.1 is undergoing sound quality testing. Known issues slight periodic gap in sound playback. This is under observation.
