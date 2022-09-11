@@ -18,11 +18,11 @@ class LoginViewController: UIViewController {
     func selectCanadaPlayer(_ ca : Bool) {
         if ca {
             siriusCanadaSwitch.isOn = true
-            let caUrl = "\(self.g.insecure)\(self.g.localhost):" + String(self.p.port) + "/ca"
+            let caUrl = "\(self.g.insecure)\(self.g.localhost):" + String(self.p.port) + "/api/v3/ca"
             Async.api.Text(endpoint: caUrl) { _ in /* print(ca as Any) */ }
         } else {
             siriusCanadaSwitch.isOn = false
-            let usUrl = "\(self.g.insecure)\(self.g.localhost):" + String(self.p.port) + "/us"
+            let usUrl = "\(self.g.insecure)\(self.g.localhost):" + String(self.p.port) + "/api/v3/us"
             Async.api.Text(endpoint: usUrl) { _ in /* print(us as Any) */ }
         }
     }
@@ -98,7 +98,7 @@ class LoginViewController: UIViewController {
         self.loginButton.alpha = 0.5
         self.view?.endEditing(true)
         
-        let pingUrl = "\(self.g.insecure)\(self.g.localhost):" + String(self.p.port) + "/ping"
+        let pingUrl = "\(self.g.insecure)\(self.g.localhost):" + String(self.p.port) + "/api/v3/ping"
     
         Async.api.Text(endpoint: pingUrl) { ping in
             
@@ -120,7 +120,7 @@ class LoginViewController: UIViewController {
     
     //MARK: 1 - Login
     func login() {
-        let endpoint = g.insecure + g.local + ":" + String(p.port)  + "/api/v2/autologin"
+        let endpoint = g.insecure + g.local + ":" + String(p.port)  + "/api/v3/login"
         let method = "login"
         let request = ["user":g.Username,"pass":g.Password] as Dictionary
     
@@ -168,7 +168,7 @@ class LoginViewController: UIViewController {
     
     //MARK 2 - Session
     func session() {
-        let endpoint = g.insecure + Global.obj.local + ":" + String(p.port) + "/api/v2/session"
+        let endpoint = g.insecure + Global.obj.local + ":" + String(p.port) + "/api/v3/session"
         let method = "cookies"
         let request = ["channelid":"siriushits1"] as Dictionary
         
@@ -188,7 +188,7 @@ class LoginViewController: UIViewController {
     //MARK 3 - Channels
     func channels(channelLineUpId: String) {
         autoreleasepool {
-            let endpoint = g.insecure + g.local + ":" + String(p.port) + "/api/v2/channels"
+            let endpoint = g.insecure + g.local + ":" + String(p.port) + "/api/v3/channels"
             let method = "channels"
             let request = ["channeltype" : "" ] as Dictionary
             
@@ -457,7 +457,7 @@ class LoginViewController: UIViewController {
         }
         // }
         
-        self.prog(0.9, "Guide")
+        self.prog(1.0, "Guide")
         guide()
     }
     

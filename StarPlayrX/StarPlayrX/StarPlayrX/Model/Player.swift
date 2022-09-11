@@ -78,7 +78,7 @@ final class Player {
 
         func stream() {
             DispatchQueue.main.async {
-                if let url = URL(string: "\(self.g.insecure)\(self.g.localhost):\(self.port)/playlist/\(self.g.currentChannel)\(self.g.m3u8)") {
+                if let url = URL(string: "\(self.g.insecure)\(self.g.localhost):\(self.port)/api/v3/m3u/\(self.g.currentChannel)\(self.g.m3u8)") {
                     let asset = AVAsset(url: url)
                     let playItem = AVPlayerItem(asset:asset)
 
@@ -374,7 +374,7 @@ final class Player {
     func updatePDT(completionHandler: @escaping CompletionHandler ) {
         let g = Global.obj
         
-        let endpoint = g.insecure + g.local + ":" + String(self.port) + "/pdt"
+        let endpoint = g.insecure + g.local + ":" + String(self.port) + "/api/v3/pdt"
         
         Async.api.Get(endpoint: endpoint) { dict in
             
