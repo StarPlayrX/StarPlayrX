@@ -95,7 +95,7 @@ final class Player {
             var spx = false
 
             for i in 0...10 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + Double(i)) { [self] in
+                DispatchQueue.main.asyncAfter(deadline: .now() + Double(i / 2)) { [self] in
                     if p.rate == 1 && !spx {
                         SPXCache()
                         spx.toggle()
@@ -106,23 +106,24 @@ final class Player {
             }
             
             DispatchQueue.main.async { [self] in
-                for i in 0...5 {
+                for i in 0...10 {
                     
-                    DispatchQueue.main.asyncAfter(deadline: .now() + Double(i)) { [self] in
+                    DispatchQueue.main.asyncAfter(deadline: .now() + Double(i / 2)) { [self] in
                         if p.rate == 1 { return }
 
                         if p.rate < 1 {
                             p.playImmediately(atRate: 1.0)
-                            p.play()
                         }
                         
                         if i == 5 && p.volume < 1 {
-                            p.fadeVolume(from: p.volume, to: 1, duration: Float(1))
-
+                            p.fadeVolume(from: p.volume, to: 1, duration: Float(0.5))
+                            
+                            if !spx {
+                                SPXCache()
+                                spx.toggle()
+                            }
                         }
                        
-
-                        
                         if p.rate == 1 {
                             state = .playing
                             NotificationCenter.default.post(name: .didUpdatePlay, object: nil)
