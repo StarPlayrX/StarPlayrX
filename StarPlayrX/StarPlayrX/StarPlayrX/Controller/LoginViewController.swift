@@ -147,7 +147,7 @@ class LoginViewController: UIViewController {
                 UserDefaults.standard.set(self.g.userid, forKey: "userid")
                 
                 DispatchQueue.main.async {
-                    self.prog(0.2, "Login")
+                    self.prog(0.2, "Session")
                     self.session()
                 }
             } else {
@@ -173,9 +173,9 @@ class LoginViewController: UIViewController {
         let request = ["channelid":"siriushits1"] as Dictionary
         
         Async.api.Post(request: request, endpoint: endpoint, method: method) { result in
+                    
             
-            
-           self.prog(0.3, "Session")
+           self.prog(0.3, "Channels")
             
             if let data = result?.data?["data"] as? String {
                 self.channels(channelLineUpId:data)
@@ -193,10 +193,12 @@ class LoginViewController: UIViewController {
             let request = ["channeltype" : "" ] as Dictionary
             
             Async.api.Post(request: request, endpoint: endpoint, method: method) { result in
+                
+                //print("result", result)
                 if let data = result?.data?["data"] as? [String : Any] {
                     self.g.ChannelList = data
                                         
-                    self.prog(0.4, "Channels")
+                    self.prog(0.4, "Artwork")
                     
                     self.art(channelLineUpId: channelLineUpId)
                 } else {
@@ -221,7 +223,7 @@ class LoginViewController: UIViewController {
         
         Async.api.Text(endpoint: checksumUrl) { sum in
             
-            self.prog(0.5, "Artwork")
+            self.prog(0.5, "Icons")
             
             if let check = sum {
                 self.g.imagechecksum = String(check)
@@ -237,7 +239,7 @@ class LoginViewController: UIViewController {
             self.embeddedAlbumArt(filename: "bluenumbers", process: false)
             
             func nextStep() {
-                self.prog(0.6, "Artwork")
+                self.prog(0.6, "Processing")
                 
                 self.processing()
             }

@@ -56,8 +56,8 @@ final class Player {
     //MARK: Update the screen
     func syncArt() {
         
-        if let md5 = sha256(String(CACurrentMediaTime().description)) {
-            self.previousHash = md5
+        if let sha256 = sha256(String(CACurrentMediaTime().description)) {
+            self.previousHash = sha256
         } else {
             let str = "Hello, Last Star Player X."
             self.previousHash = sha256(String(str)) ?? str
@@ -71,49 +71,64 @@ final class Player {
     
     
     func playX() {
-        self.player.volume = 0
-        resetPlayer()
-        let pinpoint = "\(g.insecure)\(g.localhost):\(self.port)/api/v3/ping"
-        state = .buffering
-
         func stream() {
-            DispatchQueue.main.async {
-                if let url = URL(string: "\(self.g.insecure)\(self.g.localhost):\(self.port)/api/v3/m3u/\(self.g.currentChannel)\(self.g.m3u8)") {
-                    let asset = AVAsset(url: url)
-                    let playItem = AVPlayerItem(asset:asset)
+            guard
+                let url = URL(string: "\(self.g.insecure)\(self.g.localhost):\(self.port)/api/v3/m3u/\(self.g.currentChannel)\(self.g.m3u8)")
+            else {
+                return
+            }
+            
+            p.volume = 0
 
-                    let p = self.player
-                    p.insert(playItem, after: nil)
-                    p.currentItem?.preferredForwardBufferDuration = 0
-                    p.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = true
-                    p.automaticallyWaitsToMinimizeStalling = true
-                    p.appliesMediaSelectionCriteriaAutomatically = true
-                    p.allowsExternalPlayback = true
-                    p.playImmediately(atRate: 1.0)
-                    
-                    //MARK: Todd B - Todo fix fade in on player view ToddB FIXME
-                    p.fadeVolume(from: 0, to: 1, duration: Float(5))
-                    
-                    if #available(iOS 13.0, *) {
-                        p.currentItem?.automaticallyPreservesTimeOffsetFromLive = true
+            let asset = AVAsset(url: url)
+            let playItem = AVPlayerItem(asset:asset)
+            p.replaceCurrentItem(with: playItem)
+            
+            //MARK: Todd B - Todo fix fade in on player view ToddB FIXME
+            
+            p.fadeVolume(from: 0, to: 1, duration: Float(6))
+            
+            if #available(iOS 13.0, *) {
+                p.currentItem?.automaticallyPreservesTimeOffsetFromLive = true
+            }
+            
+            var spx = false
+
+            for i in 0...10 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + Double(i)) { [self] in
+                    if p.rate == 1 && !spx {
+                        SPXCache()
+                        spx.toggle()
                     }
                 }
-            }
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + (self.avSession.outputLatency))  { [weak self] in
-                guard let self = self else { return }
-                self.SPXCache()
-            }
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + self.avSession.outputLatency * 2.0) { [weak self] in
-                self?.player.currentItem?.preferredForwardBufferDuration = 1
-                self?.state = .playing
-                NotificationCenter.default.post(name: .didUpdatePlay, object: nil)
                 
-                if self?.player.rate != 1 {
-                    self?.player.playImmediately(atRate: 1.0)
-                }
+                if spx { break }
+            }
+            
+            DispatchQueue.main.async { [self] in
+                for i in 0...5 {
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + Double(i)) { [self] in
+                        if p.rate == 1 { return }
 
+                        if p.rate < 1 {
+                            p.playImmediately(atRate: 1.0)
+                            p.play()
+                        }
+                        
+                        if i == 5 && p.volume < 1 {
+                            p.fadeVolume(from: p.volume, to: 1, duration: Float(1))
+
+                        }
+                       
+
+                        
+                        if p.rate == 1 {
+                            state = .playing
+                            NotificationCenter.default.post(name: .didUpdatePlay, object: nil)
+                        }
+                    }
+                }
             }
         }
         
@@ -133,10 +148,33 @@ final class Player {
             }
         }
         
-        Async.api.Text(endpoint: pinpoint ) { pong in
-            guard let ping = pong else { launchServer(); return }
-            ping == "pong" ? stream() : launchServer()
+        let p = self.player
+        p.fadeVolume(from: 1, to: 0, duration: Float(0.5))
+
+        //resetPlayer()
+        
+        //let pinpoint = "\(g.insecure)\(g.localhost):\(self.port)/api/v3/ping"
+        state = .buffering
+        
+
+        //p.insert(playItem, after: nil)
+        p.currentItem?.preferredForwardBufferDuration = 1
+        p.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = false
+        p.automaticallyWaitsToMinimizeStalling = false
+        p.appliesMediaSelectionCriteriaAutomatically = false
+        p.allowsExternalPlayback = true
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [self] in
+            p.removeAllItems()
+            p.pause()
+            p.volume = 0
+            stream()
         }
+        
+//        Async.api.Text(endpoint: pinpoint ) { pong in
+//            guard let ping = pong else { launchServer(); return }
+//            ping == "pong" ? stream() : launchServer()
+//        }
     }
     
     func change() {
@@ -146,12 +184,12 @@ final class Player {
         p.currentItem?.preferredForwardBufferDuration = 0
         if #available(iOS 13.0, *) {
             p.currentItem?.automaticallyPreservesTimeOffsetFromLive = true
-        } 
+        }
         p.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = true
         p.automaticallyWaitsToMinimizeStalling = true
         p.appliesMediaSelectionCriteriaAutomatically = true
         p.allowsExternalPlayback = true
-
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + avSession.outputLatency * 2.0) { [weak self] in
             self?.player.currentItem?.preferredForwardBufferDuration = 1
         }
@@ -164,22 +202,9 @@ final class Player {
     }
     
     func resetPlayer() {
-        
-        if !player.items().isEmpty {
-            
-            let count = player.items().count
-            if count == 1 {
-                if let starplayrx = self.player.items().first as AVPlayerItem? {
-                    runReset(starplayrx: starplayrx)
-                }
-            } else if count > 1 {
-                
-                for starplayrx in player.items() {
-                    runReset(starplayrx: starplayrx)
-                }
-            }
+        for starplayrx in player.items() {
+            runReset(starplayrx: starplayrx)
         }
-        
     }
     
     
@@ -191,31 +216,16 @@ final class Player {
         self.player = AVQueuePlayer()
     }
     
-    
-    
-    
     var previousHash = "reset"
-    
-    //MARK: New and Improved MD5
-//    func MD5(_ d: String) -> String? {
-//
-//        var str = String()
-//
-//        for byte in Insecure.MD5.hash(data: d.data(using: .utf8) ?? Data() ) {
-//            str += String(format: "%02x", byte)
-//        }
-//
-//        return str
-//    }
     
     //MARK: Update our display
     func updateDisplay(key: String, cache: [String : Any], channelArt: String, _ animated: Bool = true) {
         if let value  = cache[key] as? [String: String],
-            let artist = value["artist"] as String?,
-            let song   = value["song"] as String?,
-            let image  = value["image"] as String?,
-            let hash = sha256(artist + song + key + channelArt + image),
-            previousHash != hash
+           let artist = value["artist"] as String?,
+           let song   = value["song"] as String?,
+           let image  = value["image"] as String?,
+           let hash = sha256(artist + song + key + channelArt + image),
+           previousHash != hash
         {
             
             previousHash = hash
@@ -355,19 +365,19 @@ final class Player {
         let gs = g.self
         
         
-            ps.updatePDT() { success in
-                if success {
-                    
-                    if let i = gs.ChannelArray.firstIndex(where: {$0.channel == gs.currentChannel}) {
-                        let item = gs.ChannelArray[i].largeChannelArtUrl
-                        ps.updateDisplay(key: gs.currentChannel, cache: ps.pdtCache, channelArt: item)
-                    }
-                    
-                    DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: .updateChannelsView, object: nil)
-                    }
+        ps.updatePDT() { success in
+            if success {
+                
+                if let i = gs.ChannelArray.firstIndex(where: {$0.channel == gs.currentChannel}) {
+                    let item = gs.ChannelArray[i].largeChannelArtUrl
+                    ps.updateDisplay(key: gs.currentChannel, cache: ps.pdtCache, channelArt: item)
+                }
+                
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: .updateChannelsView, object: nil)
                 }
             }
+        }
     }
     
     //MARK: Update Artist Song Info
@@ -381,7 +391,7 @@ final class Player {
             if let p = dict as? [String : Any], !p.isEmpty, let cache = p["data"] as? [String : Any], !cache.isEmpty {
                 self.pdtCache = cache
                 
-            
+                
                 g.ChannelArray = self.getPDTData(importData: g.ChannelArray)
                 completionHandler(true)
                 
@@ -414,7 +424,7 @@ final class Player {
                 nowPlayingData[i].searchString = nowPlayingData[i].searchString.replacingOccurrences(of: "'", with: "")
                 
                 nowPlayingData[i].image = nowPlayingData[i].channelImage
-
+                
                 
                 nowPlayingData[i].albumUrl =  nowPlayingData[i].largeChannelArtUrl
             }
@@ -476,7 +486,7 @@ final class Player {
                 break
             }
         }
-                    
+        
         startServer(self.port)
         jumpStart()
         
@@ -528,9 +538,9 @@ final class Player {
 func jumpStart() {
     let net = Network.ability
     net.start()
-
+    
     let locale = Locale.current
-
+    
     if locale.regionCode == "CA" || locale.regionCode == "CAN" {
         preflightConfig(location: "CA")
     } else {

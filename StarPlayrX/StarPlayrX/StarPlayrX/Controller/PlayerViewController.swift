@@ -672,8 +672,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
          #endif
     }
     
-    
-    
     @objc func handleRouteChange(notification: Notification) {
         airplayRunner()
     }
@@ -709,8 +707,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                 }
             }
         }
-                
-    
     }
     
     override func accessibilityPerformMagicTap() -> Bool {
