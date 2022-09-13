@@ -42,12 +42,12 @@ final class Player {
     
     func new(_ state: PlayerState? = nil) {
         if state == .stream {
-            self.playX()
+            self.play()
         } else if player.rate == 1 || self.state == .playing {
             self.pause()
             self.state = .paused
         } else {
-            self.playX()
+            self.play()
             self.state = .buffering
         }
     }
@@ -69,130 +69,93 @@ final class Player {
         }
     }
     
+    //MARK: Launch Server and Stream
+    func launchServer() {
+        autoLaunchServer(){ success in
+            success ? play() : stop()
+        }
+    }
     
-    func playX() {
-        func stream() {
-            guard
-                let url = URL(string: "\(g.insecure)\(g.localhost):\(port)/api/v3/m3u/\(g.currentChannel)\(g.m3u8)")
-            else {
-                return
-            }
-            
-            p.volume = 0
-
-            let asset = AVAsset(url: url)
-            let playItem = AVPlayerItem(asset:asset)
-            
-            p.replaceCurrentItem(with: playItem)
-            p.play()
-            //MARK: Todd B - Todo fix fade in on player view ToddB FIXME
-            
-            p.fadeVolume(from: 0, to: 1, duration: Float(2.5))
-        
-            
-            var spx = false
-
-            for i in 0...10 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + Double(i / 2)) { [self] in
-                    if p.rate == 1 && !spx {
-                        SPXCache()
-                        spx.toggle()
-                    }
-                }
-                
-                if spx { break }
-            }
-            
-            DispatchQueue.main.async { [self] in
-                for i in 0...10 {
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + Double(i / 2)) { [self] in
-                        if p.rate == 1 { return }
-
-                        if p.rate < 1 {
-                            p.playImmediately(atRate: 1.0)
-                        }
-                        
-                        if i == 5 && p.volume < 1 {
-                            p.fadeVolume(from: p.volume, to: 1, duration: Float(0.5))
-                        }
-                       
-                        if p.rate == 1 {
-                            state = .playing
-                            NotificationCenter.default.post(name: .didUpdatePlay, object: nil)
-                        }
-                    }
-                }
-            }
+    //MARK: Stop the player, we have an issue - this could show an interruption
+    func stop() {
+        self.player.pause()
+        self.state = .paused
+        NotificationCenter.default.post(name: .didUpdatePause, object: nil)
+        self.resetPlayer()
+        self.player = AVQueuePlayer()
+    }
+    
+    func stream() {
+        guard
+            let url = URL(string: "\(g.insecure)\(g.localhost):\(port)/api/v3/m3u/\(g.currentChannel)\(g.m3u8)")
+        else {
+            return
         }
-        
-        //MARK: Stop the player, we have an issue - this could show an interruption
-        func stop() {
-            self.player.pause()
-            self.state = .paused
-            NotificationCenter.default.post(name: .didUpdatePause, object: nil)
-            self.resetPlayer()
-            self.player = AVQueuePlayer()
-        }
-        
-        //MARK: Launch Server and Stream
-        func launchServer() {
-            autoLaunchServer(){ success in
-                success ? playX() : stop()
-            }
-        }
-        
         
         let p = self.player
-        
+        p.volume = 0
+        p.replaceCurrentItem(with: AVPlayerItem(asset:AVAsset(url: url)))
+        p.play()
+        p.fadeVolume(from: 0, to: 1, duration: Float(2.5))
+    
+        var spx = false
+
+        for i in 0...20 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + Double(i / 2)) { [self] in
+                if p.rate == 1 && !spx {
+                    SPXCache()
+                    state = .playing
+                    NotificationCenter.default.post(name: .didUpdatePlay, object: nil)
+                    spx.toggle()
+                }
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + Double(i / 2)) {
+                if p.rate == 1 { return }
+
+                if p.rate < 1 {
+                    p.playImmediately(atRate: 1.0)
+                }
+                
+                if i >= 5 && p.volume < 1 {
+                    p.fadeVolume(from: p.volume, to: 1, duration: Float(0.5))
+                }
+            }
+        }
+    }
+    
+    func play() {
+        let p = self.player
         let currentItem = p.currentItem
         
         var wait = 0.25
         if currentItem == nil {
             wait = 0
         }
-        p.fadeVolume(from: 1, to: 0, duration: Float(wait))
-
-        //resetPlayer()
         
+        p.fadeVolume(from: 1, to: 0, duration: Float(wait))
         state = .buffering
         
         if #available(iOS 13.0, *) {
             p.currentItem?.automaticallyPreservesTimeOffsetFromLive = true
         }
 
-        //p.insert(playItem, after: nil)
         p.currentItem?.preferredForwardBufferDuration = 1
         p.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = false
         p.automaticallyWaitsToMinimizeStalling = false
         p.appliesMediaSelectionCriteriaAutomatically = false
         p.allowsExternalPlayback = true
+        
         let pinpoint = "\(g.insecure)\(g.localhost):\(self.port)/api/v3/ping"
 
         Async.api.Text(endpoint: pinpoint ) { pong in
-            guard let ping = pong else { launchServer(); return }
-                  ping == "pong" ? () : (launchServer())
+            guard let ping = pong else { self.launchServer(); return }
+            ping == "pong" ? () : (self.launchServer())
               }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + Double(wait)) {
-            stream()
+            self.stream()
         }
-        
-        
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [self] in
-//            p.removeAllItems()
-//            p.pause()
-//            p.volume = 0
-//            stream()
-//        }
-//
-//        let pinpoint = "\(g.insecure)\(g.localhost):\(self.port)/api/v3/ping"
-//
-//        Async.api.Text(endpoint: pinpoint ) { pong in
-//            guard let ping = pong else { return }
-//            print(ping)
-//            ping == "pong" ? stream() : launchServer()
-//        }
     }
     
     func change() {

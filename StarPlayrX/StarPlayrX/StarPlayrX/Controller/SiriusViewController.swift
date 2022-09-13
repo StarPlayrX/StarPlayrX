@@ -88,7 +88,7 @@ class SiriusViewController: UITableViewController {
             let startHeadPhones = hasHeadphones(in: session.currentRoute)
             
             if p.player.rate == 0 && startHeadPhones {
-                p.playX()
+                p.play()
             }
             
         case .oldDeviceUnavailable: // Old device removed.

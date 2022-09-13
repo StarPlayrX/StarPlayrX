@@ -494,7 +494,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
             
             DispatchQueue.global().async {
                 Player.shared.player.pause()
-                Player.shared.playX()
+                Player.shared.play()
             }
         }
         
