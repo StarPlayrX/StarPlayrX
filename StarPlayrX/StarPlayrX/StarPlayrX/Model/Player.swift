@@ -73,7 +73,7 @@ final class Player {
     func playX() {
         func stream() {
             guard
-                let url = URL(string: "\(self.g.insecure)\(self.g.localhost):\(self.port)/api/v3/m3u/\(self.g.currentChannel)\(self.g.m3u8)")
+                let url = URL(string: "\(g.insecure)\(g.localhost):\(port)/api/v3/m3u/\(g.currentChannel)\(g.m3u8)")
             else {
                 return
             }
@@ -82,11 +82,17 @@ final class Player {
 
             let asset = AVAsset(url: url)
             let playItem = AVPlayerItem(asset:asset)
-            p.replaceCurrentItem(with: playItem)
+            
+            if p.currentItem == nil {
+                p.insert(playItem, after: nil)
+            } else {
+                p.replaceCurrentItem(with: playItem)
+
+            }
             p.play()
             //MARK: Todd B - Todo fix fade in on player view ToddB FIXME
             
-            p.fadeVolume(from: 0, to: 1, duration: Float(3))
+            p.fadeVolume(from: 0, to: 1, duration: Float(2.5))
             
             if #available(iOS 13.0, *) {
                 p.currentItem?.automaticallyPreservesTimeOffsetFromLive = true
@@ -149,8 +155,16 @@ final class Player {
             }
         }
         
+        
         let p = self.player
-        p.fadeVolume(from: 1, to: 0, duration: Float(0.25))
+        
+        let currentItem = p.currentItem
+        
+        var wait = 0.25
+        if currentItem == nil {
+            wait = 0
+        }
+        p.fadeVolume(from: 1, to: 0, duration: Float(wait))
 
         //resetPlayer()
         
@@ -170,7 +184,7 @@ final class Player {
                   ping == "pong" ? () : (launchServer())
               }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + Double(wait)) {
             stream()
         }
         
