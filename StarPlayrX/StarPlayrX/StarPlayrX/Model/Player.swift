@@ -519,8 +519,6 @@ final class Player {
 }
 
 func jumpStart() {
-    let net = Network.ability
-    net.start()
     
     let locale = Locale.current
     

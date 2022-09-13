@@ -13,16 +13,15 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
-    
+    let net = Network.ability
+
     var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent // .default
     }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {        
-      //  let net = Network.ability
         
-       // net.start()
-        //net.LaunchServer()
+        net.start()
         
         // Override point for customization after application launch.
         let selectedView = UIView()
