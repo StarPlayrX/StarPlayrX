@@ -83,20 +83,12 @@ final class Player {
             let asset = AVAsset(url: url)
             let playItem = AVPlayerItem(asset:asset)
             
-            if p.currentItem == nil {
-                p.insert(playItem, after: nil)
-            } else {
-                p.replaceCurrentItem(with: playItem)
-
-            }
+            p.replaceCurrentItem(with: playItem)
             p.play()
             //MARK: Todd B - Todo fix fade in on player view ToddB FIXME
             
             p.fadeVolume(from: 0, to: 1, duration: Float(2.5))
-            
-            if #available(iOS 13.0, *) {
-                p.currentItem?.automaticallyPreservesTimeOffsetFromLive = true
-            }
+        
             
             var spx = false
 
@@ -123,11 +115,6 @@ final class Player {
                         
                         if i == 5 && p.volume < 1 {
                             p.fadeVolume(from: p.volume, to: 1, duration: Float(0.5))
-                            
-                            if !spx {
-                                SPXCache()
-                                spx.toggle()
-                            }
                         }
                        
                         if p.rate == 1 {
@@ -170,6 +157,9 @@ final class Player {
         
         state = .buffering
         
+        if #available(iOS 13.0, *) {
+            p.currentItem?.automaticallyPreservesTimeOffsetFromLive = true
+        }
 
         //p.insert(playItem, after: nil)
         p.currentItem?.preferredForwardBufferDuration = 1
