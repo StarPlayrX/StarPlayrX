@@ -69,22 +69,8 @@ final class Player {
         }
     }
     
-    func playX() {
     
-        let p = self.player
-        
-        let wait: Double = p.currentItem == nil ? 0 : 0.25
-        p.fadeVolume(from: 1, to: 0, duration: Float(wait))
-        state = .buffering
-        
-        p.currentItem?.preferredForwardBufferDuration = 1
-        p.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = false
-        p.automaticallyWaitsToMinimizeStalling = false
-        p.appliesMediaSelectionCriteriaAutomatically = false
-        p.allowsExternalPlayback = true
-        
-        let pinpoint = "\(g.insecure)\(g.localhost):\(self.port)/api/v3/ping"
-
+    func playX() {
         func stream() {
             guard
                 let url = URL(string: "\(self.g.insecure)\(self.g.localhost):\(self.port)/api/v3/m3u/\(self.g.currentChannel)\(self.g.m3u8)")
@@ -96,10 +82,11 @@ final class Player {
 
             let asset = AVAsset(url: url)
             let playItem = AVPlayerItem(asset:asset)
-            
-            p.currentItem == nil ? p.insert(playItem, after: nil) : p.replaceCurrentItem(with: playItem)
-            p.fadeVolume(from: 0, to: 1, duration: Float(5))
+            p.replaceCurrentItem(with: playItem)
             p.play()
+            //MARK: Todd B - Todo fix fade in on player view ToddB FIXME
+            
+            p.fadeVolume(from: 0, to: 1, duration: Float(3))
             
             if #available(iOS 13.0, *) {
                 p.currentItem?.automaticallyPreservesTimeOffsetFromLive = true
@@ -108,27 +95,38 @@ final class Player {
             var spx = false
 
             for i in 0...10 {
-                
                 DispatchQueue.main.asyncAfter(deadline: .now() + Double(i / 2)) { [self] in
                     if p.rate == 1 && !spx {
                         SPXCache()
-                        state = .playing
-                        NotificationCenter.default.post(name: .didUpdatePlay, object: nil)
                         spx.toggle()
                     }
+                }
+                
+                if spx { break }
+            }
+            
+            DispatchQueue.main.async { [self] in
+                for i in 0...10 {
                     
-                    if p.rate == 1 && p.volume == 1 { return }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + Double(i / 2)) { [self] in
+                        if p.rate == 1 { return }
 
-                    if p.rate < 1 {
-                        p.playImmediately(atRate: 1.0)
-                    }
-                    
-                    if i == 5 && p.volume < 1 {
-                        p.fadeVolume(from: p.volume, to: 1, duration: Float(0.5))
+                        if p.rate < 1 {
+                            p.playImmediately(atRate: 1.0)
+                        }
                         
-                        if !spx {
-                            SPXCache()
-                            spx.toggle()
+                        if i == 5 && p.volume < 1 {
+                            p.fadeVolume(from: p.volume, to: 1, duration: Float(0.5))
+                            
+                            if !spx {
+                                SPXCache()
+                                spx.toggle()
+                            }
+                        }
+                       
+                        if p.rate == 1 {
+                            state = .playing
+                            NotificationCenter.default.post(name: .didUpdatePlay, object: nil)
                         }
                     }
                 }
@@ -147,22 +145,54 @@ final class Player {
         //MARK: Launch Server and Stream
         func launchServer() {
             autoLaunchServer(){ success in
-                success ? stream() : stop()
+                success ? playX() : stop()
             }
         }
-    
-        DispatchQueue.main.asyncAfter(deadline: .now() + wait) {
-            p.removeAllItems()
-            p.pause()
-            p.volume = 0
-            Async.api.Text(endpoint: pinpoint ) { pong in
-                guard let ping = pong else { launchServer(); return }
-                ping == "pong" ? stream() : launchServer()
-            }
+        
+        let p = self.player
+        p.fadeVolume(from: 1, to: 0, duration: Float(0.25))
+
+        //resetPlayer()
+        
+        state = .buffering
+        
+
+        //p.insert(playItem, after: nil)
+        p.currentItem?.preferredForwardBufferDuration = 1
+        p.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = false
+        p.automaticallyWaitsToMinimizeStalling = false
+        p.appliesMediaSelectionCriteriaAutomatically = false
+        p.allowsExternalPlayback = true
+        let pinpoint = "\(g.insecure)\(g.localhost):\(self.port)/api/v3/ping"
+
+        Async.api.Text(endpoint: pinpoint ) { pong in
+            guard let ping = pong else { launchServer(); return }
+                  ping == "pong" ? () : (launchServer())
+              }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+            stream()
         }
+        
+        
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [self] in
+//            p.removeAllItems()
+//            p.pause()
+//            p.volume = 0
+//            stream()
+//        }
+//
+//        let pinpoint = "\(g.insecure)\(g.localhost):\(self.port)/api/v3/ping"
+//
+//        Async.api.Text(endpoint: pinpoint ) { pong in
+//            guard let ping = pong else { return }
+//            print(ping)
+//            ping == "pong" ? stream() : launchServer()
+//        }
     }
     
     func change() {
+        
         let p = self.player
         
         p.currentItem?.preferredForwardBufferDuration = 0
@@ -190,6 +220,7 @@ final class Player {
             runReset(starplayrx: starplayrx)
         }
     }
+    
     
     func pause() {
         self.player.pause()
@@ -519,6 +550,8 @@ final class Player {
 }
 
 func jumpStart() {
+    let net = Network.ability
+    net.start()
     
     let locale = Locale.current
     
