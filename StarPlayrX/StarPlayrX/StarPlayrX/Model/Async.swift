@@ -97,9 +97,7 @@ internal class Async {
             guard let rdata = returndata else { TupleHandler( (message: method + " was failed.", success: false, data: Data(), response: resp as? HTTPURLResponse ) as? PostReturnTuple ); return }
                 
                 let result = try? JSONSerialization.jsonObject(with: rdata, options: JSONSerialization.ReadingOptions.mutableContainers) as? NSDictionary
-                
-                print(result)
-            
+                            
                 if method == "channels" {
                     var localCats = Array<String>()
                     

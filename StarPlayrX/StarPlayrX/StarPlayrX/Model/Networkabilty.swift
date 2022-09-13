@@ -17,20 +17,10 @@ public class Network {
     let monitor = NWPathMonitor()
     let monitorString = "Monitor"
     var networkIsConnected = Bool()
-    var networkIsWiFi = Bool()
-    var networkIsTripped = false
     
     func start() {
-        
         monitor.pathUpdateHandler = { [self] path in
-            
             networkIsConnected = (path.status == .satisfied)
-            
-            if !networkIsConnected {
-                networkIsTripped = true
-            }
-            
-            networkIsWiFi = path.usesInterfaceType(.wifi)
         }
         
         let queue = DispatchQueue(label: monitorString)
