@@ -500,19 +500,19 @@ final class Player {
         commandCenter.accessibilityActivate()
         
         commandCenter.playCommand.addTarget(handler: { (event) in
-            self.new()
+            self.new(.stream)
             return MPRemoteCommandHandlerStatus.success}
         )
         
         commandCenter.pauseCommand.addTarget(handler: { (event) in
-            self.new()
+            self.new(.paused)
             return MPRemoteCommandHandlerStatus.success}
         )
         
-        commandCenter.togglePlayPauseCommand.addTarget(handler: { (event) in
-            self.new()
-            return MPRemoteCommandHandlerStatus.success}
-        )
+//        commandCenter.togglePlayPauseCommand.addTarget(handler: { (event) in
+//            self.new()
+//            return MPRemoteCommandHandlerStatus.success}
+//        )
     }
 }
 
