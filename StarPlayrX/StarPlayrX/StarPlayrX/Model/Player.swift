@@ -41,8 +41,17 @@ final class Player {
     }
     
     func new(_ state: PlayerState? = nil) {
+        let pinpoint = "\(g.insecure)\(g.localhost):\(self.port)/api/v3/ping"
+
+        Async.api.Text(endpoint: pinpoint ) { pong in
+            guard let ping = pong else { self.launchServer(); return }
+            ping == "pong" ? () : (self.launchServer())
+        }
+        
         if state == .stream {
             self.play()
+            self.state = .buffering
+
         } else if player.rate == 1 || self.state == .playing {
             self.pause()
             self.state = .paused
@@ -125,6 +134,7 @@ final class Player {
     }
     
     func play() {
+        
         let p = self.player
         let currentItem = p.currentItem
         
@@ -145,13 +155,6 @@ final class Player {
         p.automaticallyWaitsToMinimizeStalling = false
         p.appliesMediaSelectionCriteriaAutomatically = false
         p.allowsExternalPlayback = true
-        
-        let pinpoint = "\(g.insecure)\(g.localhost):\(self.port)/api/v3/ping"
-
-        Async.api.Text(endpoint: pinpoint ) { pong in
-            guard let ping = pong else { self.launchServer(); return }
-            ping == "pong" ? () : (self.launchServer())
-              }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + Double(wait)) {
             self.stream()

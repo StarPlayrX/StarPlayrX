@@ -10,8 +10,9 @@ import UIKit
 import AVKit
 
 class SiriusViewController: UITableViewController {
-    var pdtTimer: Timer? = nil
-    
+    var pdtTimer:    Timer? = nil
+    var streamTimer: Timer? = nil
+
     let g = Global.obj
     let p = Player.shared
     
@@ -53,7 +54,7 @@ class SiriusViewController: UITableViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(handleRouteChange(_:)), name: .gotRouteChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(handleInterruption(_:)), name: .gotSessionInterruption, object: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(networkInterruption(_:)), name: NSNotification.Name.AVPlayerItemFailedToPlayToEndTime, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(networkInterruption(_:)), name: NSNotification.Name.AVPlayerItemPlaybackStalled, object: nil)
         
         restartPDT()
         g.ChannelList = nil
@@ -145,12 +146,24 @@ class SiriusViewController: UITableViewController {
     }
     
     //MARK: Read Write Cache for the PDT (Artist / Song / Album Art)
+    @objc func SPXStream() {
+        let ps = p.self
+        
+        if (ps.state == .playing || ps.state == .interrupted) && ps.player.isDead  {
+            print("Stream was dead, attempting to restream")
+            ps.new(.stream)
+        } else {
+            self.checkServer()
+        }
+    }
+    
     @objc func SPXCache() {
         let ps = p.self
         let gs = g.self
         
         ps.updatePDT() { success in
             if success {
+
                 if ps.player.isBusy {
                     if let i = gs.ChannelArray.firstIndex(where: {$0.channel == gs.currentChannel}) {
                         let item = gs.ChannelArray[i].largeChannelArtUrl
@@ -170,7 +183,12 @@ class SiriusViewController: UITableViewController {
     func restartPDT() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.pdtTimer = Timer.scheduledTimer(timeInterval: 20.0, target: self, selector: #selector(self.SPXCache), userInfo: nil, repeats: true)
+            self.pdtTimer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.SPXCache), userInfo: nil, repeats: true)
+        }
+        
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.streamTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(self.SPXStream), userInfo: nil, repeats: true)
         }
     }
     
