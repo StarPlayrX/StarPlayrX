@@ -11,7 +11,7 @@ import AVKit
 
 class SiriusViewController: UITableViewController {
     var pdtTimer:    Timer? = nil
-    var streamTimer: Timer? = nil
+//    var streamTimer: Timer? = nil
 
     let g = Global.obj
     let p = Player.shared
@@ -186,10 +186,10 @@ class SiriusViewController: UITableViewController {
             self.pdtTimer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.SPXCache), userInfo: nil, repeats: true)
         }
         
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.streamTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(self.SPXStream), userInfo: nil, repeats: true)
-        }
+//        DispatchQueue.main.async { [weak self] in
+//            guard let self = self else { return }
+//            self.streamTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(self.SPXStream), userInfo: nil, repeats: true)
+//        }
     }
     
     deinit {

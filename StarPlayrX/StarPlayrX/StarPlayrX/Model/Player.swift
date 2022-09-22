@@ -40,27 +40,26 @@ final class Player {
         }
     }
     
-    func new(_ state: PlayerState? = nil) {
-        let pinpoint = "\(g.insecure)\(g.localhost):\(self.port)/api/v3/ping"
-
-        Async.api.Text(endpoint: pinpoint ) { pong in
-            guard let ping = pong else { self.launchServer(); return }
-            ping == "pong" ? () : (self.launchServer())
-        }
-        
+    func spx(_ state: PlayerState?) {
         if state == .stream {
             self.play()
             self.state = .buffering
-
         } else if player.rate == 1 || self.state == .playing {
             self.pause()
             self.state = .paused
-        } else {
+        } else  {
             self.play()
             self.state = .buffering
         }
     }
     
+    func new(_ state: PlayerState?) {
+        let pinpoint = "\(g.insecure)\(g.localhost):\(self.port)/api/v3/ping"
+        Async.api.Text(endpoint: pinpoint ) { pong in
+            guard let ping = pong else { self.launchServer(); return }
+            ping == "pong" ? self.spx(state) : (self.launchServer())
+        }
+    }
     
     //MARK: Update the screen
     func syncArt() {
@@ -134,7 +133,6 @@ final class Player {
     }
     
     func play() {
-        
         let p = self.player
         let currentItem = p.currentItem
         
@@ -150,11 +148,15 @@ final class Player {
             p.currentItem?.automaticallyPreservesTimeOffsetFromLive = true
         }
 
-        p.currentItem?.preferredForwardBufferDuration = 1
-        p.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = false
-        p.automaticallyWaitsToMinimizeStalling = false
-        p.appliesMediaSelectionCriteriaAutomatically = false
+        p.currentItem?.preferredForwardBufferDuration = 0
+        p.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = true
+        p.automaticallyWaitsToMinimizeStalling = true
+        p.appliesMediaSelectionCriteriaAutomatically = true
         p.allowsExternalPlayback = true
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + avSession.outputLatency * 2.0) { [weak self] in
+            self?.player.currentItem?.preferredForwardBufferDuration = 1
+        }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + Double(wait)) {
             self.stream()
@@ -162,13 +164,14 @@ final class Player {
     }
     
     func change() {
-        
         let p = self.player
         
         p.currentItem?.preferredForwardBufferDuration = 0
+        
         if #available(iOS 13.0, *) {
             p.currentItem?.automaticallyPreservesTimeOffsetFromLive = true
         }
+        
         p.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = true
         p.automaticallyWaitsToMinimizeStalling = true
         p.appliesMediaSelectionCriteriaAutomatically = true
@@ -191,7 +194,6 @@ final class Player {
         }
     }
     
-    
     func pause() {
         self.player.pause()
         self.state = .paused
@@ -211,10 +213,8 @@ final class Player {
            let hash = sha256(artist + song + key + channelArt + image),
            previousHash != hash
         {
-            
             previousHash = hash
             g.NowPlaying = (channel:key,artist:artist,song:song,albumArt:image,channelArt:channelArt, image: nil ) as NowPlayingType
-            
             updateNowPlayingX(animated)
         }
     }
@@ -222,7 +222,6 @@ final class Player {
     public func chooseFilter(fileName:String, values:[Float],filterKeys:[String],image:UIImage) -> UIImage {
         let context = CIContext()
         let filter = CIFilter(name: fileName)
-        
         for i in 0..<filterKeys.count {
             filter?.setValue(values[i], forKey:filterKeys[i])
         }
@@ -232,7 +231,6 @@ final class Player {
         if let result = filter?.outputImage, let cgimage = context.createCGImage(result, from: result.extent) {
             return UIImage(cgImage: cgimage)
         }
-        
         return image
     }
     
@@ -244,18 +242,15 @@ final class Player {
                 return newImage
             }
         }
-        
         return image
     }
     
     //loading the album art
     //MARK: Todd
     func updateNowPlayingX(_ animated: Bool = true) {
-        
         let g = Global.obj
         
         func demoImage() -> UIImage? {
-            
             if var img = UIImage(named: "starplayr_placeholder") {
                 img = img.withBackground(color: UIColor(displayP3Red: 19 / 255, green: 20 / 255, blue: 36 / 255, alpha: 1.0))
                 img = self.resizeImage(image: img, targetSize: CGSize(width: 1440, height: 1440))
@@ -264,7 +259,6 @@ final class Player {
                 return nil
             }
         }
-        
         
         func displayArt(image: UIImage?) {
             if var img = image {
@@ -286,8 +280,7 @@ final class Player {
                 
                 g.NowPlaying.image = img
                 self.setnowPlayingInfo(channel: g.NowPlaying.channel, song: g.NowPlaying.song, artist: g.NowPlaying.artist, imageData:img)
-                
-            } else if let i = demoImage()  {
+            } else if let i = demoImage() {
                 g.NowPlaying.image = i
                 self.setnowPlayingInfo(channel: g.NowPlaying.channel, song: g.NowPlaying.song, artist: g.NowPlaying.artist, imageData: i)
             }
@@ -297,10 +290,7 @@ final class Player {
             } else {
                 DispatchQueue.main.async { NotificationCenter.default.post(name: .gotNowPlayingInfo, object: nil) }
             }
-            
         }
-        
-        
         
         //Demo Mode
         if !g.demomode {
@@ -315,39 +305,29 @@ final class Player {
                     displayArt(image: img?.addImagePadding(x: 20, y: 200))
                 })
             }
-            
         } else {
             if let image = demoImage() {
                 displayArt(image: image)
             }
         }
-        
     }
-    
-    
+
     func resizeImage(image: UIImage, targetSize: CGSize) -> UIImage {
         let rect = CGRect(x: 0, y: 0, width: targetSize.width, height: targetSize.height)
-        
         UIGraphicsBeginImageContextWithOptions( targetSize, false, 1.0)
-        
         image.draw(in: rect)
         
         if let newImage = UIGraphicsGetImageFromCurrentImageContext() {
             UIGraphicsEndImageContext()
             return newImage
         }
-        
         return UIImage()
     }
     
-    
-    
     //MARK: Read Write Cache for the PDT (Artist / Song / Album Art)
     @objc func SPXCache() {
-        
         let ps = self
         let gs = g.self
-        
         
         ps.updatePDT() { success in
             if success {
@@ -365,33 +345,26 @@ final class Player {
     }
     
     //MARK: Update Artist Song Info
-    func updatePDT(completionHandler: @escaping CompletionHandler ) {
+    func updatePDT(completionHandler: @escaping CompletionHandler) {
         let g = Global.obj
-        
         let endpoint = g.insecure + g.local + ":" + String(self.port) + "/api/v3/pdt"
         
         Async.api.Get(endpoint: endpoint) { dict in
-            
             if let p = dict as? [String : Any], !p.isEmpty, let cache = p["data"] as? [String : Any], !cache.isEmpty {
                 self.pdtCache = cache
                 
-                
                 g.ChannelArray = self.getPDTData(importData: g.ChannelArray)
                 completionHandler(true)
-                
             } else {
                 completionHandler(false)
             }
         }
     }
     
-    
-    
     func getPDTData(importData: tableData) -> tableData {
         var nowPlayingData = importData
         
         for i in 0..<nowPlayingData.count {
-            
             let key = nowPlayingData[i].channel
             
             if let value = pdtCache[key] as? [String: String], let artist = value["artist"] as String?, let song = value["song"]  as String?, let image = value["image"]  as String? {
@@ -406,16 +379,11 @@ final class Player {
                 nowPlayingData[i].searchString = nowPlayingData[i].searchString + " " + artist
                 nowPlayingData[i].searchString = nowPlayingData[i].searchString + " " + song
                 nowPlayingData[i].searchString = nowPlayingData[i].searchString.replacingOccurrences(of: "'", with: "")
-                
-                nowPlayingData[i].image = nowPlayingData[i].channelImage
-                
-                
-                nowPlayingData[i].albumUrl =  nowPlayingData[i].largeChannelArtUrl
+                nowPlayingData[i].image        = nowPlayingData[i].channelImage
+                nowPlayingData[i].albumUrl     =  nowPlayingData[i].largeChannelArtUrl
             }
         }
-        
         return nowPlayingData
-        
     }
     
     public func setnowPlayingInfo(channel:String, song:String, artist:String, imageData: UIImage) {
@@ -426,15 +394,15 @@ final class Player {
             return image
         })
         
-        nowPlayingInfo[MPMediaItemPropertyTitle] = song
-        nowPlayingInfo[MPMediaItemPropertyArtist] = artist
-        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = channel
-        nowPlayingInfo[MPMediaItemPropertyPodcastTitle] = song
-        nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork
-        nowPlayingInfo[MPMediaItemPropertyMediaType] = 1
-        nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = true
-        nowPlayingInfo[MPMediaItemPropertyAlbumArtist] = artist
-        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = g.currentChannelName
+        nowPlayingInfo[MPMediaItemPropertyTitle]                    = song
+        nowPlayingInfo[MPMediaItemPropertyArtist]                   = artist
+        nowPlayingInfo[MPMediaItemPropertyAlbumTitle]               = channel
+        nowPlayingInfo[MPMediaItemPropertyPodcastTitle]             = song
+        nowPlayingInfo[MPMediaItemPropertyArtwork]                  = artwork
+        nowPlayingInfo[MPMediaItemPropertyMediaType]                = 1
+        nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream]        = true
+        nowPlayingInfo[MPMediaItemPropertyAlbumArtist]              = artist
+        nowPlayingInfo[MPMediaItemPropertyAlbumTitle]               = g.currentChannelName
         nowPlayingInfo[MPNowPlayingInfoPropertyDefaultPlaybackRate] = 1.0
         
         if self.player.rate == 1 {
@@ -446,9 +414,7 @@ final class Player {
                 nowPlayingInfoCenter.playbackState = .paused
             }
         }
-        
         nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
-        
     }
     
     public func autoLaunchServer(completionHandler: CompletionHandler) {
@@ -470,7 +436,6 @@ final class Player {
                 break
             }
         }
-        
         startServer(self.port)
         jumpStart()
         
@@ -478,7 +443,7 @@ final class Player {
     }
     
     func magicTapped() {
-        new()
+        new(nil)
     }
     
     let avSession = AVAudioSession.sharedInstance()
@@ -499,19 +464,15 @@ final class Player {
         
         // Get the shared MPRemoteCommandCenter
         let commandCenter = MPRemoteCommandCenter.shared()
-        
         commandCenter.accessibilityActivate()
-        
         commandCenter.playCommand.addTarget(handler: { (event) in
             self.new(.stream)
             return MPRemoteCommandHandlerStatus.success}
         )
-        
         commandCenter.pauseCommand.addTarget(handler: { (event) in
-            self.new(.paused)
+            self.new(.playing)
             return MPRemoteCommandHandlerStatus.success}
         )
-        
 //        commandCenter.togglePlayPauseCommand.addTarget(handler: { (event) in
 //            self.new()
 //            return MPRemoteCommandHandlerStatus.success}
@@ -522,7 +483,6 @@ final class Player {
 func jumpStart() {
     let net = Network.ability
     net.start()
-    
     let locale = Locale.current
     
     if locale.regionCode == "CA" || locale.regionCode == "CAN" {

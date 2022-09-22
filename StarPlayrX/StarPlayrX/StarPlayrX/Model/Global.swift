@@ -83,6 +83,7 @@ enum PlayerState {
     case buffering
     case interrupted
     case stream
+    case unknown
 }
 
 enum Speakers : String {
