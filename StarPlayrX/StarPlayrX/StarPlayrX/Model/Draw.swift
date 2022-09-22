@@ -32,8 +32,7 @@ final class Draw {
     let iPhoneY        : CGFloat
     var sliderWidth    : CGFloat = 0
     var positionBottom : CGFloat = 0
-    
-    let isPhone		 : Bool
+    let isPhone		   : Bool
     
     //MARK: CUSTOMIZATIONS
     let labelOffset		: CGFloat
@@ -90,7 +89,6 @@ final class Draw {
         return artistSong
     }
     
-    
     //MARK: 4 - Draw Artist and Song Labels for iPhone
     func ArtistSongiPhone(playerView: UIView ) -> [UILabel] {
         let artist = self.drawLabels(playerView: playerView, x: centerX, y: (AlbumArtSizeY - AlbumArtSizeX - labelOffset) / 2 - iPhoneOffset, width: AlbumArtSizeX, height: labelHeight, align: .center, color: .white, text: "", font: .systemFont(ofSize: fontSize, weight: UIFont.Weight.semibold), wire: true)
@@ -127,11 +125,7 @@ final class Draw {
         return vp
     }
     
-    deinit { }
-    
-    
     init( frame: CGRect, isPhone: Bool, NavY: CGFloat, TabY: CGFloat) {
-        
         self.isPhone = isPhone
         
         iPhoneHeight = frame.height
@@ -296,7 +290,6 @@ final class Draw {
         }
     }
     
-    
     //MARK: draw Player View
     func drawPlayerView(mainView: UIView, x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat, isPhone: Bool) -> UIView {
         let drawView = UIView(frame: CGRect(x: 0, y: 0, width: width, height: height))
@@ -321,7 +314,6 @@ final class Draw {
                 centerX = drawView.frame.size.width / 2
                 centerY = drawView.frame.size.height / 2 - iPhoneOffset
                 positionBottom = CGFloat( drawView.frame.size.height - 50 )
-        
             
             //MARK: iPhone X and higher
             case (812.0,true), (896.0,true) :
@@ -354,8 +346,6 @@ final class Draw {
                 centerX = drawView.frame.size.width / 2
                 centerY = (drawView.frame.size.height - g.tabBarHeight) / 2
                 positionBottom = CGFloat( drawView.frame.size.height - 30 )
-        
-            
             default:
                 //defaults to Regular
                 if isPhone {
@@ -372,8 +362,6 @@ final class Draw {
                     centerY = (drawView.frame.size.height - g.tabBarHeight) / 2
                     positionBottom = CGFloat( drawView.frame.size.height - 30 )
             }
-            
-            
         }
         
         //common among all sizes
@@ -381,7 +369,6 @@ final class Draw {
         
         return drawView
     }
-    
     
     //MARK: draw Album Art View
     func drawAlbumView(playerView: UIView, x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat, wire: Bool) -> UIImageView {
@@ -393,10 +380,8 @@ final class Draw {
         }
         
         playerView.addSubview(drawView)
-        
         return drawView
     }
-    
     
     //MARK: draw labels
     func drawLabels(playerView: UIView, x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat,
@@ -411,20 +396,15 @@ final class Draw {
         }
         
         drawView.textAlignment = align
-        
         drawView.text = text
         drawView.font = font
         drawView.numberOfLines = 2
-        
         playerView.addSubview(drawView)
-        
         return drawView
     }
     
-    
     //MARK: Draw VolumeSlider
     func drawVolumeSlider(playerView: UIView, centerX: CGFloat, centerY: CGFloat, rectX: CGFloat, rectY: CGFloat, width: CGFloat, height: CGFloat) -> UISlider {
-        
         let slider = UISlider(frame:CGRect(x: rectX, y: rectY, width: width, height: height))
         slider.center = CGPoint(x: centerX, y: centerY)
         
@@ -442,7 +422,6 @@ final class Draw {
         return slider
     }
     
-    
     //MARK: Draw Buttons
     func drawButtons(playerView: UIView, centerX: CGFloat, centerY: CGFloat, rectX: CGFloat, rectY: CGFloat, width: CGFloat, height: CGFloat, wire: Bool) -> UIButton {
         
@@ -458,7 +437,6 @@ final class Draw {
     }
     
     func drawImage(playerView: UIView, centerX: CGFloat, centerY: CGFloat, rectX: CGFloat, rectY: CGFloat, width: CGFloat, height: CGFloat, wire: Bool) -> UIImageView {
-        
         let image = UIImageView(frame:CGRect(x: rectX, y: rectY, width: width, height: height))
         image.center = CGPoint(x: centerX, y: centerY)
         
@@ -470,7 +448,6 @@ final class Draw {
         playerView.addSubview(image)
         return image
     }
-    
     
     //MARK: Draw Buttons
     func drawAirPlay(airplayView: UIView, playerView: UIView, centerX: CGFloat, centerY: CGFloat, rectX: CGFloat, rectY: CGFloat, width: CGFloat, height: CGFloat, wire: Bool) -> (view:UIView, picker: AVRoutePickerView)  {
@@ -484,7 +461,6 @@ final class Draw {
         
         func setupAirPlayButton() -> AVRoutePickerView {
             let buttonFrame = CGRect(x: 0, y: 0, width: 50, height: 50)
-            
             let airplayButton = AVRoutePickerView(frame: buttonFrame)
             
             if #available(iOS 13.0, *) {
@@ -495,14 +471,11 @@ final class Draw {
             airplayButton.activeTintColor = UIColor.systemBlue
             airplayButton.tintColor = .systemBlue
             airplayView.addSubview(airplayButton)
-            
-            
             return airplayButton
         }
         
         let apButton = setupAirPlayButton()
 
-        
         if let routePickerButton = apButton.subviews.first(where: { $0 is UIButton }) as? UIButton {
             routePickerButton.accessibilityLabel = "Air Play and Speakers"
         }

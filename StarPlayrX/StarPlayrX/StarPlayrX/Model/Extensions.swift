@@ -67,7 +67,6 @@ extension AVQueuePlayer {
     }
 }
 
-
 extension Notification.Name {
     static let didUpdatePlay = Notification.Name("didUpdatePlay")
     static let didUpdatePause = Notification.Name("didUpdatePause")
@@ -80,7 +79,6 @@ extension Notification.Name {
 }
 
 extension UIImage {
-    
     func addImagePadding(x: CGFloat, y: CGFloat) -> UIImage? {
         let width: CGFloat = size.width + x
         let height: CGFloat = size.height + y

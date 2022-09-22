@@ -9,7 +9,6 @@
 import UIKit
 
 class ChannelsViewController: UITableViewController,UISearchBarDelegate {
-	
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
     override var prefersHomeIndicatorAutoHidden : Bool { return true }
 
@@ -17,7 +16,7 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
     let g = Global.obj
     let p = Player.shared
     
-    var allStarButton   = UIButton(type: UIButton.ButtonType.custom)
+    var allStarButton = UIButton(type: UIButton.ButtonType.custom)
 
     func checkForAllStar() {
         let data = g.ChannelArray
@@ -100,13 +99,11 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
         }
         
         UpdateTableView(scrollPosition: .none)
-        
     }
     
     private func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
         searchBar.showsCancelButton = true
     }
-    
     
     //Read Write Cache for the PDT (Artist / Song / Album Art)
     @objc func SPXCacheChannels() {
@@ -115,22 +112,14 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
         })
     }
     
-    
-    override func viewWillDisappear(_ animated: Bool) {
-
-    }
-    
-    
     deinit {
         NotificationCenter.default.removeObserver(self, name: .updateChannelsView, object: nil)
-
         g.FilterData = nil
         g.ColdFilteredData = nil
         
         ChannelsTableView.removeFromSuperview()
         ChannelsTableView.reloadData()
     }
-    
     
     func updateFilter() {
         g.FilterData = nil
@@ -152,7 +141,6 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
         if let searchbartext = searchBar.text {
             if searchbartext.count > 0 {
                 g.SearchText = searchbartext
@@ -163,7 +151,6 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
     
         self.title == g.categoryTitle ? UpdateTableView(scrollPosition: .none) : UpdateTableView(scrollPosition: .middle)
         self.title = g.categoryTitle
-        
         checkForAllStar()
     }
         
@@ -246,7 +233,9 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
             let cell = tableView.cellForRow(at: indexPath) as UITableViewCell?,
             let text = cell.textLabel?.text,
             let channel = text.components(separatedBy: " ").first
-            else { return }
+        else {
+            return
+        }
         
         cell.isSelected = true
         cell.accessoryType = .checkmark
@@ -291,18 +280,29 @@ class ChannelsViewController: UITableViewController,UISearchBarDelegate {
     
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        1
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let filterdata = g.FilterData else { return 0 }
+        
+        guard
+            let filterdata = g.FilterData
+        else {
+            return 0
+        }
+        
         return filterdata.count
     }
   	
     //Display the channels view
     override func tableView(_ tableView: UITableView,
         cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let filterdata = g.FilterData else { return UITableViewCell() }
+        
+        guard
+            let filterdata = g.FilterData
+        else {
+            return UITableViewCell()
+        }
 
         let cell = tableView.dequeueReusableCell(
             withIdentifier: "Cell", for: indexPath)

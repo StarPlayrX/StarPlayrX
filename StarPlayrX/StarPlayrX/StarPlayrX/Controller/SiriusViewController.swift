@@ -17,26 +17,25 @@ class SiriusViewController: UITableViewController {
     let p = Player.shared
     
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
-    override var prefersHomeIndicatorAutoHidden : Bool { return true }
+    override var prefersHomeIndicatorAutoHidden : Bool { true }
     
-    func checkServer() {
-        let pinpoint = "\(g.insecure)\(g.localhost):\(p.port)/api/v3/ping"
-        Async.api.Text(endpoint: pinpoint) { pong in
-            guard let ping = pong else { self.launchServer(); return }
-            ping == "pong" ? ()/* Do Nothing */ : self.launchServer()
-        }
-    }
+//    func checkServer() {
+//        let pinpoint = "\(g.insecure)\(g.localhost):\(p.port)/api/v3/ping"
+//        Async.api.Text(endpoint: pinpoint) { pong in
+//            guard let ping = pong else { self.launchServer(); return }
+//            ping == "pong" ? ()/* Do Nothing */ : self.launchServer()
+//        }
+//    }
     
-    func launchServer() {
-        p.autoLaunchServer(){ success in
-            //Do nothing
-        }
-    }
+//    func launchServer() {
+//        p.autoLaunchServer(){ success in
+//            //Do nothing
+//        }
+//    }
     
     @objc func AppEnteredForeground(_ notification: Notification) {
-        checkServer()
+        //checkServer()
     }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -145,18 +144,16 @@ class SiriusViewController: UITableViewController {
         KeepTableCellUpToDate()
     }
     
-    //MARK: Read Write Cache for the PDT (Artist / Song / Album Art)
     @objc func SPXStream() {
         let ps = p.self
         
         if (ps.state == .playing || ps.state == .interrupted) && ps.player.isDead  {
             print("Stream was dead, attempting to restream")
             ps.new(.stream)
-        } else {
-            self.checkServer()
         }
     }
     
+    //MARK: Read Write Cache for the PDT (Artist / Song / Album Art)
     @objc func SPXCache() {
         let ps = p.self
         let gs = g.self
@@ -174,8 +171,6 @@ class SiriusViewController: UITableViewController {
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(name: .updateChannelsView, object: nil)
                 }
-            } else {
-                self.checkServer()
             }
         }
     }

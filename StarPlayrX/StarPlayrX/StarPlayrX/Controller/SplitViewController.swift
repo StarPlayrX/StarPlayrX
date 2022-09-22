@@ -25,10 +25,8 @@ class SplitViewController: UISplitViewController, UISplitViewControllerDelegate 
                 navigationController?.navigationBar.standardAppearance = appearance
                 navigationController?.navigationBar.layer.borderWidth = 0.0
             }
-        } 
-        
+        }
         self.view.backgroundColor = UIColor(displayP3Red: 35 / 255, green: 37 / 255, blue: 39 / 255, alpha: 1.0)
-        
     }
     
     func splitViewController(

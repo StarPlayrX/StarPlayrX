@@ -147,12 +147,12 @@
 			isa = PBXGroup;
 			children = (
 				5FDAD9B92464EFBA008E38A8 /* Async.swift */,
+				5F5C504D244CC26000A35D76 /* Sync.swift */,
 				5F381C16245F568E009BA91D /* Draw.swift */,
 				5F5C504F244CC26000A35D76 /* Extensions.swift */,
 				5F5C5052244CC26000A35D76 /* Global.swift */,
 				5F5C5057244CC26000A35D76 /* Networkabilty.swift */,
 				5F5C5048244CC26000A35D76 /* Player.swift */,
-				5F5C504D244CC26000A35D76 /* Sync.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";

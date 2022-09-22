@@ -8,8 +8,6 @@
 
 import UIKit
 
-var isMacCatalystApp = false
-
 @available(iOS 13.0, *)
 class SceneDelegate: UIResponder, UIWindowSceneDelegate  {
     
@@ -27,7 +25,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate  {
                 windowScene.sizeRestrictions?.maximumSize = CGSize(width: 400, height: 800)
            }
         }
-
 
         #if targetEnvironment(macCatalyst)
            guard let windowScene = (scene as? UIWindowScene) else { return }

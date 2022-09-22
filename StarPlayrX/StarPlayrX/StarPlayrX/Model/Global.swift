@@ -87,17 +87,18 @@ enum PlayerState {
 }
 
 enum Speakers : String {
-    case speaker0 = "speaker0"
-    case speaker1 = "speaker1"
-    case speaker2 = "speaker2"
-    case speaker3 = "speaker3"
-    case speaker4 = "speaker4"
-    case speaker5 = "speaker5"
-    case speaker6 = "speaker6"
-    case speaker7 = "speaker7"
-    case speaker8 = "speaker8"
-    case speaker9 = "speaker9"
+    case speaker0  = "speaker0"
+    case speaker1  = "speaker1"
+    case speaker2  = "speaker2"
+    case speaker3  = "speaker3"
+    case speaker4  = "speaker4"
+    case speaker5  = "speaker5"
+    case speaker6  = "speaker6"
+    case speaker7  = "speaker7"
+    case speaker8  = "speaker8"
+    case speaker9  = "speaker9"
     case speaker10 = "speaker10"
 }
 
-
+let net = Network.ability
+var isMacCatalystApp = false

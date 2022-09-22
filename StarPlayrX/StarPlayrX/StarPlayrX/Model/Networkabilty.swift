@@ -20,7 +20,7 @@ public class Network {
     
     func start() {
         monitor.pathUpdateHandler = { [self] path in
-            networkIsConnected = (path.status == .satisfied)
+            networkIsConnected = path.status != .unsatisfied
         }
         
         let queue = DispatchQueue(label: monitorString)

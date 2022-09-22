@@ -15,8 +15,36 @@ class Sync {
     func readLocalDataFile(filename:String) -> Data?  {
         try? NSData(contentsOfFile: Bundle.main.path(forResource: filename, ofType: "dms") ?? "") as Data
     }
-}
+    
+    //MARK: Text Sync
+    internal func Text(endpoint: String, TextHandler: @escaping TextHandler) {
+        guard let url = URL(string: endpoint) else { TextHandler("error"); return}
+        
+        let semaphore = DispatchSemaphore(value: 0)
 
+        var urlReq = URLRequest(url: url)
+        urlReq.httpMethod = "GET"
+        urlReq.timeoutInterval = TimeInterval(3)
+        urlReq.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+        
+        let task = URLSession.shared.dataTask(with: urlReq ) { ( data, _, _ ) in
+            
+            guard
+                let d = data,
+                let text = String(data: d, encoding: .utf8)
+                else { TextHandler("error"); return }
+            
+            TextHandler(text)
+            
+            semaphore.signal()
+
+        }
+        
+        task.resume()
+        
+        _ = semaphore.wait(timeout: .distantFuture)
+    }
+}
 
 //How to programically change audio but follows the same rules as MPVolumeView which does not cover AirPlay2
 

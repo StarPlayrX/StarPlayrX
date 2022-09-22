@@ -9,6 +9,7 @@
 import Foundation
 import StarPlayrRadioKit
 import MediaPlayer
+import UIKit
 
 final class Player {
     static let shared = Player()

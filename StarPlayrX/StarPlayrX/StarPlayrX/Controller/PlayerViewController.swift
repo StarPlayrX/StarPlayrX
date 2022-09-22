@@ -12,16 +12,13 @@ import MediaPlayer
 
 class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     
-    
-   
-    
     let g = Global.obj
     
-    #if !targetEnvironment(simulator)
+#if !targetEnvironment(simulator)
     let ap2volume = GTCola.shared()
-    #else
+#else
     let ap2volume: ()? = nil
-    #endif
+#endif
     
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
     override var prefersHomeIndicatorAutoHidden : Bool { return true }
@@ -190,10 +187,9 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     }
     
     func startupVolume() {
-        
-        #if targetEnvironment(simulator)
+    #if targetEnvironment(simulator)
         runSimulation()
-        #else
+    #else
         if !g.demomode && !isMacCatalystApp {
             if let ap2 = ap2volume {
                 ap2.hud(false) //Disable HUD on this view
@@ -203,15 +199,15 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                 runSimulation()
             }
         }
-        #endif
+    #endif
     }
     
     func shutdownVolume() {
-        #if !targetEnvironment(simulator)
+    #if !targetEnvironment(simulator)
         if !g.demomode && !isMacCatalystApp {
             ap2volume?.hud(true) //Enable HUD on this view
         }
-        #endif
+    #endif
     }
     
     @objc func OnDidUpdatePlay(){
@@ -219,7 +215,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
             self.updatePlayPauseIcon(play: true)
         }
     }
-    
     
     @objc func OnDidUpdatePause(){
         DispatchQueue.main.async {
@@ -233,9 +228,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         NotificationCenter.default.addObserver(self, selector: #selector(GotNowPlayingInfoAnimated), name: .gotNowPlayingInfoAnimated, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(GotNowPlayingInfo), name: .gotNowPlayingInfo, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: .willEnterForegroundNotification, object: nil)
-        
         startObservingVolumeChanges()
-        
     }
     
     func removeObservers() {
@@ -296,7 +289,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                 } else {
                     allStarButton.setImage(UIImage(named: "star_off"), for: .normal)
                     allStarButton.accessibilityLabel = "Preset Off."
-                    
                 }
             }
             
@@ -329,18 +321,17 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         self.setSpeakers(value: value)
     }
     
-    
     @objc func volumeChanged() {
         if VolumeSlider.isTracking { return }
         
-        #if !targetEnvironment(simulator)
+    #if !targetEnvironment(simulator)
         if !g.demomode && !isMacCatalystApp, let ap2 = Player.shared.avSession.outputVolume as Float?  {
             DispatchQueue.main.async {
                 self.VolumeSlider.setValue(ap2, animated: true)
                 self.setSpeakers(value: ap2)
             }
         }
-        #endif
+    #endif
     }
     
     private struct Observation {
@@ -371,26 +362,24 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     }
     
     override func viewDidLoad() {
-        
         super.viewDidLoad()
         setObservers()
         doubleTap()
         AirPlayBtn.delegate = self
         
-#if targetEnvironment(simulator)
+    #if targetEnvironment(simulator)
         runSimulation()
-#endif
+    #endif
         
         if self.g.demomode {
             runSimulation()
         }
-        
         restartPDT()
         
-        
-#if !targetEnvironment(simulator)
+    #if !targetEnvironment(simulator)
         volumeChanged()
-#endif
+    #endif
+        checkForNetworkError()
     }
     
     @objc func GotNowPlayingInfoAnimated() {
@@ -405,9 +394,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
             ArtistSong?.accessibilityLabel = pdt.artist + ". " + pdt.song + "."
             Song?.accessibilityLabel = ""
             Song?.accessibilityHint = ""
-            
-            //Artist?.isHighlighted = true
-            // AlbumArt.accessibilityLabel = "Album Art, " + pdt.artist + ". " + pdt.song + "."
         }
         
         func staticArtistSong() -> Array<(lbl: UILabel?, str: String)> {
@@ -416,7 +402,6 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
             let song   = pdt.song
             
             let combine = [
-                
                 ( lbl: self.Artist,     str: artist ),
                 ( lbl: self.Song,       str: song ),
                 ( lbl: self.ArtistSong, str: combo ),
@@ -481,6 +466,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     }
     
     @objc func PlayPause() {
+        checkForNetworkError()
         PlayerXL.accessibilityHint = ""
         
         if Player.shared.state == .playing || Player.shared.state == .stream || Player.shared.state == .buffering {
@@ -520,12 +506,12 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
             Player.shared.syncArt()
         }
         
-        #if !targetEnvironment(simulator)
+    #if !targetEnvironment(simulator)
         if !g.demomode && !isMacCatalystApp, let ap2 = ap2volume?.getSoda()  {
             
             VolumeSlider.setValue(ap2, animated: false)
         }
-        #endif
+    #endif
         
         title = g.currentChannelName
         startup()
@@ -627,16 +613,16 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
             let value = slider.value
             self.setSpeakers(value: value)
             
-            #if targetEnvironment(simulator)
+        #if targetEnvironment(simulator)
             Player.shared.player.volume = value
-            #else
+        #else
             // your real device code
             if !self.g.demomode && !isMacCatalystApp {
                 self.ap2volume?.setSoda(value)
             } else {
                 Player.shared.player.volume = value
             }
-            #endif
+        #endif
         }
     }
     
@@ -661,7 +647,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
             VolumeSlider.isEnabled = true
         }
         
-        #if !targetEnvironment(simulator)
+    #if !targetEnvironment(simulator)
         if g.demomode || isMacCatalystApp {
             if Player.shared.avSession.currentRoute.outputs.first?.portType == .airPlay  {
                 VolumeSlider.isEnabled = false
@@ -669,7 +655,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                 VolumeSlider.isEnabled = true
             }
         }
-         #endif
+     #endif
     }
     
     @objc func handleRouteChange(notification: Notification) {
@@ -684,14 +670,14 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
             if isTrue && title == g.currentChannelName {
                 if Player.shared.avSession.currentRoute.outputs.first?.portType == .airPlay {
                     
-                    #if !targetEnvironment(simulator)
+                #if !targetEnvironment(simulator)
                     if !g.demomode && !isMacCatalystApp {
                         ap2volume?.setSodaBy(0.0)
                     }
-                    #endif
+                #endif
                     
                 } else {
-                    #if !targetEnvironment(simulator)
+                #if !targetEnvironment(simulator)
                     if !g.demomode && !isMacCatalystApp {
                         if let vol = ap2volume?.getSoda() {
                             DispatchQueue.main.async {
@@ -699,7 +685,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
                             }
                         }
                     }
-                    #endif
+                #endif
                 }
                 
                 DispatchQueue.main.async {
@@ -716,5 +702,35 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     
     @objc func willEnterForeground() {
         startup()
+    }
+    
+    func checkForNetworkError() {
+        guard net.networkIsConnected else {
+            self.displayError(title: "Network error", message: "Check your internet connection and try again", action: "OK")
+            return
+        }
+    }
+    
+    func displayError(title: String, message: String, action: String) {
+        DispatchQueue.main.async {
+            self.showAlert(title: title, message: message, action: action)
+        }
+    }
+    
+    //Show Alert
+    func showAlert(title: String, message:String, action:String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: action, style: .default, handler: { action in
+            switch action.style{
+            case .default:
+                ()
+            case .cancel:
+                ()
+            case .destructive:
+                ()
+            @unknown default:
+                print("error")
+            }}))
+        self.present(alert, animated: true, completion: nil)
     }
 }

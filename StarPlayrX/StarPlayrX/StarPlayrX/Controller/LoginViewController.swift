@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SafariServices
 import AVKit
 
 class LoginViewController: UIViewController {
@@ -38,23 +37,23 @@ class LoginViewController: UIViewController {
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge { .bottom }
     override var prefersHomeIndicatorAutoHidden : Bool { return true }
     
-    @IBAction func starplayrx_dot_com(_ sender: Any) {
-        website(url: "https://starplayrx.com")
-    }
+//    @IBAction func starplayrx_dot_com(_ sender: Any) {
+//        website(url: "https://starplayrx.com")
+//    }
     
-    @IBAction func Trial(_ sender: Any) {
-        website(url: "https://care.siriusxm.com/sirpromoplanselection_view.action?programCode=ESSPS3MOFREE&intcmp=NPR_all_SXIRES-launch_tryfree_3for0_040819_ES")
-    }
+//    @IBAction func Trial(_ sender: Any) {
+//        website(url: "https://care.siriusxm.com/sirpromoplanselection_view.action?programCode=ESSPS3MOFREE&intcmp=NPR_all_SXIRES-launch_tryfree_3for0_040819_ES")
+//    }
     
-    func website(url: String) {
-        if let url = URL(string: url) {
-            let config = SFSafariViewController.Configuration()
-            config.entersReaderIfAvailable = true
-            
-            let vc = SFSafariViewController(url: url, configuration: config)
-            present(vc, animated: true)
-        }
-    }
+//    func website(url: String) {
+//        if let url = URL(string: url) {
+//            let config = SFSafariViewController.Configuration()
+//            config.entersReaderIfAvailable = true
+//
+//            let vc = SFSafariViewController(url: url, configuration: config)
+//            present(vc, animated: true)
+//        }
+//    }
     
     @IBOutlet weak var userField: UITextField!
     @IBOutlet weak var passField: UITextField!
@@ -68,7 +67,7 @@ class LoginViewController: UIViewController {
     @IBAction func loginButton(_ sender: Any) {
         self.g.Username = self.userField.text ?? ""
         self.g.Password = self.passField.text ?? ""
-        self.prog(0.0, "", animated: false)
+        self.prog(0.0, " ", animated: false)
         self.autoLogin()
     }
     
@@ -83,7 +82,7 @@ class LoginViewController: UIViewController {
     
     func displayError(title: String, message: String, action: String) {
         DispatchQueue.main.async {
-            self.prog(0.0, "")
+            self.prog(0.0, " ")
             self.loginButton.isEnabled = true
             self.loginButton.alpha = 1.0
             self.showAlert(title: title, message: message, action: action)
@@ -91,7 +90,7 @@ class LoginViewController: UIViewController {
     }
     
     func autoLogin() {
-        let net = Network.ability
+        checkForNetworkError()
         
         //MARK: 1 - Logging In
         self.loginButton.isEnabled = false
@@ -102,24 +101,21 @@ class LoginViewController: UIViewController {
     
         Async.api.Text(endpoint: pingUrl) { ping in
             
-            
             //Check if Local Web Server is Up
             if let ping = ping, ping != "pong" {
                 //print("Launching the Server.")
                 net.LaunchServer()
             }
             
-            if !net.networkIsConnected {
-                self.displayError(title: "Network error", message: "Check your internet connection and try again.", action: "OK")
-            } else {
-                self.prog(0.0, "Login")
-                self.login()
-            }
+            self.prog(0.0, "Login")
+            self.login()
         }
     }
     
     //MARK: 1 - Login
     func login() {
+        checkForNetworkError()
+        
         let endpoint = g.insecure + g.local + ":" + String(p.port)  + "/api/v3/login"
         let method = "login"
         let request = ["user":g.Username,"pass":g.Password] as Dictionary
@@ -128,7 +124,7 @@ class LoginViewController: UIViewController {
         g.demomode = g.Username.contains(g.demoname)
     
         func failureMessage() {
-            self.displayError(title: "Network error", message: "Check your internet connection and try again.", action: "OK")
+            self.displayError(title: "Network error", message: "Check your internet connection and try again", action: "OK")
         }
         
         Async.api.Post(request: request, endpoint: endpoint, method: method) { result in
@@ -145,19 +141,17 @@ class LoginViewController: UIViewController {
                 UserDefaults.standard.set(self.g.Password, forKey: "pass")
                 self.g.userid = data
                 UserDefaults.standard.set(self.g.userid, forKey: "userid")
+            
+                self.prog(0.1, "Login")
+                self.session()
                 
-                DispatchQueue.main.async {
-                    self.prog(0.2, "Session")
-                    self.session()
-                }
             } else {
                 DispatchQueue.main.async {
                     self.loginButton.isEnabled = true
                     self.loginButton.alpha = 1.0
                     if data == "411" {
-                        self.prog(0, "")
-                        self.closeStarPlayr(title: "Local Network Error",
-                                            message: message, action: "Close StarPlayrX")
+                        self.prog(0, " ")
+                        self.closeStarPlayr(title: "Local Network Error", message: message, action: "Close StarPlayrX")
                     } else {
                         self.displayError(title: "Login Error", message: message, action: "OK")
                     }
@@ -168,25 +162,30 @@ class LoginViewController: UIViewController {
     
     //MARK 2 - Session
     func session() {
+        checkForNetworkError()
+        
         let endpoint = g.insecure + Global.obj.local + ":" + String(p.port) + "/api/v3/session"
         let method = "cookies"
         let request = ["channelid":"siriushits1"] as Dictionary
         
         Async.api.Post(request: request, endpoint: endpoint, method: method) { result in
-                    
-            
-           self.prog(0.3, "Channels")
-            
-            if let data = result?.data?["data"] as? String {
-                self.channels(channelLineUpId:data)
-            } else {
+            self.prog(0.2, "Channels")
+
+            guard
+                let data = result?.data?["data"] as? String
+            else {
                 self.channels(channelLineUpId:"350")
+                return
             }
+
+            self.channels(channelLineUpId:data)
         }
     }
     
     //MARK 3 - Channels
     func channels(channelLineUpId: String) {
+        checkForNetworkError()
+        
         autoreleasepool {
             let endpoint = g.insecure + g.local + ":" + String(p.port) + "/api/v3/channels"
             let method = "channels"
@@ -194,12 +193,9 @@ class LoginViewController: UIViewController {
             
             Async.api.Post(request: request, endpoint: endpoint, method: method) { result in
                 
-                //print("result", result)
                 if let data = result?.data?["data"] as? [String : Any] {
                     self.g.ChannelList = data
-                                        
-                    self.prog(0.4, "Artwork")
-                    
+                    self.prog(0.3, "Channels")
                     self.art(channelLineUpId: channelLineUpId)
                 } else {
                     self.displayError(title: "Error reading channels", message: "Possible network error.", action: "OK")
@@ -210,8 +206,7 @@ class LoginViewController: UIViewController {
     
     //MARK 4 - Artwork
     func art(channelLineUpId: String) {
-        
-        // self.embeddedAlbumArt(filename: "bluenumbers") //load by default
+        checkForNetworkError()
         
         //large channel art checksum
         let GetChecksum = UserDefaults.standard.string(forKey: "largeChecksumXD") ?? "0"
@@ -223,7 +218,7 @@ class LoginViewController: UIViewController {
         
         Async.api.Text(endpoint: checksumUrl) { sum in
             
-            self.prog(0.5, "Icons")
+            self.prog(0.4, "Art")
             
             if let check = sum {
                 self.g.imagechecksum = String(check)
@@ -239,7 +234,7 @@ class LoginViewController: UIViewController {
             self.embeddedAlbumArt(filename: "bluenumbers", process: false)
             
             func nextStep() {
-                self.prog(0.6, "Processing")
+                self.prog(0.5, "Art")
                 
                 self.processing()
             }
@@ -249,8 +244,6 @@ class LoginViewController: UIViewController {
                 self.embeddedAlbumArt(filename: "bluenumbers", process: true)
                 UserDefaults.standard.removeObject(forKey: "channelDataXD")
                 UserDefaults.standard.removeObject(forKey: "largeChecksumXD")
-                //UserDefaults.standard.synchronize()
-                
             }
             
             func runFailure(_ str: Int) {
@@ -258,7 +251,6 @@ class LoginViewController: UIViewController {
                 self.embeddedAlbumArt(filename: "bluenumbers", process: true)
                 UserDefaults.standard.removeObject(forKey: "channelDataXD")
                 UserDefaults.standard.removeObject(forKey: "largeChecksumXD")
-                //UserDefaults.standard.synchronize()
             }
             
             if g.demomode {
@@ -281,7 +273,6 @@ class LoginViewController: UIViewController {
                     print(error)
                 }
             } else {
-                
                 let dataUrl = "\(g.secure)\(g.domain):\(g.secureport)/large"
                 
                 Async.api.CommanderData(endpoint: dataUrl, method: "large-art") { (data) in
@@ -309,7 +300,19 @@ class LoginViewController: UIViewController {
         }
     }
     
+    func checkForNetworkError() {
+        guard net.networkIsConnected else {
+            DispatchQueue.main.async {
+                self.runFinish(false)
+            }
+            self.displayError(title: "Network error", message: "Check your internet connection and try again", action: "OK")
+            return
+        }
+    }
+    
     func guide() {
+        checkForNetworkError()
+        
         //MARK: Skip Check
         p.updatePDT() { success in
             if success {
@@ -323,15 +326,13 @@ class LoginViewController: UIViewController {
                     NotificationCenter.default.post(name: .updateChannelsView, object: nil)
                 }
                 
-                self.finish()
-            } else {
-                self.finish()
-                //print("GUIDE ERROR.")
-                //self.prog(0, "")
-                //self.showAlert(title: "Error reading reading Guide",
-                //message: "Posible network error.", action: "OK")
             }
         }
+        
+        self.prog(0.9, "Success")
+        usleep(100000)
+        self.finish()
+        usleep(100000)
     }
     
     func prog(_ Float: Float, _ Text: String, animated: Bool = true) {
@@ -341,11 +342,11 @@ class LoginViewController: UIViewController {
         
         func runProg() {
             //MARK: Invoke using getFloat(Float)
-            let getFloat = { (_ Float: Float) -> Float in
+            let getFloat = { (_ float: Float) -> Float in
                 if let bar = self.progressBar?.progress {
-                    return Float < 1 && Float > 0 ? bar + 0.1 : Float
+                    return float < 1 && float > 0 ? bar + 0.1 : float
                 } else {
-                    return Float
+                    return float
                 }
             }
             
@@ -362,23 +363,25 @@ class LoginViewController: UIViewController {
     }
     
     func finish() {
-        self.prog(1.0, "Complete")
+        self.prog(1.0, "Success")
         
         DispatchQueue.main.async {
-            runFinish()
+            self.runFinish(true)
         }
+    }
+    
+    func runFinish(_ success: Bool) {
+        self.loginButton.isEnabled = true
+        self.loginButton.alpha = 1.0
         
-        func runFinish() {
-            self.loginButton.isEnabled = true
-            self.loginButton.alpha = 1.0
+        if success {
             self.tabItem(index: 1, enable: true, selectItem: true)
         }
     }
     
-    
     func processing()  {
         func runFailure() {
-            self.displayError(title: "Channel List Error", message: "Check your internet connection and try again.", action: "OK")
+            self.displayError(title: "Channel List Error", message: "Check your internet connection and try again", action: "OK")
         }
         
         guard let channelList = g.ChannelList else { runFailure(); return }
@@ -408,8 +411,7 @@ class LoginViewController: UIViewController {
                 name = name.replacingOccurrences(of: "Sirius XM ", with: "")
                 name = name.replacingOccurrences(of: "SXM ", with: "")
                 name = name.replacingOccurrences(of: "SPX ", with: "")
-                
-                
+            
                 let title = NSMutableAttributedString(string: number + " ", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17)])
                 let channel = NSMutableAttributedString(string: name, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17)])
                 
@@ -421,8 +423,7 @@ class LoginViewController: UIViewController {
                 runFailure();
             }
         }
-        
-        
+    
         //Read in the presets
         guard let x = (UserDefaults.standard.array(forKey: "SPXPresets") ?? ["2","3","4"]) as? [String] else { return }
         
@@ -441,12 +442,10 @@ class LoginViewController: UIViewController {
             }
         }
         
-        self.prog(0.8, "Icons")
+        self.prog(0.6, "Guide")
         self.processChannelIcons()
     }
-    
-    
-    
+
     //Adds in Channel Art from Data Dictionary
     func processChannelIcons()  {
         // if !g.ChannelArray.isEmpty && !(g.ChannelData?.isEmpty ?? true) {
@@ -459,10 +458,9 @@ class LoginViewController: UIViewController {
         }
         // }
         
-        self.prog(1.0, "Guide")
+        self.prog(0.8, "Guide")
         guide()
     }
-    
     
     //Show Alert
     func showAlert(title: String, message:String, action:String) {
@@ -476,7 +474,6 @@ class LoginViewController: UIViewController {
                 ()
             case .destructive:
                 ()
-                
             @unknown default:
                 print("error")
             }}))
@@ -559,6 +556,11 @@ class LoginViewController: UIViewController {
         siriusCanadaSwitch.isOn = self.g.localeIsCA
         selectCanadaPlayer(self.g.localeIsCA)
         
+        //Pause Gesture
+        let doubleFingerTapToPause = UITapGestureRecognizer(target: self, action: #selector(self.pausePlayBack) )
+        doubleFingerTapToPause.numberOfTapsRequired = 2
+        self.view.addGestureRecognizer(doubleFingerTapToPause)
+                
         if !self.g.Username.isEmpty && !self.g.Password.isEmpty {
             
             if UIAccessibility.isVoiceOverRunning {
@@ -573,14 +575,9 @@ class LoginViewController: UIViewController {
                 }
             }
             
-            self.prog(0.0, "", animated: false)
+            self.prog(0.0, " ", animated: false)
             self.autoLogin()
         }
-        
-        //Pause Gesture
-        let doubleFingerTapToPause = UITapGestureRecognizer(target: self, action: #selector(self.pausePlayBack) )
-        doubleFingerTapToPause.numberOfTapsRequired = 2
-        self.view.addGestureRecognizer(doubleFingerTapToPause)
     }
     
     func embeddedAlbumArt(filename: String, process: Bool = false) {
@@ -592,7 +589,7 @@ class LoginViewController: UIViewController {
                     g.ChannelData = dict
                     
                     if process {
-                        self.prog(0.6, "Processing")
+                        self.prog(0.6, "Art")
                         self.processing()
                     }
                 }
