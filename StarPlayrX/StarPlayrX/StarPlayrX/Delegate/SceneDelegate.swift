@@ -23,8 +23,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate  {
         if ProcessInfo.processInfo.isMacCatalystApp {
             isMacCatalystApp = true
             UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.forEach { windowScene in
-                windowScene.sizeRestrictions?.minimumSize = CGSize(width: 1364.5, height: 1023.5)
-                windowScene.sizeRestrictions?.maximumSize = CGSize(width: 1364.5, height: 1023.5)
+                windowScene.sizeRestrictions?.minimumSize = CGSize(width: 400, height: 800)
+                windowScene.sizeRestrictions?.maximumSize = CGSize(width: 400, height: 800)
            }
         }
 

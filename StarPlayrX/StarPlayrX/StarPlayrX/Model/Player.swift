@@ -42,6 +42,10 @@ final class Player {
     
     func spx(_ state: PlayerState?) {
         if state == .stream {
+            if isMacCatalystApp {
+                self.resetPlayer()
+            }
+            
             self.play()
             self.state = .buffering
         } else if player.rate == 1 || self.state == .playing {
