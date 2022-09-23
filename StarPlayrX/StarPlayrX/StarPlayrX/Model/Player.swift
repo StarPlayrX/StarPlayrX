@@ -46,13 +46,12 @@ final class Player {
             if isMacCatalystApp {
                 self.resetPlayer()
             }
-            
             self.play()
             self.state = .buffering
         } else if player.rate == 1 || self.state == .playing {
             self.pause()
             self.state = .paused
-        } else  {
+        } else {
             self.play()
             self.state = .buffering
         }
@@ -99,6 +98,7 @@ final class Player {
     }
     
     func stream() {
+
         guard
             let url = URL(string: "\(g.insecure)\(g.localhost):\(port)/api/v3/m3u/\(g.currentChannel)\(g.m3u8)")
         else {
@@ -108,33 +108,35 @@ final class Player {
         let p = self.player
         p.volume = 0
         p.replaceCurrentItem(with: AVPlayerItem(asset:AVAsset(url: url)))
-        p.play()
+        p.playImmediately(atRate: 1.0)
+        SPXCache()
+        state = .playing
         p.fadeVolume(from: 0, to: 1, duration: Float(2.5))
-    
-        var spx = false
+      
 
-        for i in 0...20 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + Double(i / 2)) { [self] in
-                if p.rate == 1 && !spx {
-                    SPXCache()
-                    state = .playing
-                    NotificationCenter.default.post(name: .didUpdatePlay, object: nil)
-                    spx.toggle()
-                }
-            }
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + Double(i / 2)) {
-                if p.rate == 1 { return }
+//        var spx = false
 
-                if p.rate < 1 {
-                    p.playImmediately(atRate: 1.0)
-                }
-                
-                if i >= 5 && p.volume < 1 {
-                    p.fadeVolume(from: p.volume, to: 1, duration: Float(0.5))
-                }
-            }
-        }
+//        for i in 0...20 {
+//            DispatchQueue.main.asyncAfter(deadline: .now() + Double(i / 2)) { [self] in
+//                if p.rate == 1 && !spx {
+//
+//                    NotificationCenter.default.post(name: .didUpdatePlay, object: nil)
+//                    spx.toggle()
+//                }
+//            }
+//
+//            DispatchQueue.main.asyncAfter(deadline: .now() + Double(i / 2)) {
+//                if p.rate == 1 { return }
+//
+//                if p.rate < 1 {
+//                    p.playImmediately(atRate: 1.0)
+//                }
+//
+//                if i >= 5 && p.volume < 1 {
+//                    p.fadeVolume(from: p.volume, to: 1, duration: Float(0.5))
+//                }
+//            }
+//        }
     }
     
     func play() {

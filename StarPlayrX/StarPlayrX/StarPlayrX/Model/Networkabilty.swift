@@ -22,7 +22,6 @@ public class Network {
         monitor.pathUpdateHandler = { [self] path in
             networkIsConnected = path.status != .unsatisfied
             networkIsConnected = true
-
         }
         
         let queue = DispatchQueue(label: monitorString)
@@ -80,8 +79,4 @@ public class Network {
         release(socket: socketFileDescriptor)
         return true
     }
-    
 }
-
-
-

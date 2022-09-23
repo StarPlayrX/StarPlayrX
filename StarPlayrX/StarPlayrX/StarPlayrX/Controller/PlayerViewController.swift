@@ -467,28 +467,21 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     
     @objc func PlayPause() {
         checkForNetworkError()
+        
         PlayerXL.accessibilityHint = ""
         
-        if Player.shared.state == .playing || Player.shared.state == .stream || Player.shared.state == .buffering {
-            updatePlayPauseIcon(play: false)
-            Player.shared.state = .paused
-            Player.shared.pause()
-            
-        } else if Player.shared.state == .paused || Player.shared.state == .interrupted {
-            updatePlayPauseIcon(play: true)
-            Player.shared.state = .stream
-            
-            DispatchQueue.global().async {
-                Player.shared.player.pause()
-                Player.shared.play()
+        if Player.shared.player.isBusy {
+            DispatchQueue.main.async { [self] in
+                updatePlayPauseIcon(play: false)
+                Player.shared.new(.paused)
+                PlayerXL.accessibilityLabel = "Paused"
             }
-        }
-        
-        // Opposite Day
-        if Player.shared.state == .paused {
-            PlayerXL.accessibilityLabel = "Now Playing"
-        } else if Player.shared.state == .stream {
-            PlayerXL.accessibilityLabel = "Paused"
+        } else {
+            DispatchQueue.main.async { [self] in
+                updatePlayPauseIcon(play: true)
+                Player.shared.new(.playing)
+                PlayerXL.accessibilityLabel = "Now Playing"
+            }
         }
     }
     
