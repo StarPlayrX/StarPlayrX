@@ -19,6 +19,6 @@ CameoKit was StarPlayrX's original abstraction layer between SiriusXM and StarPl
 
 Perfect4 was a super fast Swift server with a good bit of its code in C. Unfortunately Perfect was proving difficult to maintain since its original authors seemed to have abandoned it completely. It was also quite large and needed to have access to its C headers. This has been replaced with SwifterLite, an unofficial fork of Swifter. Swifter was pretty small, but it wasn't fast enough or stable enough to replace Perfect. SwifterLite was born removing 50% of Swifter's original code base and refactored what was remaining. SwifterLite is made specfically for StarPlayrX and future IPTVee projects by Todd Bruss, but anyone can use SwifterLite as a reliable and fast embedded http web server on iOS, macOS and tvOS.
 
-SwifterLite is copyrighted by the Swifter contributors (c) 2016 and Todd Bruss (c) 2022.
+SwifterLite is copyrighted (c) 2016 by the Swifter individual contributors and (c) 2022 by Todd Bruss 
 
 StarplayrX and StarPlayrRadioKit is copyrighted (c) 2022 by Todd Bruss and NiceMac LLC
