@@ -44,7 +44,7 @@ internal class Async {
         
         var urlReq = URLRequest(url: url)
         urlReq.httpMethod = "GET"
-        urlReq.timeoutInterval = TimeInterval(15)
+        urlReq.timeoutInterval = TimeInterval(60)
         urlReq.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
         
         let task = URLSession.shared.dataTask(with: urlReq ) { ( data, _, _ ) in
