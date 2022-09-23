@@ -8,7 +8,7 @@ The Mac Catalyst version of StarPlayrX can be compiled by individuals. There wil
 StarPlayrX is open source along with its two libraries StarPlayrRadioKit and SwifterLite, so who is interested and have some experience with Swift can create their own StarPlayr.
 
 <center>
-<img src="https://user-images.githubusercontent.com/52664524/192068375-da29200b-00c5-42d2-951c-89acb12caaf6.png" width="265"> <img src="https://user-images.githubusercontent.com/52664524/192068208-91b5c67e-38b8-438b-8fdc-6ad9b64d0df8.png" width="265"> <img src="https://user-images.githubusercontent.com/52664524/192068072-c8c34cc7-27eb-4850-b26a-aaaeda0e103c.png" width="265">
+<img src="https://user-images.githubusercontent.com/52664524/192068375-da29200b-00c5-42d2-951c-89acb12caaf6.png" width="262"> <img src="https://user-images.githubusercontent.com/52664524/192068208-91b5c67e-38b8-438b-8fdc-6ad9b64d0df8.png" width="262"> <img src="https://user-images.githubusercontent.com/52664524/192068072-c8c34cc7-27eb-4850-b26a-aaaeda0e103c.png" width="262">
 </center>
 
 CameoKit and Perfect4 is now deprecated. It has been replaced with StarPlayrRadioKit and SwifterLite (fork from Swifter). All three repos are located on my Github's main page.
