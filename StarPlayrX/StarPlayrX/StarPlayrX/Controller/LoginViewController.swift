@@ -105,17 +105,21 @@ class LoginViewController: UIViewController {
             if let ping = ping, ping != "pong" {
                 //print("Launching the Server.")
                 net.LaunchServer()
+                self.prog(0.1, "Login")
+                self.login()
+            } else {
+                self.prog(0.1, "Login")
+                self.login()
             }
             
-            self.prog(0.0, "Login")
-            self.login()
+          
         }
     }
     
     //MARK: 1 - Login
     func login() {
         checkForNetworkError()
-        
+
         let endpoint = g.insecure + g.local + ":" + String(p.port)  + "/api/v3/login"
         let method = "login"
         let request = ["user":g.Username,"pass":g.Password] as Dictionary
@@ -128,6 +132,7 @@ class LoginViewController: UIViewController {
         }
         
         Async.api.Post(request: request, endpoint: endpoint, method: method) { result in
+
             guard
                 let result = result,
                 let data = result.data?["data"] as? String,
@@ -142,7 +147,7 @@ class LoginViewController: UIViewController {
                 self.g.userid = data
                 UserDefaults.standard.set(self.g.userid, forKey: "userid")
             
-                self.prog(0.1, "Login")
+                self.prog(0.2, "Login")
                 self.session()
                 
             } else {
@@ -169,7 +174,7 @@ class LoginViewController: UIViewController {
         let request = ["channelid":"siriushits1"] as Dictionary
         
         Async.api.Post(request: request, endpoint: endpoint, method: method) { result in
-            self.prog(0.2, "Channels")
+            self.prog(0.3, "Channels")
 
             guard
                 let data = result?.data?["data"] as? String
@@ -195,7 +200,7 @@ class LoginViewController: UIViewController {
                 
                 if let data = result?.data?["data"] as? [String : Any] {
                     self.g.ChannelList = data
-                    self.prog(0.3, "Channels")
+                    self.prog(0.4, "Channels")
                     self.art(channelLineUpId: channelLineUpId)
                 } else {
                     self.displayError(title: "Error reading channels", message: "Possible network error.", action: "OK")
@@ -218,7 +223,7 @@ class LoginViewController: UIViewController {
         
         Async.api.Text(endpoint: checksumUrl) { sum in
             
-            self.prog(0.4, "Art")
+            self.prog(0.5, "Channels")
             
             if let check = sum {
                 self.g.imagechecksum = String(check)
@@ -234,7 +239,7 @@ class LoginViewController: UIViewController {
             self.embeddedAlbumArt(filename: "bluenumbers", process: false)
             
             func nextStep() {
-                self.prog(0.5, "Art")
+                self.prog(0.6, "Channels")
                 
                 self.processing()
             }
@@ -442,7 +447,7 @@ class LoginViewController: UIViewController {
             }
         }
         
-        self.prog(0.6, "Guide")
+        self.prog(0.7, "Channels")
         self.processChannelIcons()
     }
 
@@ -458,7 +463,7 @@ class LoginViewController: UIViewController {
         }
         // }
         
-        self.prog(0.8, "Guide")
+        self.prog(0.8, "Channels")
         guide()
     }
     
@@ -589,7 +594,7 @@ class LoginViewController: UIViewController {
                     g.ChannelData = dict
                     
                     if process {
-                        self.prog(0.6, "Art")
+                        self.prog(0.6, "Channels")
                         self.processing()
                     }
                 }

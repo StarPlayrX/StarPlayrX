@@ -21,7 +21,7 @@ internal class Async {
         
         var urlReq = URLRequest(url: url)
         urlReq.httpMethod = "GET"
-        urlReq.timeoutInterval = TimeInterval(3)
+        urlReq.timeoutInterval = TimeInterval(60)
         urlReq.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
         
         let task = URLSession.shared.dataTask(with: urlReq ) { ( data, _, _ ) in
@@ -44,7 +44,7 @@ internal class Async {
         
         var urlReq = URLRequest(url: url)
         urlReq.httpMethod = "GET"
-        urlReq.timeoutInterval = TimeInterval(3)
+        urlReq.timeoutInterval = TimeInterval(15)
         urlReq.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
         
         let task = URLSession.shared.dataTask(with: urlReq ) { ( data, _, _ ) in
@@ -68,7 +68,7 @@ internal class Async {
         
         var urlReq = URLRequest(url: url)
         urlReq.httpMethod = "GET"
-        urlReq.timeoutInterval = TimeInterval(3)
+        urlReq.timeoutInterval = TimeInterval(60)
         urlReq.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
         
         let task = URLSession.shared.dataTask(with: urlReq ) { ( returndata, response, _ ) in
@@ -91,7 +91,7 @@ internal class Async {
         urlReq.httpBody = try? JSONSerialization.data(withJSONObject: request, options: .prettyPrinted)
         urlReq.addValue("application/json", forHTTPHeaderField: "Content-Type")
         urlReq.httpMethod = "POST"
-        urlReq.timeoutInterval = TimeInterval(3)
+        urlReq.timeoutInterval = TimeInterval(60)
         urlReq.setValue("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0.2 Safari/605.1.15", forHTTPHeaderField: "User-Agent")
         
         let task = URLSession.shared.dataTask(with: urlReq ) { ( returndata, resp, error ) in
@@ -172,7 +172,7 @@ internal class Async {
         
         var urlReq = URLRequest(url: url)
         urlReq.httpMethod = "GET"
-        urlReq.timeoutInterval = TimeInterval(2)
+        urlReq.timeoutInterval = TimeInterval(60)
         urlReq.cachePolicy = .returnCacheDataElseLoad
         
         let task = URLSession.shared.dataTask(with: urlReq ) { ( data, _, _ ) in
