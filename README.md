@@ -1,17 +1,16 @@
 # StarPlayrX
 Sirius XM streaming radio for iOS, macOS and iPadOS. StarPlayrX is accessible and this is one of its strong suits.
 
-StarPlayrX is not affiliated with SiriusXM. StarPlayr trademark is owned by NiceMac LLC. Source and Binaries are copyrighted (c) Todd Bruss, NiceMac LLC, StarPlayrX.com
-
 X stands for ten. StarPlayr was originally targeted for iOS back in 2009. The app encountered some misfortune and NiceMac was disbanned. A decade later its original creator and original founding member of NiceMac, Todd Bruss created StarPlayrX from scratch and released it to the iOS app store. 
 
 The Mac Catalyst version of StarPlayrX can be compiled by individuals. There will be macOS future releases, planned for this Fall.
 
 StarPlayrX is open source along with its two libraries StarPlayrRadioKit and SwifterLite, so who is interested and have some experience with Swift can create their own StarPlayr.
 
-"Don't be a Slacker, be a Star Player."
-
-p.s.
+![image](https://user-images.githubusercontent.com/52664524/192067260-d41ffa2c-9120-4d98-b109-5b99988cfe4a.png)
+![image](https://user-images.githubusercontent.com/52664524/192067273-4868073a-d903-4711-a083-e9f883c1f010.png)
+![image](https://user-images.githubusercontent.com/52664524/192067402-414c22ff-5fcf-43cb-8bca-e04424c52de3.png)
+![image](https://user-images.githubusercontent.com/52664524/192067428-df51cf1e-bf2d-43fb-8dd6-9c4b95540878.png)
 
 CameoKit and Perfect4 is now deprecated. It has been replaced with StarPlayrRadioKit and SwifterLite (fork from Swifter). All three repos are located on my Github's main page.
  
@@ -22,3 +21,7 @@ Perfect4 was a super fast Swift server with a good bit of its code in C. Unfortu
 SwifterLite is copyrighted (c) 2016 by the Swifter's individual contributors and (c) 2022 by Todd Bruss 
 
 StarplayrX and StarPlayrRadioKit is copyrighted (c) 2022 by Todd Bruss and NiceMac LLC
+
+StarPlayrX is not affiliated with SiriusXM. StarPlayr trademark is owned by NiceMac LLC. Source and Binaries are copyrighted (c) Todd Bruss, NiceMac LLC, StarPlayrX.com
+
+"Don't be a Slacker, be a Star Player."
