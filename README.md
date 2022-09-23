@@ -9,7 +9,7 @@ StarPlayrX is open source along with its two libraries StarPlayrRadioKit and Swi
 
 ![image](https://user-images.githubusercontent.com/52664524/192067770-66e73bae-fe25-4da5-9514-391996d71ac1.png)
 
-<img src="[https://your-image-url.type](https://user-images.githubusercontent.com/52664524/192067770-66e73bae-fe25-4da5-9514-391996d71ac1.png)" width="100" height="100">
+<img src="https://your-image-url.type](https://user-images.githubusercontent.com/52664524/192067770-66e73bae-fe25-4da5-9514-391996d71ac1.png" width="100" height="100">
 
 CameoKit and Perfect4 is now deprecated. It has been replaced with StarPlayrRadioKit and SwifterLite (fork from Swifter). All three repos are located on my Github's main page.
  
