@@ -3,9 +3,9 @@ Sirius XM streaming radio for iOS, macOS and iPadOS. StarPlayrX is accessible an
 
 StarPlayrX is not affiliated with SiriusXM. StarPlayr trademark is owned by NiceMac LLC. Source and Binaries are copyrighted (c) Todd Bruss, NiceMac LLC, StarPlayrX.com
 
-X stands for ten. StarPlayr was originally targeted for iOS back in 2009. The app encountered a good bit of misfortune and NiceMac was disbanned. A decade later its original creator and founder of NiceMac, Todd Bruss created StarPlayrX and released it to the iOS app store. 
+X stands for ten. StarPlayr was originally targeted for iOS back in 2009. The app encountered some misfortune and NiceMac was disbanned. A decade later its original creator and original founding member of NiceMac, Todd Bruss created StarPlayrX from scratch and released it to the iOS app store. 
 
-The Mac Catalyst version of StarPlayrX can be compiled by individuals. There will be macOS releases, but there is not timeline in this.
+The Mac Catalyst version of StarPlayrX can be compiled by individuals. There will be macOS future releases, planned for this Fall.
 
 StarPlayrX is open source along with its two libraries StarPlayrRadioKit and Swifter-Lite, so who is interested and have some experience with Swift can create their own StarPlayr.
 
