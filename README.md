@@ -7,11 +7,14 @@ X stands for ten. StarPlayr was originally targeted for iOS back in 2009. The ap
 
 The Mac Catalyst version of StarPlayrX can be compiled by individuals. There will be macOS future releases, planned for this Fall.
 
-StarPlayrX is open source along with its two libraries StarPlayrRadioKit and Swifter-Lite, so who is interested and have some experience with Swift can create their own StarPlayr.
+StarPlayrX is open source along with its two libraries StarPlayrRadioKit and SwifterLite, so who is interested and have some experience with Swift can create their own StarPlayr.
 
 "Don't be a Slacker, be a Star Player."
 
 p.s.
 
-CameoKit and Perfect4 is now deprecated. It has been replaced with StarPlayrRadioKit and Swifter-Lite (fork from Swifter). All three repos are located on my Github's main page.
+CameoKit and Perfect4 is now deprecated. It has been replaced with StarPlayrRadioKit and SwifterLite (fork from Swifter). All three repos are located on my Github's main page.
  
+CameoKit was StarPlayrX's original abstraction layer between SiriusXM and StarPlayrX. StarPlayrRadioKit is its replacement.
+
+Perfect4 was a super fast Swift server with a good bit of its code in C. Unfortunately Perfect was proving difficult to maintain since its original authors seemed to have abandoned it completely. It was also quite large and needed to have access to its C headers. This has been replaced with SwifterLite, an unofficial fork of Swifter. Swifter was pretty small, but it wasn't fast enough or stable enough to replace Perfect. SwifterLite was born removing 50% of Swifter's original code base and refactored heavily from what was remaining. SwifterLite is made specfically for StarPlayrX and future IPTVee projects by Todd Bruss, but anyone can use SwifterLite as a reliable and fast embedded http web server on iOS, macOS and tvOS.
