@@ -361,6 +361,10 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         NotificationCenter.default.removeObserver(self, name: AVAudioSession.routeChangeNotification, object: nil)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        updatePlayPauseIcon()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setObservers()
@@ -693,7 +697,16 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
         return true
     }
     
+    func updatePlayPauseIcon() {
+        if Player.shared.player.isBusy {
+            self.updatePlayPauseIcon(play: true)
+        } else {
+            self.updatePlayPauseIcon(play: true)
+        }
+    }
+    
     @objc func willEnterForeground() {
+        updatePlayPauseIcon()
         startup()
     }
     
