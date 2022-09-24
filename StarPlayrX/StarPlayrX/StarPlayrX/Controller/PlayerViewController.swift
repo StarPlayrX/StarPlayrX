@@ -698,11 +698,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     }
     
     func updatePlayPauseIcon() {
-        if Player.shared.player.isBusy {
-            self.updatePlayPauseIcon(play: true)
-        } else {
-            self.updatePlayPauseIcon(play: true)
-        }
+        self.updatePlayPauseIcon(play: Player.shared.player.isBusy)
     }
     
     @objc func willEnterForeground() {
