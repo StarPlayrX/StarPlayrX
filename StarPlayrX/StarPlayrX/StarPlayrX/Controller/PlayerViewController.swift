@@ -698,6 +698,7 @@ class PlayerViewController: UIViewController, AVRoutePickerViewDelegate  {
     }
     
     func updatePlayPauseIcon() {
+        print( Player.shared.player.isBusy)
         self.updatePlayPauseIcon(play: Player.shared.player.isBusy)
     }
     

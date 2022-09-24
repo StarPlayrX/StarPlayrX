@@ -98,7 +98,10 @@ final class Player {
     }
     
     func stream() {
-
+        SPXCache()
+        state = .playing
+        NotificationCenter.default.post(name: .didUpdatePlay, object: nil)
+        
         guard
             let url = URL(string: "\(g.insecure)\(g.localhost):\(port)/api/v3/m3u/\(g.currentChannel)\(g.m3u8)")
         else {
@@ -109,8 +112,7 @@ final class Player {
         p.volume = 0
         p.replaceCurrentItem(with: AVPlayerItem(asset:AVAsset(url: url)))
         p.playImmediately(atRate: 1.0)
-        SPXCache()
-        state = .playing
+        
         p.fadeVolume(from: 0, to: 1, duration: Float(2.5))
       
 
@@ -473,10 +475,13 @@ final class Player {
         let commandCenter = MPRemoteCommandCenter.shared()
         commandCenter.accessibilityActivate()
         commandCenter.playCommand.addTarget(handler: { (event) in
+            print("1")
+
             self.new(.stream)
             return MPRemoteCommandHandlerStatus.success}
         )
         commandCenter.pauseCommand.addTarget(handler: { (event) in
+            print("2")
             self.new(.playing)
             return MPRemoteCommandHandlerStatus.success}
         )
