@@ -39,12 +39,14 @@ internal class Async {
     }
 
 	//MARK: Text
-    internal func Text(endpoint: String, TextHandler: @escaping TextHandler) {
+    internal func Text(endpoint: String, timeOut: Double = 5, TextHandler: @escaping TextHandler) {
+        
+        
         guard let url = URL(string: endpoint) else { TextHandler("error"); return}
         
         var urlReq = URLRequest(url: url)
         urlReq.httpMethod = "GET"
-        urlReq.timeoutInterval = TimeInterval(60)
+        urlReq.timeoutInterval = TimeInterval(timeOut)
         urlReq.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
         
         let task = URLSession.shared.dataTask(with: urlReq ) { ( data, _, _ ) in

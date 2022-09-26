@@ -59,11 +59,11 @@ extension UIImage {
 //Some extra variables, so we can check the status of our AVPlayer
 extension AVQueuePlayer {
     var isDead: Bool {
-        return rate == 0 || currentItem == .none || error != nil
+        return rate == 0
     }
     
     var isBusy: Bool {
-        return rate == 1 && currentItem != .none && error == nil
+        return rate == 1
     }
 }
 

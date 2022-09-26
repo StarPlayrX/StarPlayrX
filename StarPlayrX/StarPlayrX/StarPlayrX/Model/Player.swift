@@ -58,11 +58,14 @@ final class Player {
     }
     
     func new(_ state: PlayerState?) {
-        let pinpoint = "\(g.insecure)\(g.localhost):\(self.port)/api/v3/ping"
-        Async.api.Text(endpoint: pinpoint ) { pong in
-            guard let ping = pong else { self.launchServer(); return }
-            ping == "pong" ? self.spx(state) : (self.launchServer())
+        DispatchQueue.global().async { [self] in
+            let pinpoint = "\(g.insecure)\(g.localhost):\(port)/api/v3/ping"
+            Async.api.Text(endpoint: pinpoint, timeOut: 1 ) { pong in
+                guard let ping = pong else { launchServer(); return }
+                ping == "pong" ? spx(state) : (launchServer())
+            }
         }
+      
     }
     
     //MARK: Update the screen
