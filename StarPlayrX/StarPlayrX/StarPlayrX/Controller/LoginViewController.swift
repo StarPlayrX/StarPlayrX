@@ -99,20 +99,13 @@ class LoginViewController: UIViewController {
         
         let pingUrl = "\(self.g.insecure)\(self.g.localhost):" + String(self.p.port) + "/api/v3/ping"
     
-        Async.api.Text(endpoint: pingUrl, timeOut: 1) { ping in
-            
-            //Check if Local Web Server is Up
+        Async.api.Text(endpoint: pingUrl, timeOut: 1) { [self] ping in            
             if let ping = ping, ping != "pong" {
-                //print("Launching the Server.")
                 net.LaunchServer()
-                self.prog(0.1, "Login")
-                self.login()
-            } else {
-                self.prog(0.1, "Login")
-                self.login()
             }
             
-          
+            prog(0.1, "Login")
+            login()
         }
     }
     

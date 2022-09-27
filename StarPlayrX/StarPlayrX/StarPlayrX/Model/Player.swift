@@ -60,9 +60,9 @@ final class Player {
     func new(_ state: PlayerState?) {
         DispatchQueue.global().async { [self] in
             let pinpoint = "\(g.insecure)\(g.localhost):\(port)/api/v3/ping"
-            Async.api.Text(endpoint: pinpoint, timeOut: 1 ) { pong in
+            Async.api.Text(endpoint: pinpoint, timeOut: 1 ) { [self] pong in
                 guard let ping = pong else { launchServer(); return }
-                ping == "pong" ? spx(state) : (launchServer())
+                ping == "pong" ? spx(state) : ( launchServer() )
             }
         }
       
