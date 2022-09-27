@@ -19,6 +19,8 @@ SwifterLite is copyrighted (c) 2016 by the Swifter's individual contributors and
 
 StarplayrX and StarPlayrRadioKit is copyrighted (c) 2022 by Todd Bruss and NiceMac LLC
 
-StarPlayrX is not affiliated with SiriusXM. StarPlayr trademark is owned by NiceMac LLC. Source and Binaries are copyrighted (c) Todd Bruss, NiceMac LLC, StarPlayrX.com
+StarPlayrX is not affiliated with SiriusXM. StarPlayr trademark is owned by NiceMac LLC. Source Code and Binaries are copyrighted (c) Todd Bruss, NiceMac LLC, StarPlayrX.com
+
+MIT License
 
 "Don't be a Slacker, be a Star Player."
