@@ -1,6 +1,8 @@
 # StarPlayrX
 
-### Note this has not been tested with macOS Ventura 13.0 yet. You may be an issue logging in.
+### Note this has not been tested with macOS Ventura 13.0. You may be an issue logging in.
+
+## This current open source version is considered beta, many changes were made to its middleware and client software.
 
 Sirius XM streaming radio for iOS, macOS and iPadOS. StarPlayrX is accessible and this is one of its strong suits.
 
