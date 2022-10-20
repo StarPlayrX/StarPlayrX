@@ -1,4 +1,7 @@
 # StarPlayrX
+
+### Note this has not been tested with Venture macOS 13 yet. They may be an issue logging in.
+
 Sirius XM streaming radio for iOS, macOS and iPadOS. StarPlayrX is accessible and this is one of its strong suits.
 
 X stands for ten. Back in 2009 StarPlayr was once on macOS, iOS, Windows and Windows Mobile. It was run by a team of 4 faithful engineers including myself. The startup was called NiceMac. A decade later, I decided to bring StarPlayrX to the app store. This time under my own name and 100% of it is open sourced.
