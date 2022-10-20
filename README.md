@@ -1,6 +1,6 @@
 # StarPlayrX
 
-### Note this has not been tested with macOS Ventura 13.0. You may be an issue logging in.
+### Note this has not been tested with macOS Ventura 13.0. You have an issue logging in.
 
 #### This current open source version is considered beta, many changes were made to its middleware and client software and has not been released to the AppStore. Once we are happy with it, there will be a new macOS Catalyst release on StarPlayrX.com and a new iOS AppStore release.
 
