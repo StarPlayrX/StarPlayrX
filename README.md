@@ -1,6 +1,6 @@
 # StarPlayrX
 
-### Note this has not been tested with Venture macOS 13 yet. They may be an issue logging in.
+### Note this has not been tested with macOS Ventura 13.0 yet. They may be an issue logging in.
 
 Sirius XM streaming radio for iOS, macOS and iPadOS. StarPlayrX is accessible and this is one of its strong suits.
 
