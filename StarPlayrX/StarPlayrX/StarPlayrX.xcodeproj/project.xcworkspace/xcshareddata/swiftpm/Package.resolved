@@ -5,17 +5,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/StarPlayrX/StarPlayrRadioKit",
       "state" : {
-        "branch" : "main",
-        "revision" : "470c0553cd573f08f288c90b85b97400578ee459"
+        "branch" : "mustang",
+        "revision" : "9468a75e4bd482662c7f9d265074886676e6050a"
       }
     },
     {
-      "identity" : "swifter-lite",
+      "identity" : "swifterlite",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/StarPlayrX/Swifter-Lite",
+      "location" : "https://github.com/StarPlayrX/SwifterLite",
       "state" : {
-        "branch" : "1.5.1",
-        "revision" : "aa89931f90ae0f04197b4182f8a89549aab340bb"
+        "branch" : "mustang",
+        "revision" : "ca347acbb8b54b725301670250944bc803100118"
       }
     }
   ],

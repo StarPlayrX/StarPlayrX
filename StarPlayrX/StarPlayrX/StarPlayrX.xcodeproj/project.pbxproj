@@ -208,7 +208,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1140;
-				LastUpgradeCheck = 1340;
+				LastUpgradeCheck = 1400;
 				ORGANIZATIONNAME = "Todd Bruss";
 				TargetAttributes = {
 					5F5C5004244CBBD300A35D76 = {
@@ -334,6 +334,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -399,6 +400,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -433,7 +435,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = StarPlayrX/StarPlayrX.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 469UCUB275;
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = StarPlayrX/Info.plist;
@@ -444,7 +446,7 @@
 				);
 				MACH_O_TYPE = mh_execute;
 				MARKETING_VERSION = 1.3.1;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.toddbruss.StarPlayr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -466,7 +468,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = StarPlayrX/StarPlayrX.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 469UCUB275;
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = StarPlayrX/Info.plist;
@@ -477,7 +479,7 @@
 				);
 				MACH_O_TYPE = mh_execute;
 				MARKETING_VERSION = 1.3.1;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.toddbruss.StarPlayr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -518,7 +520,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/StarPlayrX/StarPlayrRadioKit";
 			requirement = {
-				branch = main;
+				branch = mustang;
 				kind = branch;
 			};
 		};
